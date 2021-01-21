@@ -1,0 +1,82 @@
+import React from 'react';
+import {
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+  View,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {MAIN_COLOR} from '../utility/colors';
+import {isEmpty} from '../utility/helpers';
+
+const MyButton = ({
+  icon,
+  rightIcon,
+  style = {},
+  iconStyle = {},
+  iconSize = 16,
+  iconColor = '#fff',
+  isLoading = false,
+  text = '',
+  loading = {size: 16, color: '#fff'},
+  textStyle = {},
+  ...props
+}) => {
+  return (
+    <TouchableOpacity
+      disabled={isLoading}
+      {...props}
+      style={[styles.container, style]}>
+      <View style={iconStyle}>
+        {icon && <Icon name={icon} size={iconSize} color={iconColor} />}
+      </View>
+      {!isEmpty(text) &&
+        (isLoading ? (
+          <ActivityIndicator
+            style={{height: loading.size, width: loading.size}}
+            color={loading.color}
+          />
+        ) : (
+          <Text style={[styles.text, textStyle || {}]}>{text}</Text>
+        ))}
+      <View>
+        {rightIcon && (
+          <Icon name={rightIcon} size={iconSize} color={iconColor} />
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export default MyButton;
+
+const styles = {
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: 310,
+    alignItems: 'center',
+    height: 42,
+    backgroundColor: MAIN_COLOR,
+    borderRadius: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgb(77, 84, 124)',
+        shadowOpacity: 0.09,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  text: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
+};

@@ -1,0 +1,15 @@
+import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
+import AuthScreen from '../screens/AuthScreen';
+import VerificationScreen from '../screens/VerificationScreen';
+
+const Stack = createStackNavigator();
+
+export default function AuthNavigator() {
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="AuthScreen" component={AuthScreen} />
+      <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
+    </Stack.Navigator>
+  );
+}
