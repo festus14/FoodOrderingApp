@@ -1,24 +1,27 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, Platform} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {LIGHT_GREY} from '../utility/colors';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {LIGHTER_BLACK, LIGHT_GREY, SECONDARY_COLOR} from '../utility/colors';
 
-export default function SearchBar({size, color}) {
+export default function SearchBar() {
   const [text, setText] = useState('');
   return (
     <View style={styles.container}>
-      <Icon name="search" size={size} color={color} />
+      <View style={styles.icon}>
+        <Icon name="ios-search-outline" size={30} color={SECONDARY_COLOR} />
+      </View>
       <TextInput
         placeholder="Search for vendor"
         placeholderTextColor={LIGHT_GREY}
         value={text}
+        style={styles.input}
         autoCapitalize="none"
         autoCorrect={false}
         onChangeText={(input) => setText(input)}
         returnKeyType="search"
       />
-      <View style={styles.iconStyle}>
-        <Icon name="pencil" size={size} color={color} />
+      <View style={styles.icon}>
+        <Icon name="ios-menu-outline" size={30} color={LIGHTER_BLACK} />
       </View>
     </View>
   );
@@ -46,9 +49,15 @@ const styles = {
       },
     }),
   },
-  iconStyle: {
+  icon: {
     width: 54,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  input: {
+    paddingBottom: 8,
+    paddingRight: 10,
+    fontSize: 17,
+    flex: 1,
   },
 };

@@ -19,9 +19,8 @@ export const styles = {
   },
   text: {
     color: 'white',
-    fontSize: 42,
-    fontWeight: 'bold',
+    fontSize: 17,
+    fontWeight: '100',
     textAlign: 'center',
-    backgroundColor: '#000000a0',
   },
 };

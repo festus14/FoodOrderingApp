@@ -48,7 +48,7 @@ const styles = {
     borderWidth: 0,
     borderBottomColor: LIGHTER_GREY,
     borderBottomWidth: 1,
-    marginBottom: SCREEN_HEIGHT * 0.02,
+    marginBottom: SCREEN_HEIGHT * 0.01,
     width: '100%',
   },
   icon: {
@@ -56,14 +56,14 @@ const styles = {
     textAlign: 'center',
   },
   input: {
-    paddingBottom: 10,
+    paddingBottom: 8,
     paddingRight: 10,
-    fontSize: 20,
+    fontSize: 17,
     flex: 1,
   },
   title: {
     marginRight: 10,
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '100',
   },
 };

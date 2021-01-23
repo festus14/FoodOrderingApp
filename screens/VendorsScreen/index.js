@@ -3,11 +3,10 @@ import {
   View,
   Text,
   KeyboardAvoidingView,
-  ScrollView,
   SafeAreaView,
   FlatList,
+  Platform,
 } from 'react-native';
-import DismissKeyboard from '../../components/DismissKeyboard';
 import Header from '../../components/Header';
 import SearchBar from '../../components/SearchBar';
 import VendorItem from '../../components/VendorItem';
@@ -25,7 +24,7 @@ const DATA = [
   },
   {
     id: 3,
-    imageURL: '../../assets/images/boxin-white.png',
+    imageURL: '../../assets/images/burger.png',
   },
   {
     id: 4,
@@ -35,40 +34,49 @@ const DATA = [
     id: 5,
     imageURL: '../../assets/images/burger.png',
   },
-  {
-    id: 6,
-    imageURL: '../../assets/images/boxin-white.png',
-  },
 ];
+
+const headerComponent = (
+  <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    <Text style={{color: '#fff', fontWeight: '300', fontSize: 17}}>
+      Delivering To
+    </Text>
+    <Text style={{color: '#fff', fontWeight: '100', fontSize: 16}}>
+      Omovie street, Okota, Lagos.
+    </Text>
+  </View>
+);
 
 const VendorsScreen = ({navigation}) => {
   const goBack = () => navigation.goBack();
 
   return (
-    <>
+    <SafeAreaView style={{flex: 1}}>
       <Header
-        leftIcon="arrow-left"
-        title="Delivering To"
+        leftIcon="ios-arrow-back"
+        rightIcon="ios-chevron-down-outline"
+        component={headerComponent}
         onLeftPress={goBack}
       />
 
-      <SafeAreaView style={{flex: 1}}>
-        <SearchBar />
+      <SearchBar />
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={{flex: 1}}>
         <View style={styles.container}>
-          <DismissKeyboard>
-            <KeyboardAvoidingView>
-              <Text>All Vendors</Text>
-              <FlatList
-                data={DATA}
-                renderItem={({item, index, separators}) => (
-                  <VendorItem item={item} />
-                )}
-                keyExtractor={(item) => item.id}
-                numColumns={2}
-                onRefresh={() => console.warn('Refreshed')}
-              />
-            </KeyboardAvoidingView>
-          </DismissKeyboard>
+          <Text style={styles.vendorText}>All Vendors</Text>
+          <FlatList
+            data={DATA}
+            renderItem={({item, index, separators}) => (
+              <VendorItem item={item} />
+            )}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            refreshing={false}
+            onRefresh={() => console.warn('Refreshed')}
+            showsVerticalScrollIndicator={false}
+          />
 
           <View style={styles.bottomContainer}>
             <Text style={styles.firstText}>
@@ -77,8 +85,8 @@ const VendorsScreen = ({navigation}) => {
             <Text style={styles.secondText}>Recommend Vendor</Text>
           </View>
         </View>
-      </SafeAreaView>
-    </>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -86,15 +94,12 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
-    height: '100%',
-    position: 'relative',
+    padding: 10,
   },
   bottomContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    marginTop: 10,
   },
   firstText: {
     fontSize: 15,
@@ -107,6 +112,16 @@ const styles = {
   topText: {
     fontSize: 17,
     fontWeight: '600',
+  },
+  scroll: {
+    width: '100%',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  vendorText: {
+    paddingLeft: 10,
+    fontWeight: '600',
+    fontSize: 17,
   },
 };
 

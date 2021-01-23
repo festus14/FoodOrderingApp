@@ -20,7 +20,11 @@ const VerificationScreen = ({navigation}) => {
 
   return (
     <>
-      <Header leftIcon="arrow-left" title="Enter OTP" onLeftPress={goBack} />
+      <Header
+        leftIcon="ios-arrow-back"
+        title="Enter OTP"
+        onLeftPress={goBack}
+      />
 
       <DismissKeyboard>
         <KeyboardAvoidingView

@@ -30,13 +30,8 @@ export const styles = {
     width: 100,
   },
   form: {
+    flex: 1,
     padding: 16,
-    height: SCREEN_HEIGHT * 0.45,
-    marginHorizontal: 5,
-    marginTop: 30,
-    backgroundColor: '#fff',
-    zIndex: 1,
-    borderRadius: 10,
   },
   inputStyle: {},
   titleStyle: {},
@@ -77,5 +72,8 @@ export const styles = {
   styledText: {
     textDecorationLine: 'underline',
     color: SECONDARY_COLOR,
+  },
+  contentContainer: {
+    padding: 10,
   },
 };

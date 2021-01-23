@@ -6,7 +6,7 @@ import {
   Platform,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {MAIN_COLOR} from '../utility/colors';
 import {isEmpty} from '../utility/helpers';
 
@@ -57,7 +57,7 @@ const styles = {
     justifyContent: 'space-around',
     width: 310,
     alignItems: 'center',
-    height: 42,
+    height: 40,
     backgroundColor: MAIN_COLOR,
     borderRadius: 5,
     ...Platform.select({

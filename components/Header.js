@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, Platform, StatusBar} from 'react-native';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../utility/colors';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {STATUS_BAR_HEIGHT} from '../utility/constants';
 import {isEmpty} from '../utility/helpers';
 
@@ -32,12 +32,12 @@ const Header = ({
             </TouchableOpacity>
           )}
         </View>
+        {component ?? component}
         {!isEmpty(title) && (
           <View style={[styles.textContainer, titleStyle]}>
             <Text style={styles.text}>{title || ''}</Text>
           </View>
         )}
-        {component ?? component}
         <View style={styles.iconContainer}>
           {rightIcon && (
             <TouchableOpacity onPress={onRightPress} style={styles.icon}>

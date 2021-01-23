@@ -1,24 +1,23 @@
 import React, {useState} from 'react';
 import {View, Text, Image} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {SECONDARY_COLOR} from '../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
 import RadioButton from './RadioButton';
 
-const VendorItem = ({}) => {
+const VendorItem = ({items}) => {
   const [selected, setSelected] = useState(false);
   const [favorite, setFavorite] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.top}>
-        <RadioButton
-          button={{size: 20, color: SECONDARY_COLOR, selected}}
-          onPress={() => setSelected(!selected)}
+        <Icon
+          name="ios-radio-button-on-outline"
+          color={SECONDARY_COLOR}
+          size={22}
         />
-        <RadioButton
-          button={{size: 20, color: SECONDARY_COLOR, selected: favorite}}
-          onPress={() => setFavorite(!favorite)}
-        />
+
+        <Icon name="ios-heart-outline" color={SECONDARY_COLOR} size={22} />
       </View>
       <View style={styles.center}>
         <Image
@@ -31,8 +30,10 @@ const VendorItem = ({}) => {
         <Text style={styles.time}>35-50mins</Text>
         <Text style={styles.vendor}>KFC</Text>
         <View style={styles.rating}>
-          <Icon name="arrow-left" color={SECONDARY_COLOR} size={15} />
-          <Text style={styles.ratingText}>3.5 ##</Text>
+          <Icon name="star-half-outline" color={SECONDARY_COLOR} size={15} />
+          <Text style={styles.ratingText}>
+            3.5 <Text style={{color: SECONDARY_COLOR}}>##</Text>
+          </Text>
         </View>
       </View>
     </View>
@@ -44,14 +45,14 @@ export default VendorItem;
 const styles = {
   container: {
     width: SCREEN_WIDTH * 0.42,
-    height: SCREEN_HEIGHT * 0.35,
-    justifyContent: 'space-between',
+    height: SCREEN_HEIGHT * 0.37,
+    justifyContent: 'space-around',
     borderWidth: 1,
     borderColor: SECONDARY_COLOR,
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 8,
-    marginTop: 10,
+    marginTop: 8,
     marginHorizontal: 8,
   },
   top: {
@@ -62,7 +63,6 @@ const styles = {
   center: {
     alignItems: 'center',
     justifyContent: 'center',
-    // width: '50%',
     height: '50%',
   },
   image: {height: '100%'},

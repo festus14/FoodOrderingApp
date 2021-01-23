@@ -9,7 +9,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 import MyButton from '../../components/MyButton';
-import DismissKeyboard from '../../components/DismissKeyboard';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {styles} from './style';
 import Header from '../../components/Header';
@@ -66,24 +65,33 @@ export default function AuthScreen({navigation}) {
 
   const setPositionHandler = (pos) => {
     setPosition(pos);
-    pos === 'left' ? setAuthState('login') : setAuthState('false');
+    if (pos === 'left') {
+      setAuthState('login');
+    } else {
+      setAuthState('signup');
+    }
   };
 
   const loginHandler = () => {
-    navigation.navigate('VerificationScreen');
+    navigation.navigate('HomeBottomNavigator');
   };
 
   const signUpHandler = () => {
     navigation.navigate('VerificationScreen');
   };
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <>
       <Header
         style={styles.header}
-        leftIcon="arrow-right"
+        leftIcon="ios-arrow-back"
         leftColor={MAIN_COLOR}
         size={24}
+        onLeftPress={() => goBack()}
         component={
           <TopBar
             style={styles.topBar}
@@ -91,141 +99,134 @@ export default function AuthScreen({navigation}) {
             leftText="Sign In"
             rightText="Sign Up"
             position={position}
-            setLeftPosition={() => setPositionHandler('left')}
-            setRightPosition={() => setPositionHandler('right')}
+            setLeftPosition={setPositionHandler}
+            setRightPosition={setPositionHandler}
           />
         }
       />
 
-      <DismissKeyboard>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
-          style={{flex: 1}}>
-          <SafeAreaView style={{flex: 1}}>
-            <ScrollView
-              style={styles.container}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{height: SCREEN_HEIGHT}}>
-              <View style={styles.form}>
-                {!isLogin && (
-                  <>
-                    <InputText
-                      placeholder="Required"
-                      placeholderTextColor={LIGHT_GREY}
-                      title="First Name"
-                      autoCorrect={false}
-                      value={firstName.value}
-                      inputStyle={styles.inputStyle}
-                      onSubmitEditing={() => {}}
-                      onChangeText={(input) =>
-                        setFirstName({...firstName, value: input})
-                      }
-                      autoCapitalize="none"
-                      returnKeyType="next"
-                    />
-                    <InputText
-                      placeholder="Required"
-                      placeholderTextColor={LIGHT_GREY}
-                      title="Last Name"
-                      autoCorrect={false}
-                      value={lastName.value}
-                      inputStyle={styles.inputStyle}
-                      onSubmitEditing={() => {}}
-                      onChangeText={(input) =>
-                        setLastName({...lastName, value: input})
-                      }
-                      autoCapitalize="none"
-                      returnKeyType="next"
-                    />
-                  </>
-                )}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.container}>
+        <SafeAreaView style={styles.container}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.contentContainer}
+            style={styles.form}>
+            {!isLogin && (
+              <>
                 <InputText
                   placeholder="Required"
                   placeholderTextColor={LIGHT_GREY}
-                  title="Email"
+                  title="First Name"
                   autoCorrect={false}
-                  value={email.value}
+                  value={firstName.value}
                   inputStyle={styles.inputStyle}
-                  onSubmitEditing={() => {}}
-                  onChangeText={(input) => setEmail({...email, value: input})}
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  keyboardType="email-address"
-                />
-                {!isLogin && (
-                  <InputText
-                    placeholder="Required"
-                    placeholderTextColor={LIGHT_GREY}
-                    title="Phone"
-                    autoCorrect={false}
-                    value={phoneNumber.value}
-                    inputStyle={styles.inputStyle}
-                    onSubmitEditing={() => {}}
-                    onChangeText={(input) =>
-                      setPhoneNumber({...phoneNumber, value: input})
-                    }
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    keyboardType="number-pad"
-                  />
-                )}
-                <InputText
-                  placeholder="Required"
-                  placeholderTextColor={LIGHT_GREY}
-                  title="Password"
-                  secureTextEntry
-                  value={password.value}
-                  inputStyle={styles.inputStyle}
-                  titleStyle={styles.titleStyle}
-                  containerStyle={styles.containerStyle}
                   onSubmitEditing={() => {}}
                   onChangeText={(input) =>
-                    setPassword({...password, value: input})
+                    setFirstName({...firstName, value: input})
                   }
                   autoCapitalize="none"
-                  returnKeyTpe="go"
+                  returnKeyType="next"
                 />
-                <MyButton
-                  text={isLogin ? 'Sign In' : 'Sign Up'}
-                  style={styles.btn}
-                  onPress={() => (isLogin ? loginHandler() : signUpHandler())}
+                <InputText
+                  placeholder="Required"
+                  placeholderTextColor={LIGHT_GREY}
+                  title="Last Name"
+                  autoCorrect={false}
+                  value={lastName.value}
+                  inputStyle={styles.inputStyle}
+                  onSubmitEditing={() => {}}
+                  onChangeText={(input) =>
+                    setLastName({...lastName, value: input})
+                  }
+                  autoCapitalize="none"
+                  returnKeyType="next"
                 />
-                {isLogin ? (
-                  <TouchableOpacity onPress={() => {}} style={styles.forgot}>
-                    <Text style={styles.forgotText}>{'Forgot Password?'}</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={styles.signupContainer}>
-                    <Text style={styles.signupText}>
-                      By clicking Sign Up, Continue with Facebook, Continue with
-                      Google, you agree to our{' '}
-                      <Text style={styles.styledText}>
-                        Terms and Conditions
-                      </Text>{' '}
-                      and
-                      <Text style={styles.styledText}> Privacy Statement</Text>
-                    </Text>
-                  </View>
-                )}
-                <View style={styles.oauthContainer}>
-                  <MyButton
-                    text="Continue with Facebook"
-                    style={{...styles.oauthBtn, backgroundColor: '#3B5998'}}
-                    icon={'facebook'}
-                    iconStyle={styles.iconStyle}
-                  />
-                  <MyButton
-                    text="Continue with Google"
-                    style={{...styles.oauthBtn, backgroundColor: '#4285F4'}}
-                    icon={'google'}
-                    iconStyle={styles.iconStyle}
-                  />
-                </View>
+              </>
+            )}
+            <InputText
+              placeholder="Required"
+              placeholderTextColor={LIGHT_GREY}
+              title="Email"
+              autoCorrect={false}
+              value={email.value}
+              inputStyle={styles.inputStyle}
+              onSubmitEditing={() => {}}
+              onChangeText={(input) => setEmail({...email, value: input})}
+              autoCapitalize="none"
+              returnKeyType="next"
+              keyboardType="email-address"
+            />
+            {!isLogin && (
+              <InputText
+                placeholder="Required"
+                placeholderTextColor={LIGHT_GREY}
+                title="Phone"
+                autoCorrect={false}
+                value={phoneNumber.value}
+                inputStyle={styles.inputStyle}
+                onSubmitEditing={() => {}}
+                onChangeText={(input) =>
+                  setPhoneNumber({...phoneNumber, value: input})
+                }
+                autoCapitalize="none"
+                returnKeyType="next"
+                keyboardType="number-pad"
+              />
+            )}
+            <InputText
+              placeholder="Required"
+              placeholderTextColor={LIGHT_GREY}
+              title="Password"
+              secureTextEntry
+              value={password.value}
+              inputStyle={styles.inputStyle}
+              titleStyle={styles.titleStyle}
+              containerStyle={styles.containerStyle}
+              onSubmitEditing={() => {}}
+              onChangeText={(input) => setPassword({...password, value: input})}
+              autoCapitalize="none"
+              returnKeyTpe="go"
+            />
+            <MyButton
+              text={isLogin ? 'Sign In' : 'Sign Up'}
+              style={styles.btn}
+              onPress={isLogin ? loginHandler : signUpHandler}
+            />
+            {isLogin ? (
+              <TouchableOpacity onPress={() => {}} style={styles.forgot}>
+                <Text style={styles.forgotText}>{'Forgot your password?'}</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.signupContainer}>
+                <Text style={styles.signupText}>
+                  By clicking Sign Up, Continue with Facebook, Continue with
+                  Google, you agree to our{' '}
+                  <Text style={styles.styledText}>Terms and Conditions</Text>{' '}
+                  and
+                  <Text style={styles.styledText}> Privacy Statement</Text>
+                </Text>
               </View>
-            </ScrollView>
-          </SafeAreaView>
-        </KeyboardAvoidingView>
-      </DismissKeyboard>
+            )}
+            <View style={styles.oauthContainer}>
+              <MyButton
+                text="Continue with Facebook"
+                style={{...styles.oauthBtn, backgroundColor: '#3B5998'}}
+                icon={'facebook'}
+                iconStyle={styles.iconStyle}
+                onPress={() => console.warn('faceboook')}
+              />
+              <MyButton
+                text="Continue with Google"
+                style={{...styles.oauthBtn, backgroundColor: '#4285F4'}}
+                icon={'google'}
+                iconStyle={styles.iconStyle}
+              />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </>
   );
 }

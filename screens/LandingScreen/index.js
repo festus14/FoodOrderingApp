@@ -17,9 +17,10 @@ export default function LandingScreen({navigation}) {
           />
           <MyButton
             text="Get a meal"
+            textStyle={styles.text}
             style={styles.btnStyle}
-            icon="arrow-right"
-            rightIcon="arrow-left"
+            rightIcon="long-arrow-right"
+            iconSize={30}
             onPress={() => {
               navigation.navigate('AuthStackNavigator');
             }}

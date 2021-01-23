@@ -21,12 +21,12 @@ const TopBar = ({
   return (
     <View style={[styles.topTab, style]}>
       <TouchableOpacity
-        onPress={setLeftPosition}
+        onPress={() => setLeftPosition('left')}
         style={[styles.tabBtn, tabBtn, styles.leftBtn, getStyle('left')]}>
         <Text style={[styles.tabText, getStyle('left', true)]}>{leftText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={setRightPosition}
+        onPress={() => setRightPosition('right')}
         style={[styles.tabBtn, tabBtn, getStyle('right')]}>
         <Text style={[styles.tabText, getStyle('right', true)]}>
           {rightText}
