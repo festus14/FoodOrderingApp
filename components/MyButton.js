@@ -57,6 +57,7 @@ const styles = {
     justifyContent: 'space-around',
     width: 310,
     alignItems: 'center',
+    alignSelf: 'center',
     height: 40,
     backgroundColor: MAIN_COLOR,
     borderRadius: 5,

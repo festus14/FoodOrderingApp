@@ -1,12 +1,14 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import VendorsStackNavigator from './VendorsStackNavigator';
 import {MAIN_COLOR} from '../utility/colors';
-import OrdersStackNavigator from './OrdersStackNavigator';
+import SingleVendorScreen from '../screens/SingleVendorScreen';
+import VendorContinentalScreen from '../screens/VendorContinentalScreen';
+import VendorTraditionalScreen from '../screens/VendorTraditionalScreen';
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-export default function HomeBottomNavigator() {
+export default function VendorTopNavigator() {
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -19,19 +21,14 @@ export default function HomeBottomNavigator() {
         labelStyle: {fontSize: 20},
       }}>
       <Tab.Screen
-        name="VendorsStackNavigator"
-        component={VendorsStackNavigator}
+        name="VendorContinentalScreen"
+        component={VendorContinentalScreen}
         options={{title: 'Vendors'}}
       />
       <Tab.Screen
-        name="OrdersStackNavigator"
-        component={OrdersStackNavigator}
+        name="VendorTraditionalScreen"
+        component={VendorTraditionalScreen}
         options={{title: 'Orders'}}
-      />
-      <Tab.Screen
-        name="AccountStackNavigator"
-        component={VendorsStackNavigator}
-        options={{title: 'Account'}}
       />
     </Tab.Navigator>
   );

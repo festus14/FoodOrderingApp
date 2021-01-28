@@ -69,7 +69,10 @@ const VendorsScreen = ({navigation}) => {
           <FlatList
             data={DATA}
             renderItem={({item, index, separators}) => (
-              <VendorItem item={item} />
+              <VendorItem
+                item={item}
+                onPress={() => navigation.navigate('SingleVendorScreen')}
+              />
             )}
             keyExtractor={(item) => item.id}
             numColumns={2}
