@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import VendorsStackNavigator from './VendorsStackNavigator';
 import {MAIN_COLOR} from '../utility/colors';
 import OrdersStackNavigator from './OrdersStackNavigator';
+import AccountStackNavigator from './AccountStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +31,7 @@ export default function HomeBottomNavigator() {
       />
       <Tab.Screen
         name="AccountStackNavigator"
-        component={VendorsStackNavigator}
+        component={AccountStackNavigator}
         options={{title: 'Account'}}
       />
     </Tab.Navigator>
