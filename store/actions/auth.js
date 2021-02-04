@@ -81,6 +81,7 @@ export const logIn = (authData) => {
       );
 
       let resJson = await res.json();
+
       console.warn('Log in...', resJson);
 
       dispatch(uiStopLoading());
@@ -110,6 +111,55 @@ export const logIn = (authData) => {
     } catch (error) {
       dispatch(uiStopLoading());
       console.log('Sign in catch...', error);
+      return 'Authentication failed, please check your internet connection and try again';
+    }
+  };
+};
+
+export const resetPassword = (authData) => {
+  return async (dispatch) => {
+    try {
+      dispatch(uiStartLoading());
+      await dispatch(authRemoveAsyncData());
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(uiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/auth/users/create-password/`,
+        'POST',
+        {
+          token: authData.token,
+          password: authData.password,
+        },
+        {Authorization: ''},
+      );
+
+      let resJson = await res.json();
+
+      console.warn('Reset password...', resJson);
+
+      dispatch(uiStopLoading());
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          return 'Please log out and sign in again';
+        }
+        return (
+          resJson?.email[0] ??
+          resJson?.message ??
+          'Something went wrong, try again'
+        );
+      }
+
+      return null;
+    } catch (error) {
+      dispatch(uiStopLoading());
+      console.log(error);
       return 'Authentication failed, please check your internet connection and try again';
     }
   };

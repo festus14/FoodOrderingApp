@@ -12,4 +12,5 @@ export {
   getAuthToken,
   forgotPassword,
   resendVerifyToken,
+  resetPassword,
 } from './auth';

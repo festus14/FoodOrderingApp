@@ -48,7 +48,7 @@ export default function AuthScreen({navigation}) {
   });
 
   const [firstName, setFirstName] = useState({
-    field: 'FirstName',
+    field: 'First name',
     value: '',
     validationRules: {
       minLength: 2,
@@ -56,7 +56,7 @@ export default function AuthScreen({navigation}) {
   });
 
   const [lastName, setLastName] = useState({
-    field: 'LastName',
+    field: 'Last name',
     value: '',
     validationRules: {
       minLength: 2,
@@ -64,7 +64,7 @@ export default function AuthScreen({navigation}) {
   });
 
   const [phoneNumber, setPhoneNumber] = useState({
-    field: 'PhoneNumber',
+    field: 'Phone number',
     value: '',
     validationRules: {
       minLength: 10,
@@ -99,6 +99,8 @@ export default function AuthScreen({navigation}) {
   };
 
   const loginHandler = async () => {
+    navigation.navigate('HomeBottomNavigator');
+    return;
     let error = validateLoginUser();
     if (error) {
       setError(error);
@@ -221,12 +223,13 @@ export default function AuthScreen({navigation}) {
       setError(error);
     } else {
       try {
-        error = await dispatch(resendVerifyToken(email.value.toLowerCase()));
+        error = await dispatch(forgotPassword(email.value.toLowerCase()));
         if (error) {
           setError(error);
         } else {
-          setSuccess('A token has been successfully sent to your mail');
-          navigation.navigate('VerificationScreen');
+          setSuccess('Reset Password has been successfully sent to your mail');
+          // setAuthView('auth');
+          navigation.navigate('PasswordResetScreen');
         }
       } catch (e) {
         console.log(e);
@@ -262,7 +265,7 @@ export default function AuthScreen({navigation}) {
       ) : (
         <Header
           leftIcon="ios-arrow-back"
-          title={authView === 'forgot' ? 'Forgot Password' : 'Resend Token'}
+          title={authView === 'forgot' ? 'Password Reset' : 'Resend Token'}
           onLeftPress={() => setAuthView('auth')}
         />
       )}
@@ -293,7 +296,7 @@ export default function AuthScreen({navigation}) {
                 />
                 {authView === 'forgot' ? (
                   <MyButton
-                    text="Forgot Password"
+                    text="Send Token"
                     style={styles.btn}
                     isLoading={isLoading}
                     onPress={forgotHandler}
