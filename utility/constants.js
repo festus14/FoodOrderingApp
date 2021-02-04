@@ -10,4 +10,4 @@ export const SCALE = Math.round(
   PixelRatio.roundToNearestPixel(SCREEN_WIDTH / 320),
 );
 
-export const API_URL = '';
+export const API_URL = 'https://api.boxin.ng/api/v1';
