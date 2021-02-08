@@ -32,6 +32,7 @@ export const styles = {
   form: {
     flex: 1,
     padding: 16,
+    marginTop: 30,
   },
   inputStyle: {},
   titleStyle: {},
@@ -75,5 +76,10 @@ export const styles = {
   },
   contentContainer: {
     padding: 10,
+  },
+  codeText: {
+    color: '#555',
+    fontSize: 19,
+    marginBottom: 30,
   },
 };

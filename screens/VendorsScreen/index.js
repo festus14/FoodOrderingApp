@@ -53,10 +53,8 @@ const VendorsScreen = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header
-        leftIcon="ios-arrow-back"
         rightIcon="ios-chevron-down-outline"
         component={headerComponent}
-        onLeftPress={goBack}
       />
 
       <SearchBar />
@@ -65,7 +63,6 @@ const VendorsScreen = ({navigation}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={{flex: 1}}>
         <View style={styles.container}>
-          <Text style={styles.vendorText}>All Vendors</Text>
           <FlatList
             data={DATA}
             renderItem={({item, index, separators}) => (
@@ -79,14 +76,18 @@ const VendorsScreen = ({navigation}) => {
             refreshing={false}
             onRefresh={() => console.warn('Refreshed')}
             showsVerticalScrollIndicator={false}
+            ListHeaderComponent={
+              <Text style={styles.vendorText}>All Vendors</Text>
+            }
+            ListFooterComponent={
+              <View style={styles.bottomContainer}>
+                <Text style={styles.firstText}>
+                  Your favorite vendor is not listed?
+                </Text>
+                <Text style={styles.secondText}>Recommend Vendor</Text>
+              </View>
+            }
           />
-
-          <View style={styles.bottomContainer}>
-            <Text style={styles.firstText}>
-              Your favorite vendor is not listed?
-            </Text>
-            <Text style={styles.secondText}>Recommend Vendor</Text>
-          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -103,6 +104,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    marginTop: 10,
   },
   firstText: {
     fontSize: 15,

@@ -84,6 +84,10 @@ const SingleVendorScreen = ({navigation}) => {
           leftIcon="ios-arrow-back"
           title="Urban Co."
           onLeftPress={goBack}
+          rightIcon="ios-cart-outline"
+          onRightPress={() =>
+            navigation.navigate('CheckoutModal', {title: 'Checkout'})
+          }
         />
 
         <View style={styles.infoImage}>

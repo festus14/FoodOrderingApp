@@ -47,7 +47,7 @@ export default VendorItem;
 const styles = {
   container: {
     width: SCREEN_WIDTH * 0.42,
-    height: SCREEN_HEIGHT * 0.37,
+    height: SCREEN_HEIGHT * 0.32,
     justifyContent: 'space-around',
     borderWidth: 1,
     borderColor: SECONDARY_COLOR,

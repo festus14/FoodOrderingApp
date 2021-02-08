@@ -81,7 +81,7 @@ const OrdersScreen = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
-        <Header title="Orders" />
+        <Header title="Orders" rightIcon="ios-cart-outline" size={26} />
 
         <View style={styles.container}>
           <View style={styles.topTabs}>
