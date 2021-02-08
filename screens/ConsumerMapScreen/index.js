@@ -131,9 +131,16 @@ const ConsumerMapScreen = ({navigation}) => {
 
       <KeyboardAvoidingView style={{flex: 1}}>
         <View style={styles.container}>{view}</View>
-        <GooglePlacesInput setLocation={setLocation} />
+        <GooglePlacesInput
+          setLocation={setLocation}
+          onSearch={searchLocationHandler}
+        />
 
-        <MyButton text="Choose this address" style={styles.button} />
+        <MyButton
+          text="Choose this address"
+          style={styles.button}
+          onPress={searchLocationHandler}
+        />
       </KeyboardAvoidingView>
     </>
   );
