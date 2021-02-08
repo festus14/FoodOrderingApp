@@ -1,27 +1,36 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, Platform} from 'react-native';
+import React from 'react';
+import {View, TextInput, Platform, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {LIGHTER_BLACK, LIGHT_GREY, SECONDARY_COLOR} from '../utility/colors';
+import {SECONDARY_COLOR} from '../utility/colors';
 
-export default function SearchBar() {
-  const [text, setText] = useState('');
+export default function SearchBar({
+  style = {},
+  size = 30,
+  titleStyle = {},
+  rightIcon,
+  leftIcon,
+  title = '',
+  onLeftPress,
+  onRightPress,
+  inputStyle,
+  ...props
+}) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.icon}>
-        <Icon name="ios-search-outline" size={30} color={SECONDARY_COLOR} />
+        {leftIcon && (
+          <TouchableOpacity onPress={onLeftPress} style={styles.icon}>
+            <Icon name={leftIcon} color={SECONDARY_COLOR} size={size} />
+          </TouchableOpacity>
+        )}
       </View>
-      <TextInput
-        placeholder="Search for vendor"
-        placeholderTextColor={LIGHT_GREY}
-        value={text}
-        style={styles.input}
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={(input) => setText(input)}
-        returnKeyType="search"
-      />
+      <TextInput style={[styles.input, inputStyle]} {...props} />
       <View style={styles.icon}>
-        <Icon name="ios-menu-outline" size={30} color={LIGHTER_BLACK} />
+        {rightIcon && (
+          <TouchableOpacity onPress={onRightPress} style={styles.icon}>
+            <Icon name={rightIcon} color={SECONDARY_COLOR} size={size} />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

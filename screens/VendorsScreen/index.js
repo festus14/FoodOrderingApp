@@ -53,10 +53,8 @@ const VendorsScreen = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header
-        leftIcon="ios-arrow-back"
         rightIcon="ios-chevron-down-outline"
         component={headerComponent}
-        onLeftPress={goBack}
       />
 
       <SearchBar />

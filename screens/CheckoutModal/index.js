@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import TopBar from '../../components/TopBar';
 import {SECONDARY_COLOR} from '../../utility/colors';
 
-export default function ModalScreen({navigation, route}) {
+export default function CheckoutModal({navigation, route}) {
   const {title} = route.params;
   const [position, setPosition] = useState('left');
   const [authState, setAuthState] = useState('delivery');
@@ -89,13 +89,22 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   headerText: {
     fontWeight: 'bold',
   },
   coloredText: {
     color: SECONDARY_COLOR,
+  },
+  controlList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  control: {
+    flexDirection: 'row',
   },
 };

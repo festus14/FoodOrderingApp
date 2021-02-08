@@ -1,56 +1,62 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, View, Alert} from 'react-native';
 import LandingScreen from '../screens/LandingScreen';
+import ConsumerMapScreen from '../screens/ConsumerMapScreen';
 import AuthStackNavigator from './AuthStackNavigator';
-import HomeBottomNavigator from './HomeBottomNavigator';
+import ConsumerBottomNavigator from './ConsumerBottomNavigator';
+import RestaurantBottomNavigator from './RestaurantBottomNavigator';
+import {Store} from '../store';
+import {getUser} from '../store/actions/user';
+import CheckoutModal from '../screens/CheckoutModal';
 
 const MainStack = createStackNavigator();
 
 export default function MainAppNavigator() {
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    state: {
+      ui: {isLoading},
+      auth: {token, userRole},
+    },
+    dispatch,
+  } = useContext(Store);
 
-  useEffect(() => {
-    async function fetchToken() {
-      setIsLoading(true);
-      try {
-      } catch (e) {
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchToken();
-  }, []);
-
-  if (isLoading) {
-    //    TODO: Implement splash screen
-    //   return <SplashScreen />;
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator size={40} />
-      </View>
-    );
-  }
+  // console.warn(userRole);
 
   return (
     <MainStack.Navigator headerMode="none">
       <MainStack.Screen name="LandingScreen" component={LandingScreen} />
-      <MainStack.Screen
-        name="AuthStackNavigator"
-        component={AuthStackNavigator}
-      />
-      <MainStack.Screen
-        name="HomeBottomNavigator"
-        component={HomeBottomNavigator}
-      />
+      {token === null ? (
+        <MainStack.Screen
+          name="AuthStackNavigator"
+          component={AuthStackNavigator}
+        />
+      ) : (
+        <>
+          <MainStack.Screen
+            name="ConsumerMapScreen"
+            component={ConsumerMapScreen}
+          />
+          {userRole === 'CONSUMER' ? (
+            <>
+              <MainStack.Screen
+                name="ConsumerBottomNavigator"
+                component={ConsumerBottomNavigator}
+              />
+              <MainStack.Screen
+                name="CheckoutModal"
+                component={CheckoutModal}
+                header={{mode: 'screen'}}
+              />
+            </>
+          ) : (
+            <MainStack.Screen
+              name="RestaurantBottomNavigator"
+              component={RestaurantBottomNavigator}
+            />
+          )}
+        </>
+      )}
     </MainStack.Navigator>
   );
 }
-
-const styles = {
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-};

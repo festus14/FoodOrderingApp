@@ -4,34 +4,57 @@ import {uiStartLoading, uiStopLoading, setUser, resetApp} from './';
 import {API_URL} from '../../utility/constants';
 import {sendRequest} from '../../utility/helpers';
 import moment from 'moment';
+import * as RootNavigation from '../../RootNavigation';
+import jwt_decode from 'jwt-decode';
 
-export const authSetToken = (token, userId, expiry) => {
+export const authSetToken = ({token, refresh, userId, expiry, userRole}) => {
   return {
     type: AUTH_SET_TOKEN,
     token,
+    refresh,
     userId,
     expiry,
+    userRole,
   };
 };
 
-export const authStoreAsyncData = (token, userId, userData, expiry) => {
+export const authStoreAsyncData = ({
+  token,
+  refresh,
+  userId,
+  userData,
+  expiry,
+  userRole,
+}) => {
   return async (dispatch) => {
-    dispatch(authSetToken(token, userId, expiry));
+    dispatch(authSetToken({token, refresh, userId, expiry, userRole}));
     try {
-      await RNSecureKeyStore.set('userId', JSON.stringify(userId), {
-        accessible: ACCESSIBLE.WHEN_UNLOCKED,
-      });
-      await RNSecureKeyStore.set('auth-token', token, {
-        accessible: ACCESSIBLE.WHEN_UNLOCKED,
-      });
-      await RNSecureKeyStore.set('user-data', JSON.stringify(userData), {
-        accessible: ACCESSIBLE.WHEN_UNLOCKED,
-      });
-      await RNSecureKeyStore.set('auth-expiry-date', expiry, {
-        accessible: ACCESSIBLE.WHEN_UNLOCKED,
-      });
+      userId &&
+        (await RNSecureKeyStore.set('user-id', JSON.stringify(userId), {
+          accessible: ACCESSIBLE.WHEN_UNLOCKED,
+        }));
+      userRole &&
+        (await RNSecureKeyStore.set('user-role', JSON.stringify(userRole), {
+          accessible: ACCESSIBLE.WHEN_UNLOCKED,
+        }));
+      token &&
+        (await RNSecureKeyStore.set('auth-token', token, {
+          accessible: ACCESSIBLE.WHEN_UNLOCKED,
+        }));
+      refresh &&
+        (await RNSecureKeyStore.set('refresh-token', refresh, {
+          accessible: ACCESSIBLE.WHEN_UNLOCKED,
+        }));
+      userData &&
+        (await RNSecureKeyStore.set('user-data', JSON.stringify(userData), {
+          accessible: ACCESSIBLE.WHEN_UNLOCKED,
+        }));
+      expiry &&
+        (await RNSecureKeyStore.set('auth-expiry-date', expiry, {
+          accessible: ACCESSIBLE.WHEN_UNLOCKED,
+        }));
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
   };
 };
@@ -45,7 +68,13 @@ export const authRemoveAsyncData = () => {
       await RNSecureKeyStore.set('auth-token', '', {
         accessible: ACCESSIBLE.WHEN_UNLOCKED,
       });
+      await RNSecureKeyStore.set('refresh-token', '', {
+        accessible: ACCESSIBLE.WHEN_UNLOCKED,
+      });
       await RNSecureKeyStore.set('user-data', JSON.stringify(''), {
+        accessible: ACCESSIBLE.WHEN_UNLOCKED,
+      });
+      await RNSecureKeyStore.set('user-role', JSON.stringify(''), {
         accessible: ACCESSIBLE.WHEN_UNLOCKED,
       });
       await RNSecureKeyStore.set('auth-expiry-date', '', {
@@ -58,7 +87,7 @@ export const authRemoveAsyncData = () => {
 };
 
 export const logIn = (authData) => {
-  return async (dispatch) => {
+  return async (dispatch, state) => {
     try {
       dispatch(uiStartLoading());
       await dispatch(authRemoveAsyncData());
@@ -82,35 +111,40 @@ export const logIn = (authData) => {
 
       let resJson = await res.json();
 
-      console.warn('Log in...', resJson);
+      var userData = jwt_decode(resJson.access);
 
       dispatch(uiStopLoading());
-      if (resJson.error || resJson.error === 'Unauthenticated.') {
-        return resJson.error === 'Login Failed, kindly login again'
-          ? 'Email and password do not match'
-          : 'Authentication failed, please try again';
-      } else {
-        let {user, email, name, roles, mobile} = resJson.data;
-        user = {
-          ...user,
-          email,
-          name,
-          roles,
-          mobile,
-        };
-        dispatch(
-          authStoreAsyncData(
-            resJson.data.token,
-            user.id,
-            authData,
-            resJson.data.expiry_date.date,
-          ),
+
+      if (!res.ok) {
+        return (
+          resJson.error ?? resJson.message ?? resJson.details ?? 'Login failed'
         );
-        dispatch(setUser(user));
       }
+
+      let {access: token, refresh} = resJson;
+
+      dispatch(
+        authStoreAsyncData({
+          token,
+          refresh,
+          userData,
+          userId: userData.user_id,
+          userRole: userData.roles[0],
+        }),
+      );
+
+      await dispatch(setUser(userData));
+
+      let userRole = userData.roles[0];
+      if (userRole === 'CONSUMER') {
+        RootNavigation.navigate('ConsumerMapScreen');
+      } else if (userRole === 'RESTAURANT') {
+        RootNavigation.navigate('RestaurantBottomNavigator');
+      }
+
+      return null;
     } catch (error) {
       dispatch(uiStopLoading());
-      console.log('Sign in catch...', error);
       return 'Authentication failed, please check your internet connection and try again';
     }
   };

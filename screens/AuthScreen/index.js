@@ -31,6 +31,7 @@ export default function AuthScreen({navigation}) {
     },
     dispatch,
   } = useContext(Store);
+
   const [position, setPosition] = useState('left');
   const [authState, setAuthState] = useState('login');
   const [authError, setAuthError] = useState('');
@@ -99,8 +100,6 @@ export default function AuthScreen({navigation}) {
   };
 
   const loginHandler = async () => {
-    navigation.navigate('HomeBottomNavigator');
-    return;
     let error = validateLoginUser();
     if (error) {
       setError(error);
@@ -114,8 +113,6 @@ export default function AuthScreen({navigation}) {
         error = await dispatch(logIn(authData));
         if (error) {
           setError(error);
-        } else {
-          navigation.navigate('HomeBottomNavigator');
         }
       } catch (e) {
         console.log(e);

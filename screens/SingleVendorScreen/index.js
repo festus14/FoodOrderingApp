@@ -86,7 +86,7 @@ const SingleVendorScreen = ({navigation}) => {
           onLeftPress={goBack}
           rightIcon="ios-cart-outline"
           onRightPress={() =>
-            navigation.navigate('MyModal', {title: 'Checkout'})
+            navigation.navigate('CheckoutModal', {title: 'Checkout'})
           }
         />
 

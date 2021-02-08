@@ -1,5 +1,12 @@
 // ui actions
-export {uiStartLoading, uiStopLoading} from './ui';
+export {
+  uiStartLoading,
+  uiStopLoading,
+  userUiStartLoading,
+  userUiStopLoading,
+  vendorsUiStartLoading,
+  vendorsUiStopLoading,
+} from './ui';
 
 // auth actions
 export {
@@ -14,3 +21,9 @@ export {
   resendVerifyToken,
   resetPassword,
 } from './auth';
+
+// user actions
+export {setUser, getUser, getUserId} from './user';
+
+// vendor actions
+export {getVendors} from './vendors';

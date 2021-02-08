@@ -7,7 +7,7 @@ import AccountStackNavigator from './AccountStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
-export default function HomeBottomNavigator() {
+export default function RestaurantBottomNavigator() {
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -22,12 +22,12 @@ export default function HomeBottomNavigator() {
       <Tab.Screen
         name="VendorsStackNavigator"
         component={VendorsStackNavigator}
-        options={{title: 'Vendors'}}
+        options={{title: 'Orders'}}
       />
       <Tab.Screen
         name="OrdersStackNavigator"
         component={OrdersStackNavigator}
-        options={{title: 'Orders'}}
+        options={{title: 'Chats'}}
       />
       <Tab.Screen
         name="AccountStackNavigator"
