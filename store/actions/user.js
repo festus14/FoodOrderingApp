@@ -1,4 +1,4 @@
-import {SET_USER} from './actionTypes';
+import {SET_USER, SET_USER_ADDRESS} from './actionTypes';
 import {API_URL} from '../../utility/constants';
 import {
   userUiStartLoading,
@@ -16,6 +16,13 @@ export const setUser = (user) => {
   };
 };
 
+export const setUserAddress = (userAddress) => {
+  return {
+    type: SET_USER_ADDRESS,
+    userAddress,
+  };
+};
+
 export const getUserId = () => {
   return async (dispatch, state) => {
     try {
@@ -24,6 +31,21 @@ export const getUserId = () => {
         userId = await RNSecureKeyStore.get('userId');
       }
       return userId;
+    } catch (error) {
+      console.warn(error);
+      return false;
+    }
+  };
+};
+
+export const getUserRole = () => {
+  return async (dispatch, state) => {
+    try {
+      let userRole = await state.auth.userRole;
+      if (!userRole) {
+        userRole = await RNSecureKeyStore.get('user-role');
+      }
+      return userRole;
     } catch (error) {
       console.warn(error);
       return false;

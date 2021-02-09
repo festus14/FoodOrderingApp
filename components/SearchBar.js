@@ -13,6 +13,7 @@ export default function SearchBar({
   onLeftPress,
   onRightPress,
   inputStyle,
+  onSearch,
   ...props
 }) {
   return (
@@ -24,7 +25,11 @@ export default function SearchBar({
           </TouchableOpacity>
         )}
       </View>
-      <TextInput style={[styles.input, inputStyle]} {...props} />
+      <TextInput
+        style={[styles.input, inputStyle]}
+        onSubmitEditing={onSearch}
+        {...props}
+      />
       <View style={styles.icon}>
         {rightIcon && (
           <TouchableOpacity onPress={onRightPress} style={styles.icon}>

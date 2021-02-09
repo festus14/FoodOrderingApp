@@ -47,7 +47,10 @@ const DATA_TWO = [
   },
 ];
 
-const SingleVendorScreen = ({navigation}) => {
+const SingleVendorScreen = ({navigation, route}) => {
+  const [vendor, extraInfo] = route.params.item;
+  console.log('Vendor...', vendor);
+  console.log('extraInfo...', extraInfo);
   const [locale, setLocale] = useState('continental');
 
   const goBack = () => navigation.goBack();
@@ -82,7 +85,7 @@ const SingleVendorScreen = ({navigation}) => {
       <SafeAreaView style={{flex: 1}}>
         <Header
           leftIcon="ios-arrow-back"
-          title="Urban Co."
+          title={vendor.restaurant.firstname}
           onLeftPress={goBack}
           rightIcon="ios-cart-outline"
           onRightPress={() =>
@@ -92,7 +95,7 @@ const SingleVendorScreen = ({navigation}) => {
 
         <View style={styles.infoImage}>
           <ImageBackground
-            source={require('../../assets/images/launch-image.jpg')}
+            source={{uri: vendor.restaurant.image}}
             resizeMode="stretch"
             style={styles.bImage}>
             <View style={styles.top}>
@@ -108,14 +111,18 @@ const SingleVendorScreen = ({navigation}) => {
               />
             </View>
             <View style={styles.bottom}>
-              <Text>110-130mins</Text>
+              <Text>
+                {extraInfo.additional_info.delivery_time.slice(0, -4)}s
+              </Text>
             </View>
           </ImageBackground>
         </View>
 
         <View style={styles.container}>
           <View style={styles.infoHeader}>
-            <Text style={{fontWeight: 'bold'}}>Urban.co, Festac</Text>
+            <Text style={{fontWeight: 'bold'}}>
+              {vendor.restaurant.firstname}
+            </Text>
             <View style={styles.rating}>
               <Icon
                 name="star-half-outline"
@@ -130,7 +137,7 @@ const SingleVendorScreen = ({navigation}) => {
               <View style={{justifyContent: 'center'}}>
                 <Icon name="ellipse" color="#000" size={6} />
               </View>
-              <Text> Delivery fee N1500</Text>
+              <Text> {extraInfo.additional_info.delivery_fee}</Text>
             </View>
           </View>
 

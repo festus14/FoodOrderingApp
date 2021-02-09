@@ -4,9 +4,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {SECONDARY_COLOR} from '../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
 
-const VendorItem = ({items, onPress}) => {
+const VendorItem = ({item, onPress}) => {
   const [selected, setSelected] = useState(false);
   const [favorite, setFavorite] = useState(false);
+  const [vendor, extraInfo] = item;
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
@@ -16,18 +17,24 @@ const VendorItem = ({items, onPress}) => {
             color={SECONDARY_COLOR}
             size={22}
           />
-          <Icon name="ios-heart-outline" color={SECONDARY_COLOR} size={22} />
+          {extraInfo.additional_info.liked_by_user ? (
+            <Icon name="ios-heart-sharp" color={SECONDARY_COLOR} size={22} />
+          ) : (
+            <Icon name="ios-heart-outline" color={SECONDARY_COLOR} size={22} />
+          )}
         </View>
         <View style={styles.center}>
           <Image
-            source={require('../assets/images/burger.png')}
-            resizeMode="contain"
+            source={{uri: vendor.restaurant.image}}
+            resizeMode="cover"
             style={styles.image}
           />
         </View>
         <View>
-          <Text style={styles.time}>35-50mins</Text>
-          <Text style={styles.vendor}>KFC</Text>
+          <Text style={styles.time}>
+            {extraInfo.additional_info.delivery_time.slice(0, -4)}s
+          </Text>
+          <Text style={styles.vendor}>{vendor.restaurant.firstname}</Text>
           <View style={styles.rating}>
             <Icon name="star-half-outline" color={SECONDARY_COLOR} size={15} />
             <Text> 3.5 </Text>
@@ -65,11 +72,20 @@ const styles = {
   center: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: '50%',
+    alignSelf: 'center',
+    height: '60%',
+    width: '100%',
   },
-  image: {height: '100%'},
+  image: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 100000,
+  },
   rating: {
     flexDirection: 'row',
   },
   ratingText: {paddingLeft: 5},
+  time: {
+    marginTop: 5,
+  },
 };

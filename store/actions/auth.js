@@ -127,7 +127,7 @@ export const logIn = (authData) => {
         authStoreAsyncData({
           token,
           refresh,
-          userData,
+          userData: authData,
           userId: userData.user_id,
           userRole: userData.roles[0],
         }),
@@ -384,7 +384,8 @@ export const getAuthToken = () => {
     let token = state.auth.token;
 
     let expiryDate = state.auth.expiry;
-    if (!token || moment(expiryDate).add(59, 'minutes') <= moment()) {
+    // if (!token || moment(expiryDate).add(59, 'minutes') <= moment()) {
+    if (!token) {
       try {
         token = await RNSecureKeyStore.get('auth-token');
         expiryDate = await RNSecureKeyStore.get('auth-expiry-date');

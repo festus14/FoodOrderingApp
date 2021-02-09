@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,64 +12,71 @@ import Header from '../../components/Header';
 import SearchBar from '../../components/SearchBar';
 import VendorItem from '../../components/VendorItem';
 import {SECONDARY_COLOR} from '../../utility/colors';
-import {SCREEN_WIDTH} from '../../utility/constants';
-
-const DATA = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 3,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 4,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 5,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
-
-const headerComponent = (
-  <View style={{justifyContent: 'center', alignItems: 'center'}}>
-    <Text style={{color: '#fff', fontWeight: '300', fontSize: 17}}>
-      Delivering To
-    </Text>
-    <Text style={{color: '#fff', fontWeight: '100', fontSize: 16}}>
-      Omovie street, Okota, Lagos.
-    </Text>
-  </View>
-);
+import {Store} from '../../store';
 
 const VendorsScreen = ({navigation}) => {
+  const {
+    state: {
+      ui: {isVendorsLoading: isLoading},
+      vendors: {vendors},
+      user: {userAddress},
+    },
+    dispatch,
+  } = useContext(Store);
+
   const goBack = () => navigation.goBack();
+
+  const headerComponent = (
+    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Text
+        style={{
+          color: '#fff',
+          fontWeight: '300',
+          fontSize: 17,
+          textAlign: 'center',
+          textAlignVertical: 'center',
+        }}>
+        Delivering To
+      </Text>
+      <Text
+        style={{
+          color: '#fff',
+          fontWeight: '100',
+          fontSize: 14,
+          textAlign: 'center',
+          textAlignVertical: 'center',
+        }}>
+        {userAddress}
+      </Text>
+    </View>
+  );
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header
-        rightIcon="ios-chevron-down-outline"
+        // rightIcon="ios-chevron-down-outline"
         component={headerComponent}
       />
 
-      <SearchBar />
+      <SearchBar
+        leftIcon="search"
+        rightIcon="ios-menu-outline"
+        placeholder="Search for vendors"
+        returnKeyType="search"
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={{flex: 1}}>
         <View style={styles.container}>
           <FlatList
-            data={DATA}
+            data={vendors}
             renderItem={({item, index, separators}) => (
               <VendorItem
                 item={item}
-                onPress={() => navigation.navigate('SingleVendorScreen')}
+                onPress={() =>
+                  navigation.navigate('SingleVendorScreen', {item})
+                }
               />
             )}
             keyExtractor={(item) => item.id}

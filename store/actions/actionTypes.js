@@ -11,6 +11,7 @@ export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN';
 
 // User action types
 export const SET_USER = 'SET_USER';
+export const SET_USER_ADDRESS = 'SET_USER_ADDRESS';
 
 // Vendor action types
 export const SET_VENDORS = 'SET_VENDORS';
