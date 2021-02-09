@@ -1,7 +1,7 @@
 import {SET_VENDORS, RESET_VENDORS} from '../actions/actionTypes';
 
 const initialState = {
-  vendors: {},
+  vendors: [],
 };
 
 const reducer = (state, action) => {

@@ -24,11 +24,12 @@ import {getVendors} from '../../store/actions';
 const ConsumerMapScreen = ({navigation}) => {
   const {
     state: {
-      ui: {isLoading},
+      ui: {isVendorsLoading: isLoading},
     },
     dispatch,
   } = useContext(Store);
 
+  const [authError, setAuthError] = useState('');
   const [location, setLocation] = useState();
 
   const [region, setRegion] = useState({
@@ -71,7 +72,6 @@ const ConsumerMapScreen = ({navigation}) => {
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log('Position...', position);
           const currentLongitude = position.coords.longitude;
           const currentLatitude = position.coords.latitude;
 
@@ -99,11 +99,32 @@ const ConsumerMapScreen = ({navigation}) => {
     }
   }, []);
 
+  const setError = (error) => {
+    setAuthError(error);
+    Alert.alert('Error', error);
+
+    setTimeout(() => {
+      setAuthError('');
+    }, 5000);
+  };
+
+  const setSuccess = (message) => {
+    setAuthError(message);
+    Alert.alert('Success', message);
+
+    setTimeout(() => {
+      setAuthError('');
+    }, 5000);
+  };
+
   const searchLocationHandler = async () => {
     if (!isEmpty(location)) {
       try {
         let locationData = {delivery_address: location};
         let error = await dispatch(getVendors(locationData));
+        if (error) {
+          setError(error);
+        }
       } catch (e) {}
     }
   };
@@ -140,6 +161,7 @@ const ConsumerMapScreen = ({navigation}) => {
           text="Choose this address"
           style={styles.button}
           onPress={searchLocationHandler}
+          isLoading={isLoading}
         />
       </KeyboardAvoidingView>
     </>

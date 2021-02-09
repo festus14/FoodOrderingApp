@@ -5,7 +5,7 @@ import {SCREEN_WIDTH} from '../utility/constants';
 
 navigator.geolocation = require('react-native-geolocation-service');
 
-const GooglePlacesInput = ({setLocation, onSearch}) => {
+const GooglePlacesInput = ({setLocation = () => {}, onSearch = () => {}}) => {
   return (
     <GooglePlacesAutocomplete
       placeholder="Search location"
@@ -31,7 +31,7 @@ const GooglePlacesInput = ({setLocation, onSearch}) => {
           borderRadius: 5,
         },
         inputStyle: {},
-        onSubmitEditing: {onSearch},
+        onSearch: () => onSearch(),
       }}
     />
   );

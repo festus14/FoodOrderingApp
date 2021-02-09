@@ -7,6 +7,8 @@ import {
   vendorsUiStopLoading,
 } from './';
 import {sendRequest} from '../../utility/helpers';
+import {getUserRole, setUserAddress} from './user';
+import * as RootNavigation from '../../RootNavigation';
 
 export const setVendors = (vendors) => {
   return {
@@ -22,29 +24,38 @@ export const getVendors = (locationData) => {
       let token = await dispatch(getAuthToken());
 
       let res = await sendRequest(
-        `${API_URL}/order/restaurant_near_me/`,
+        `${API_URL}/order/restaurant-near-me/`,
         'POST',
         {...locationData},
         {},
         token,
       );
 
-      console.log('get vendors res...', res);
-
-      let resJson = await res.json();
-
-      console.warn('Get Vendors...', resJson);
-
       await dispatch(vendorsUiStopLoading());
 
-      if (resJson.error) {
-        if (resJson.error === 'Unauthenticated.') {
-          dispatch(resetApp());
+      if (res.ok) {
+        let resJson = await res.json();
+
+        if (resJson.errors) {
+          if (resJson.errors === 'Unauthenticated.') {
+            dispatch(resetApp());
+          }
+          return resJson.errors;
         }
-        return 'Something went wrong, pls try again';
+        await dispatch(setVendors(resJson.results));
+        await dispatch(setUserAddress(locationData.delivery_address));
+
+        let userRole = await dispatch(getUserRole());
+
+        if (userRole === 'CONSUMER') {
+          RootNavigation.navigate('ConsumerBottomNavigator');
+        } else if (userRole === 'RESTAURANT') {
+          RootNavigation.navigate('RestaurantBottomNavigator');
+        }
+
+        return null;
       }
-      dispatch(setVendors(resJson.data));
-      return null;
+      return 'Failed';
     } catch (e) {
       dispatch(vendorsUiStopLoading());
       console.warn(e);
