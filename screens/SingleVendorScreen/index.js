@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -12,6 +13,8 @@ import FoodItem from '../../components/FoodItem';
 import Header from '../../components/Header';
 import {SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
+import {Store} from '../../store';
+import {getVendorMenus} from '../../store/actions';
 
 const DATA = [
   {
@@ -47,38 +50,61 @@ const DATA_TWO = [
   },
 ];
 
+const SCROLL_DATA = [
+  {
+    id: '1',
+    name: 'CONTINENTAL',
+  },
+  {
+    id: '2',
+    name: 'TRADITIONAL',
+  },
+  {
+    id: '3',
+    name: 'SEA FOOD',
+  },
+];
+
 const SingleVendorScreen = ({navigation, route}) => {
   const [vendor, extraInfo] = route.params.item;
-  console.log('Vendor...', vendor);
-  console.log('extraInfo...', extraInfo);
+  const {
+    state: {
+      ui: {isVendorsLoading: isLoading},
+      vendors: {vendorMenus},
+    },
+    dispatch,
+  } = useContext(Store);
+
+  useEffect(() => {
+    const fetchMenus = async () => {
+      let error = await dispatch(getVendorMenus(vendor.restaurant.id));
+    };
+
+    fetchMenus();
+    return () => {};
+  }, []);
   const [locale, setLocale] = useState('continental');
+  const [menu, setMenu] = useState([]);
 
   const goBack = () => navigation.goBack();
 
-  const view =
-    locale === 'continental' ? (
-      <FlatList
-        data={DATA}
-        renderItem={({item, index, separators}) => (
-          <FoodItem item={item} navigation={navigation} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
-        onRefresh={() => console.warn('Refreshed')}
-        showsVerticalScrollIndicator={false}
-      />
-    ) : (
-      <FlatList
-        data={DATA_TWO}
-        renderItem={({item, index, separators}) => (
-          <FoodItem item={item} navigation={navigation} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
-        onRefresh={() => console.warn('Refreshed')}
-        showsVerticalScrollIndicator={false}
-      />
-    );
+  const view = (
+    <FlatList
+      data={menu}
+      renderItem={({item, index, separators}) => (
+        <FoodItem item={item} navigation={navigation} />
+      )}
+      keyExtractor={(item) => item.id.toString()}
+      refreshing={false}
+      onRefresh={() => console.warn('Refreshed')}
+      showsVerticalScrollIndicator={false}
+    />
+  );
+
+  const setLocaleHandler = (name, currentMenu) => {
+    setLocale(name);
+    setMenu(currentMenu);
+  };
 
   return (
     <>
@@ -141,30 +167,27 @@ const SingleVendorScreen = ({navigation, route}) => {
             </View>
           </View>
 
-          <View style={styles.topTabs}>
-            <View
-              style={[
-                styles.topTab,
-                locale === 'continental' && styles.activeTopTab,
-              ]}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => setLocale('continental')}>
-                <Text style={styles.topText}>CONTINENTAL</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={[
-                styles.topTab,
-                locale === 'traditional' && styles.activeTopTab,
-              ]}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => setLocale('traditional')}>
-                <Text style={styles.topText}>TRADITIONAL</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <FlatList
+            data={vendorMenus}
+            renderItem={({item, index, separators}) => (
+              <View
+                style={[
+                  styles.topTab,
+                  locale === item.name && styles.activeTopTab,
+                ]}>
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => setLocaleHandler(item.name, item.menu)}>
+                  <Text style={styles.topText}>{item.name}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            refreshing={false}
+            onRefresh={() => console.warn('Refreshed')}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          />
 
           {view}
         </View>
@@ -202,22 +225,22 @@ const styles = {
     alignItems: 'center',
     paddingVertical: 8,
   },
-  infoHeader: {},
+  infoHeader: {
+    marginBottom: 20,
+  },
   rating: {
     flexDirection: 'row',
     marginTop: 2,
   },
-  topTabs: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   topTab: {
     color: '#fff',
     justifyContent: 'flex-end',
-    width: '50%',
+    marginBottom: 30,
+    height: 20,
+    // backgroundColor: '#3f2',
+    alignItems: 'center',
+    marginHorizontal: 4,
+    paddingHorizontal: 12,
   },
   activeTopTab: {
     borderBottomWidth: 1,
@@ -225,9 +248,12 @@ const styles = {
   },
   topText: {
     justifyContent: 'center',
+    fontWeight: '100',
+    fontSize: 16,
   },
   btn: {
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
 };

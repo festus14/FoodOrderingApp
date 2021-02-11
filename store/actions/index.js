@@ -26,4 +26,4 @@ export {
 export {setUser, getUser, getUserId} from './user';
 
 // vendor actions
-export {getVendors} from './vendors';
+export {getVendors, getVendorMenus} from './vendors';

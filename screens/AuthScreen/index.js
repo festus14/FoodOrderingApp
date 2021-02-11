@@ -240,37 +240,36 @@ export default function AuthScreen({navigation}) {
 
   return (
     <>
-      {authView === 'auth' ? (
-        <Header
-          style={styles.header}
-          leftIcon="ios-arrow-back"
-          leftColor={MAIN_COLOR}
-          size={24}
-          onLeftPress={() => goBack()}
-          component={
-            <TopBar
-              style={styles.topBar}
-              tabBtn={styles.tabBtn}
-              leftText="Sign In"
-              rightText="Sign Up"
-              position={position}
-              setLeftPosition={setPositionHandler}
-              setRightPosition={setPositionHandler}
-            />
-          }
-        />
-      ) : (
-        <Header
-          leftIcon="ios-arrow-back"
-          title={authView === 'forgot' ? 'Password Reset' : 'Resend Token'}
-          onLeftPress={() => setAuthView('auth')}
-        />
-      )}
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.container}>
         <SafeAreaView style={styles.container}>
+          {authView === 'auth' ? (
+            <Header
+              style={styles.header}
+              leftIcon="ios-arrow-back"
+              leftColor={MAIN_COLOR}
+              size={24}
+              onLeftPress={() => goBack()}
+              component={
+                <TopBar
+                  style={styles.topBar}
+                  tabBtn={styles.tabBtn}
+                  leftText="Sign In"
+                  rightText="Sign Up"
+                  position={position}
+                  setLeftPosition={setPositionHandler}
+                  setRightPosition={setPositionHandler}
+                />
+              }
+            />
+          ) : (
+            <Header
+              leftIcon="ios-arrow-back"
+              title={authView === 'forgot' ? 'Password Reset' : 'Resend Token'}
+              onLeftPress={() => setAuthView('auth')}
+            />
+          )}
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.contentContainer}

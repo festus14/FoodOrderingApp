@@ -15,6 +15,7 @@ export const SET_USER_ADDRESS = 'SET_USER_ADDRESS';
 
 // Vendor action types
 export const SET_VENDORS = 'SET_VENDORS';
+export const SET_VENDOR_MENUS = 'SET_VENDOR_MENUS';
 
 // RESETS
 export const RESET_UI = 'RESET_UI';

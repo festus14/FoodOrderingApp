@@ -150,7 +150,7 @@ const ConsumerMapScreen = ({navigation}) => {
     <>
       <Header title="Location" />
 
-      <KeyboardAvoidingView style={{flex: 1}}>
+      <KeyboardAvoidingView style={{flex: 1}} behaviour="height">
         <View style={styles.container}>{view}</View>
         <GooglePlacesInput
           setLocation={setLocation}
