@@ -6,6 +6,8 @@ export {
   userUiStopLoading,
   vendorsUiStartLoading,
   vendorsUiStopLoading,
+  vendorsMenuUiStartLoading,
+  vendorsMenuUiStopLoading,
 } from './ui';
 
 // auth actions

@@ -94,8 +94,10 @@ const styles = {
   },
   text: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   iconContainer: {
     width: '10%',

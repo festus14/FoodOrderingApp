@@ -5,6 +5,8 @@ import {
   getAuthToken,
   vendorsUiStartLoading,
   vendorsUiStopLoading,
+  vendorsMenuUiStartLoading,
+  vendorsMenuUiStopLoading,
 } from './';
 import {sendRequest} from '../../utility/helpers';
 import {getUserRole, setUserAddress} from './user';
@@ -73,7 +75,7 @@ export const getVendors = (locationData) => {
 
 export const getVendorMenus = (id) => {
   return async (dispatch, state) => {
-    dispatch(vendorsUiStartLoading());
+    dispatch(vendorsMenuUiStartLoading());
     try {
       let token = await dispatch(getAuthToken());
       let res = await sendRequest(
@@ -84,7 +86,7 @@ export const getVendorMenus = (id) => {
         token,
       );
 
-      await dispatch(vendorsUiStopLoading());
+      await dispatch(vendorsMenuUiStopLoading());
 
       if (res.ok) {
         let resJson = await res.json();
@@ -93,20 +95,13 @@ export const getVendorMenus = (id) => {
           if (resJson.errors === 'Unauthenticated.') {
             dispatch(resetApp());
           }
-          return resJson.errors;
         }
 
-        // console.log('Categories...', resJson);
-
-        await dispatch(setVendorMenus(resJson.results));
-
-        return null;
+        return resJson.results;
       }
-      return 'Failed';
     } catch (e) {
-      dispatch(vendorsUiStopLoading());
+      await dispatch(vendorsMenuUiStopLoading());
       console.warn(e);
-      return 'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in';
     }
   };
 };

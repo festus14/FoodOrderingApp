@@ -17,56 +17,36 @@ import RoundButton from '../../components/RoundButton';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utility/constants';
 
-const DATA = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 3,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 4,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 5,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
-
-const DATA_TWO = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
-
-const SingleFoodScreen = ({navigation}) => {
+const SingleFoodScreen = ({navigation, route}) => {
   const goBack = () => navigation.goBack();
+  const item = route.params.item;
+  // console.log(item);
+
+  const [count, setCount] = useState(1);
+
+  const incrementHandler = (isInc) => {
+    if (isInc) {
+      setCount(count + 1);
+    } else {
+      if (count !== 1) {
+        setCount(count - 1);
+      }
+    }
+  };
 
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
         <Header
           leftIcon="ios-arrow-back"
-          title="Spicy Rice"
+          title={item.name}
           onLeftPress={goBack}
         />
 
         <ScrollView>
           <View style={styles.infoImage}>
             <ImageBackground
-              source={require('../../assets/images/launch-image.jpg')}
+              source={{uri: item.food_image}}
               resizeMode="stretch"
               style={styles.bImage}>
               <View style={styles.top}>
@@ -83,7 +63,7 @@ const SingleFoodScreen = ({navigation}) => {
               </View>
               <View style={styles.bottom}>
                 <View style={styles.time}>
-                  <Text>110-130mins</Text>
+                  <Text>{item.preparation_time}mins</Text>
                 </View>
                 <Icon
                   name="ios-heart-outline"
@@ -96,11 +76,9 @@ const SingleFoodScreen = ({navigation}) => {
 
           <View style={styles.container}>
             <View style={styles.content}>
-              <Text style={styles.title}>Spicy Rice</Text>
-              <Text style={styles.body}>
-                Basmati rice made with fresh traditional spices
-              </Text>
-              <Text style={styles.price}>₦1500</Text>
+              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.body}>{item.description}</Text>
+              <Text style={styles.price}>₦{item.price}</Text>
             </View>
 
             <Text style={styles.option}>Options</Text>
@@ -121,10 +99,11 @@ const SingleFoodScreen = ({navigation}) => {
             </Text>
 
             <View style={styles.increment}>
-              <RoundButton text="-" />
-              <Text style={styles.count}>1</Text>
+              <RoundButton text="-" onPress={() => incrementHandler()} />
+              <Text style={styles.count}>{count}</Text>
               <RoundButton
                 text="+"
+                onPress={() => incrementHandler(true)}
                 roundBtn={styles.roundBtn}
                 textStyle={styles.textStyle}
               />

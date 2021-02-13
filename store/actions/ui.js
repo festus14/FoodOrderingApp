@@ -5,6 +5,8 @@ import {
   USER_UI_STOP_LOADING,
   VENDORS_UI_START_LOADING,
   VENDORS_UI_STOP_LOADING,
+  VENDORS_MENU_UI_START_LOADING,
+  VENDORS_MENU_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -40,5 +42,16 @@ export const vendorsUiStartLoading = () => {
 export const vendorsUiStopLoading = () => {
   return {
     type: VENDORS_UI_STOP_LOADING,
+  };
+};
+export const vendorsMenuUiStartLoading = () => {
+  return {
+    type: VENDORS_MENU_UI_START_LOADING,
+  };
+};
+
+export const vendorsMenuUiStopLoading = () => {
+  return {
+    type: VENDORS_MENU_UI_STOP_LOADING,
   };
 };
