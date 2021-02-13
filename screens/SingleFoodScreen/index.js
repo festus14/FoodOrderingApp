@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -16,11 +16,20 @@ import Header from '../../components/Header';
 import RoundButton from '../../components/RoundButton';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utility/constants';
+import {setCart, updateCart} from '../../store/actions';
+import {Store} from '../../store';
 
 const SingleFoodScreen = ({navigation, route}) => {
+  const {
+    state: {
+      ui: {isCartLoading: isLoading},
+      cart: {cart},
+    },
+    dispatch,
+  } = useContext(Store);
   const goBack = () => navigation.goBack();
   const item = route.params.item;
-  // console.log(item);
+  console.log('item...', item);
 
   const [count, setCount] = useState(1);
 
@@ -34,6 +43,22 @@ const SingleFoodScreen = ({navigation, route}) => {
     }
   };
 
+  const setCartHandler = async () => {
+    let itemData = {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      count,
+    };
+    let oldItem = cart.filter((elem) => elem.id === itemData.id);
+    if (oldItem.length > 0) {
+      await dispatch(updateCart(oldItem.id, itemData));
+    } else {
+      await dispatch(setCart(itemData));
+    }
+    goBack();
+  };
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -41,6 +66,10 @@ const SingleFoodScreen = ({navigation, route}) => {
           leftIcon="ios-arrow-back"
           title={item.name}
           onLeftPress={goBack}
+          rightIcon={cart.length > 0 && 'ios-cart-outline'}
+          onRightPress={() =>
+            navigation.navigate('CheckoutModal', {title: 'Checkout'})
+          }
         />
 
         <ScrollView>
@@ -109,7 +138,11 @@ const SingleFoodScreen = ({navigation, route}) => {
               />
             </View>
 
-            <MyButton text="Add to cart" style={styles.addStyle} />
+            <MyButton
+              text="Add to cart"
+              style={styles.addStyle}
+              onPress={setCartHandler}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>

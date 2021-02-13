@@ -30,7 +30,6 @@ const styles = {
     flexDirection: 'row',
     height: SCREEN_HEIGHT * 0.13,
     width: SCREEN_WIDTH * 0.8,
-    // alignItems: 'center',
   },
   imageContainer: {
     height: '100%',
@@ -41,7 +40,6 @@ const styles = {
   image: {
     height: '90%',
     width: '100%',
-    // borderRadius: 100000,
   },
   content: {
     justifyContent: 'space-around',

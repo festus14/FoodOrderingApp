@@ -24,7 +24,7 @@ const SingleVendorScreen = ({navigation, route}) => {
   const {
     state: {
       ui: {isVendorsMenuLoading: isLoading},
-      vendors: {},
+      cart: {cart},
     },
     dispatch,
   } = useContext(Store);
@@ -74,7 +74,7 @@ const SingleVendorScreen = ({navigation, route}) => {
           leftIcon="ios-arrow-back"
           title={vendor.restaurant.firstname}
           onLeftPress={goBack}
-          rightIcon="ios-cart-outline"
+          rightIcon={cart.length > 0 && 'ios-cart-outline'}
           onRightPress={() =>
             navigation.navigate('CheckoutModal', {title: 'Checkout'})
           }

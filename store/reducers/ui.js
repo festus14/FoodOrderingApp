@@ -7,6 +7,8 @@ import {
   VENDORS_UI_STOP_LOADING,
   VENDORS_MENU_UI_START_LOADING,
   VENDORS_MENU_UI_STOP_LOADING,
+  CART_UI_START_LOADING,
+  CART_UI_STOP_LOADING,
   RESET_UI,
 } from '../actions/actionTypes';
 
@@ -15,6 +17,7 @@ const initialState = {
   isUserLoading: false,
   isVendorsLoading: false,
   isVendorsMenuLoading: false,
+  isCartLoading: false,
 };
 
 const reducer = (state, action) => {
@@ -58,6 +61,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         isVendorsMenuLoading: false,
+      };
+    case CART_UI_START_LOADING:
+      return {
+        ...state,
+        isCartLoading: true,
+      };
+    case CART_UI_STOP_LOADING:
+      return {
+        ...state,
+        isCartLoading: false,
       };
     case RESET_UI:
       return initialState;

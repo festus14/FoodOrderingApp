@@ -7,6 +7,8 @@ import {
   VENDORS_UI_STOP_LOADING,
   VENDORS_MENU_UI_START_LOADING,
   VENDORS_MENU_UI_STOP_LOADING,
+  CART_UI_START_LOADING,
+  CART_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -44,6 +46,7 @@ export const vendorsUiStopLoading = () => {
     type: VENDORS_UI_STOP_LOADING,
   };
 };
+
 export const vendorsMenuUiStartLoading = () => {
   return {
     type: VENDORS_MENU_UI_START_LOADING,
@@ -53,5 +56,17 @@ export const vendorsMenuUiStartLoading = () => {
 export const vendorsMenuUiStopLoading = () => {
   return {
     type: VENDORS_MENU_UI_STOP_LOADING,
+  };
+};
+
+export const cartUiStartLoading = () => {
+  return {
+    type: CART_UI_START_LOADING,
+  };
+};
+
+export const cartUiStopLoading = () => {
+  return {
+    type: CART_UI_STOP_LOADING,
   };
 };

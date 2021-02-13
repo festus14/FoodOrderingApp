@@ -144,6 +144,7 @@ export const logIn = (authData) => {
 
       return null;
     } catch (error) {
+      console.log(error);
       dispatch(uiStopLoading());
       return 'Authentication failed, please check your internet connection and try again';
     }
