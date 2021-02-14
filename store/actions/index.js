@@ -33,4 +33,11 @@ export {setUser, getUser, getUserId} from './user';
 export {getVendors, getVendorMenus} from './vendors';
 
 // consumer cart actions
-export {setCart, updateCart, deleteCart, resetCart} from './cart';
+export {
+  setCart,
+  updateCart,
+  deleteCart,
+  resetCart,
+  getCartSubtotal,
+  setCheckoutInfo,
+} from './cart';

@@ -3,15 +3,22 @@ import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SECONDARY_COLOR, LIGHTER_GREY, ALMOST_BLACK} from '../utility/colors';
 
-export default function CheckoutItem({item, navigation, deleteItem}) {
+export default function CheckoutItem({
+  item,
+  navigation,
+  deleteItem,
+  increment,
+}) {
   const [count, setCount] = useState(item.count);
 
-  const incrementHandler = (isInc) => {
+  const incrementHandler = async (isInc) => {
     if (isInc) {
       setCount(count + 1);
+      increment(item.id, true);
     } else {
       if (count !== 1) {
         setCount(count - 1);
+        increment(item.id, false);
       }
     }
   };

@@ -1,4 +1,10 @@
-import {SET_CART, UPDATE_CART, DELETE_CART, RESET_CART} from './actionTypes';
+import {
+  SET_CART,
+  UPDATE_CART,
+  DELETE_CART,
+  SET_CHECKOUT_INFO,
+  RESET_CART,
+} from './actionTypes';
 import {cartUiStartLoading} from './';
 
 export const setCart = (cart) => {
@@ -8,11 +14,11 @@ export const setCart = (cart) => {
   };
 };
 
-export const updateCart = (id, itemData) => {
+export const updateCart = (id, count) => {
   return {
     type: UPDATE_CART,
     id,
-    itemData,
+    count,
   };
 };
 
@@ -26,5 +32,21 @@ export const deleteCart = (id) => {
 export const resetCart = () => {
   return {
     type: RESET_CART,
+  };
+};
+
+export const setCheckoutInfo = (info) => {
+  return {
+    type: SET_CHECKOUT_INFO,
+    info,
+  };
+};
+
+export const getCartSubtotal = () => {
+  return async (dispatch, state) => {
+    const cart = state.cart.cart;
+
+    const subtotal = cart.reduce((sum, num) => sum + num, 0);
+    return subtotal;
   };
 };

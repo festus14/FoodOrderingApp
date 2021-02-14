@@ -29,7 +29,7 @@ const SingleFoodScreen = ({navigation, route}) => {
   } = useContext(Store);
   const goBack = () => navigation.goBack();
   const item = route.params.item;
-  console.log('item...', item);
+  // console.log('item...', item);
 
   const [count, setCount] = useState(1);
 
@@ -44,15 +44,15 @@ const SingleFoodScreen = ({navigation, route}) => {
   };
 
   const setCartHandler = async () => {
-    let itemData = {
+    const itemData = {
       id: item.id,
       name: item.name,
       price: item.price,
       count,
     };
-    let oldItem = cart.filter((elem) => elem.id === itemData.id);
+    const oldItem = cart.filter((elem) => elem.id === itemData.id);
     if (oldItem.length > 0) {
-      await dispatch(updateCart(oldItem.id, itemData));
+      await dispatch(updateCart(itemData.id, itemData.count));
     } else {
       await dispatch(setCart(itemData));
     }

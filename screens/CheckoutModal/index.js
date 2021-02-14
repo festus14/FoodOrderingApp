@@ -19,13 +19,20 @@ import {
 } from '../../utility/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Store} from '../../store';
-import {resetCart, deleteCart} from '../../store/actions';
+import {
+  resetCart,
+  deleteCart,
+  updateCart,
+  getCartSubtotal,
+} from '../../store/actions';
+import {useEffect} from 'react';
 
 export default function CheckoutModal({navigation, route}) {
   const {
     state: {
       ui: {isCartLoading: isLoading},
-      cart: {cart},
+      cart: {cart, subtotal, checkoutInfo},
+      user: {userAddress, user},
     },
     dispatch,
   } = useContext(Store);
@@ -45,7 +52,7 @@ export default function CheckoutModal({navigation, route}) {
     Alert.alert('Warning', 'Are you sure you want to clear your cart?', [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
+        onPress: () => {},
         style: 'cancel',
       },
       {text: 'OK', onPress: async () => await dispatch(resetCart())},
@@ -55,6 +62,19 @@ export default function CheckoutModal({navigation, route}) {
   const deleteItemHandler = async (id) => {
     await dispatch(deleteCart(id));
   };
+
+  const incrementHandler = async (id, isInc) => {
+    if (isInc) {
+      await dispatch(updateCart(id, +1));
+    } else {
+      await dispatch(updateCart(id, -1));
+    }
+  };
+
+  const getTotal = () => {
+    return subtotal;
+  };
+
   return (
     <>
       <Header
@@ -85,20 +105,15 @@ export default function CheckoutModal({navigation, route}) {
               </Text>
             </View>
 
-            <FlatList
-              data={cart}
-              renderItem={({item, index, separators}) => (
-                <CheckoutItem
-                  item={item}
-                  navigation={navigation}
-                  deleteItem={deleteItemHandler}
-                />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              refreshing={false}
-              onRefresh={() => console.warn('Refreshed')}
-              showsVerticalScrollIndicator={false}
-            />
+            {cart.map((item) => (
+              <CheckoutItem
+                key={item.id}
+                item={item}
+                navigation={navigation}
+                deleteItem={deleteItemHandler}
+                increment={incrementHandler}
+              />
+            ))}
 
             <View style={styles.clear}>
               <MyButton
@@ -137,8 +152,15 @@ export default function CheckoutModal({navigation, route}) {
           </View>
 
           <View style={styles.cost}>
-            <CalculationItem title="Subtotal" value="1250" />
-            <CalculationItem title="Delivery Fee" value="1000" />
+            <CalculationItem title="Subtotal" value={subtotal} />
+            <CalculationItem
+              title="Delivery Fee"
+              value={
+                Number.isInteger(checkoutInfo.delivery)
+                  ? checkoutInfo.delivery
+                  : '0'
+              }
+            />
             <CalculationItem title="Service Fee" value="200" />
             <CalculationItem
               title="Promo"
@@ -150,62 +172,120 @@ export default function CheckoutModal({navigation, route}) {
           <View style={styles.total}>
             <CalculationItem
               title="Grand Total"
-              value="200"
+              value={getTotal()}
               valStyle={{fontWeight: 'bold'}}
               titleStyle={{fontWeight: 'bold'}}
             />
           </View>
 
           <View style={styles.bottom}>
-            <View style={styles.promoLeft}>
-              <View style={styles.promoBadge}>
-                <Icon
-                  name="ios-chevron-forward-outline"
-                  color={ALMOST_BLACK}
-                  size={26}
-                />
-              </View>
-              <View style={[styles.promoCenter]}>
-                <Text style={{...styles.promoTitle, fontSize: 15}}>
-                  Delivery
-                </Text>
-                <Text style={styles.promoText}>Delivery in 110-130 mins</Text>
-              </View>
-            </View>
+            {deliveryMode === 'delivery' ? (
+              <>
+                <View style={styles.promoLeft}>
+                  <View style={styles.promoBadge}>
+                    <Icon
+                      name="ios-chevron-forward-outline"
+                      color={ALMOST_BLACK}
+                      size={26}
+                    />
+                  </View>
+                  <View style={[styles.promoCenter]}>
+                    <Text style={{...styles.promoTitle, fontSize: 15}}>
+                      Delivery
+                    </Text>
+                    <Text style={styles.promoText}>
+                      Delivery in {checkoutInfo.delivery_time.slice(0, -4)}s
+                    </Text>
+                  </View>
+                </View>
 
-            <View style={styles.promoLeft}>
-              <View style={styles.promoBadge}>
-                <Icon
-                  name="ios-chevron-forward-outline"
-                  color={ALMOST_BLACK}
-                  size={26}
-                />
-              </View>
-              <View style={{...styles.promoCenter, marginTop: 10}}>
-                <Text style={{...styles.promoTitle, fontSize: 15}}>
-                  Delivery Location
-                </Text>
-                <Text style={styles.promoText}>
-                  1 Omovie street, Okota, Lagos
-                </Text>
-              </View>
-            </View>
+                <View style={styles.promoLeft}>
+                  <View style={styles.promoBadge}>
+                    <Icon
+                      name="ios-chevron-forward-outline"
+                      color={ALMOST_BLACK}
+                      size={26}
+                    />
+                  </View>
+                  <View style={{...styles.promoCenter, marginTop: 10}}>
+                    <Text style={{...styles.promoTitle, fontSize: 15}}>
+                      Delivery Location
+                    </Text>
+                    <Text style={styles.promoText}>{userAddress}</Text>
+                  </View>
+                </View>
 
-            <View style={styles.promoLeft}>
-              <View style={styles.promoBadge}>
-                <Icon
-                  name="ios-chevron-forward-outline"
-                  color={ALMOST_BLACK}
-                  size={26}
-                />
-              </View>
-              <View style={{...styles.promoCenter, marginTop: 10}}>
-                <Text style={{...styles.promoTitle, fontSize: 15}}>
-                  Phone Number
-                </Text>
-                <Text style={styles.promoText}>+2347056789045</Text>
-              </View>
-            </View>
+                <View style={styles.promoLeft}>
+                  <View style={styles.promoBadge}>
+                    <Icon
+                      name="ios-chevron-forward-outline"
+                      color={ALMOST_BLACK}
+                      size={26}
+                    />
+                  </View>
+                  <View style={{...styles.promoCenter, marginTop: 10}}>
+                    <Text style={{...styles.promoTitle, fontSize: 15}}>
+                      Phone Number
+                    </Text>
+                    <Text style={styles.promoText}>{user.phone}</Text>
+                  </View>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={styles.promoLeft}>
+                  <View style={styles.promoBadge}>
+                    <Icon
+                      name="ios-chevron-forward-outline"
+                      color={ALMOST_BLACK}
+                      size={26}
+                    />
+                  </View>
+                  <View style={[styles.promoCenter]}>
+                    <Text style={{...styles.promoTitle, fontSize: 15}}>
+                      Distance from location
+                    </Text>
+                    <Text style={styles.promoText}>
+                      {checkoutInfo.distance}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.promoLeft}>
+                  <View style={styles.promoBadge}>
+                    <Icon
+                      name="ios-chevron-forward-outline"
+                      color={ALMOST_BLACK}
+                      size={26}
+                    />
+                  </View>
+                  <View style={{...styles.promoCenter, marginTop: 10}}>
+                    <Text style={{...styles.promoTitle, fontSize: 15}}>
+                      Pickup Location
+                    </Text>
+                    <Text style={styles.promoText}>{userAddress}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.promoLeft}>
+                  <View style={styles.promoBadge}>
+                    <Icon
+                      name="ios-chevron-forward-outline"
+                      color={ALMOST_BLACK}
+                      size={26}
+                    />
+                  </View>
+                  <View style={{...styles.promoCenter, marginTop: 10}}>
+                    <Text style={{...styles.promoTitle, fontSize: 15}}>
+                      Pickup Time
+                    </Text>
+                    <Text style={styles.promoText}>
+                      Pickup in {checkoutInfo.delivery_time.slice(0, -4)}s
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
           </View>
 
           <MyButton style={styles.orderBtn} text="Place Order" />

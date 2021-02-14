@@ -16,7 +16,7 @@ import Header from '../../components/Header';
 import {SECONDARY_COLOR, MAIN_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
-import {getVendorMenus} from '../../store/actions';
+import {getVendorMenus, setCheckoutInfo} from '../../store/actions';
 import {isEmpty} from '../../utility/helpers';
 
 const SingleVendorScreen = ({navigation, route}) => {
@@ -44,6 +44,14 @@ const SingleVendorScreen = ({navigation, route}) => {
     fetchMenus();
     return () => {};
   }, []);
+
+  useEffect(() => {
+    const setCheckoutInfoHandler = async () => {
+      await dispatch(setCheckoutInfo(extraInfo.additional_info));
+    };
+    setCheckoutInfoHandler();
+  }, []);
+
   const [locale, setLocale] = useState('');
   const [menu, setMenu] = useState([]);
 

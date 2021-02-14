@@ -25,6 +25,7 @@ export const SET_VENDOR_MENUS = 'SET_VENDOR_MENUS';
 export const SET_CART = 'SET_CART';
 export const UPDATE_CART = 'UPDATE_CART';
 export const DELETE_CART = 'DELETE_CART';
+export const SET_CHECKOUT_INFO = 'SET_CHECKOUT_INFO';
 
 // RESETS
 export const RESET_UI = 'RESET_UI';
