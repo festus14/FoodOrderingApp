@@ -1,12 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {
-  ScrollView,
-  Text,
-  View,
-  SafeAreaView,
-  FlatList,
-  Alert,
-} from 'react-native';
+import {ScrollView, Text, View, SafeAreaView, Alert} from 'react-native';
 import CheckoutItem from '../../components/CheckOutItem';
 import Header from '../../components/Header';
 import TopBar from '../../components/TopBar';
@@ -19,18 +12,13 @@ import {
 } from '../../utility/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Store} from '../../store';
-import {
-  resetCart,
-  deleteCart,
-  updateCart,
-  getCartSubtotal,
-} from '../../store/actions';
-import {useEffect} from 'react';
+import {resetCart, deleteCart, updateCart} from '../../store/actions';
+import {postOrder} from '../../store/actions/orders';
 
 export default function CheckoutModal({navigation, route}) {
   const {
     state: {
-      ui: {isCartLoading: isLoading},
+      ui: {isCartLoading: isLoading, isOrdersLoading},
       cart: {cart, subtotal, checkoutInfo},
       user: {userAddress, user},
     },
@@ -73,6 +61,17 @@ export default function CheckoutModal({navigation, route}) {
 
   const getTotal = () => {
     return subtotal;
+  };
+
+  const placeOrderHandler = async () => {
+    let error = await dispatch(postOrder({deliveryMode}));
+    if (error) {
+      Alert.alert('Error', error);
+    } else {
+      Alert.alert('Success', 'Order has been made');
+      navigation.navigate('OrdersStackNavigator');
+      await dispatch(resetCart());
+    }
   };
 
   return (
@@ -194,7 +193,8 @@ export default function CheckoutModal({navigation, route}) {
                       Delivery
                     </Text>
                     <Text style={styles.promoText}>
-                      Delivery in {checkoutInfo.delivery_time.slice(0, -4)}s
+                      Delivery in{' '}
+                      {checkoutInfo?.delivery_time?.slice(0, -4) ?? ''}s
                     </Text>
                   </View>
                 </View>
@@ -280,7 +280,8 @@ export default function CheckoutModal({navigation, route}) {
                       Pickup Time
                     </Text>
                     <Text style={styles.promoText}>
-                      Pickup in {checkoutInfo.delivery_time.slice(0, -4)}s
+                      Pickup in{' '}
+                      {checkoutInfo?.delivery_time?.slice(0, -4) ?? ''}s
                     </Text>
                   </View>
                 </View>
@@ -288,7 +289,12 @@ export default function CheckoutModal({navigation, route}) {
             )}
           </View>
 
-          <MyButton style={styles.orderBtn} text="Place Order" />
+          <MyButton
+            style={styles.orderBtn}
+            text="Place Order"
+            onPress={placeOrderHandler}
+            isLoading={isOrdersLoading}
+          />
         </ScrollView>
       </SafeAreaView>
     </>

@@ -47,7 +47,12 @@ const SingleVendorScreen = ({navigation, route}) => {
 
   useEffect(() => {
     const setCheckoutInfoHandler = async () => {
-      await dispatch(setCheckoutInfo(extraInfo.additional_info));
+      await dispatch(
+        setCheckoutInfo({
+          ...extraInfo.additional_info,
+          restaurant_id: vendor.id,
+        }),
+      );
     };
     setCheckoutInfoHandler();
   }, []);

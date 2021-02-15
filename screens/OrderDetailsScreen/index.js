@@ -49,7 +49,8 @@ const DATA_TWO = [
   },
 ];
 
-const OrderDetailsScreen = ({navigation}) => {
+const OrderDetailsScreen = ({navigation, route}) => {
+  const item = route.params.item;
   const goBack = () => navigation.goBack();
 
   return (
@@ -60,11 +61,13 @@ const OrderDetailsScreen = ({navigation}) => {
         <ScrollView style={styles.container}>
           <View style={styles.orderInfo}>
             <Text style={styles.title}>ORDER ID: 01120WD</Text>
-            <Text style={styles.time}>Placed on: 02-03-2021</Text>
+            <Text style={styles.time}>
+              Placed on: {item.created_at.slice(0, 10)}
+            </Text>
             <View style={styles.infoBottom}>
               <Text style={styles.vendor}>KFC</Text>
               <View style={styles.stateBack}>
-                <Text style={styles.state}>COMPLETED</Text>
+                <Text style={styles.state}>{item.status_of_order}</Text>
               </View>
             </View>
           </View>
@@ -81,25 +84,28 @@ const OrderDetailsScreen = ({navigation}) => {
 
           <View style={styles.orderInfo}>
             <Text style={styles.title}>Delivery option</Text>
-            <Text style={styles.time}>Home Delivery</Text>
+            <Text style={styles.time}>{item.order_type}</Text>
             <Text style={styles.title}>Delivery address</Text>
-            <Text style={styles.time}>1 Omovie street, Okota, Lagos</Text>
+            <Text style={styles.time}>{item.delivery_address}</Text>
           </View>
 
           <Text style={styles.orderTitle}>PAYMENT DETAILS</Text>
 
           <View style={styles.orderInfo}>
             <Text style={styles.time}>
-              Items total: <Text style={styles.title}>N6000</Text>
+              Items total:{' '}
+              <Text style={styles.title}>N{item.subtotal_fee}</Text>
             </Text>
             <Text style={styles.time}>
-              Delivery fee: <Text style={styles.title}>N6000</Text>
+              Delivery fee:{' '}
+              <Text style={styles.title}>N{item.delivery_fee}</Text>
             </Text>
             <Text style={styles.time}>
-              Service charge: <Text style={styles.title}>N6000</Text>
+              Service charge:{' '}
+              <Text style={styles.title}>N{item.service_fee}</Text>
             </Text>
             <Text style={styles.time}>
-              Total: <Text style={styles.title}>N6000</Text>
+              Total: <Text style={styles.title}>N{item.subtotal_fee}</Text>
             </Text>
           </View>
         </ScrollView>

@@ -19,6 +19,8 @@
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-date-picker": "^3.2.9",
+    "react-native-fast-image": "^8.3.4",
     "react-native-geolocation-service": "^5.2.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-google-places-autocomplete": "^2.1.3",

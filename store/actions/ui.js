@@ -9,6 +9,8 @@ import {
   VENDORS_MENU_UI_STOP_LOADING,
   CART_UI_START_LOADING,
   CART_UI_STOP_LOADING,
+  ORDERS_UI_START_LOADING,
+  ORDERS_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -68,5 +70,17 @@ export const cartUiStartLoading = () => {
 export const cartUiStopLoading = () => {
   return {
     type: CART_UI_STOP_LOADING,
+  };
+};
+
+export const ordersUiStartLoading = () => {
+  return {
+    type: ORDERS_UI_START_LOADING,
+  };
+};
+
+export const ordersUiStopLoading = () => {
+  return {
+    type: ORDERS_UI_STOP_LOADING,
   };
 };

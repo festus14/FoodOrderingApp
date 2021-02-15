@@ -10,6 +10,8 @@ export {
   vendorsMenuUiStopLoading,
   cartUiStartLoading,
   cartUiStopLoading,
+  ordersUiStartLoading,
+  ordersUiStopLoading,
 } from './ui';
 
 // auth actions

@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
   SafeAreaView,
-  ImageBackground,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
@@ -13,42 +12,29 @@ import Header from '../../components/Header';
 import OrderItem from '../../components/OrderItem';
 import {SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
-
-const DATA = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 3,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 4,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 5,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
-
-const DATA_TWO = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
+import {Store} from '../../store';
+import {getOrders} from '../../store/actions/orders';
 
 const OrdersScreen = ({navigation}) => {
+  const {
+    state: {
+      ui: {isOrdersLoading: isLoading},
+      cart: {cart},
+      orders: {openOrders, closedOrders},
+    },
+    dispatch,
+  } = useContext(Store);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (openOrders.length < 1 && closedOrders.length < 1) {
+        let error = await dispatch(getOrders());
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
   const [locale, setLocale] = useState('pending');
 
   const goBack = () => navigation.goBack();
@@ -56,7 +42,7 @@ const OrdersScreen = ({navigation}) => {
   const view =
     locale === 'pending' ? (
       <FlatList
-        data={DATA}
+        data={openOrders}
         renderItem={({item, index, separators}) => (
           <OrderItem item={item} navigation={navigation} />
         )}
@@ -67,7 +53,7 @@ const OrdersScreen = ({navigation}) => {
       />
     ) : (
       <FlatList
-        data={DATA_TWO}
+        data={closedOrders}
         renderItem={({item, index, separators}) => (
           <OrderItem item={item} navigation={navigation} />
         )}
@@ -81,7 +67,13 @@ const OrdersScreen = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
-        <Header title="Orders" rightIcon="ios-cart-outline" size={26} />
+        <Header
+          title="Orders"
+          rightIcon={cart.length > 0 && 'ios-cart-outline'}
+          onRightPress={() =>
+            navigation.navigate('CheckoutModal', {title: 'Checkout'})
+          }
+        />
 
         <View style={styles.container}>
           <View style={styles.topTabs}>

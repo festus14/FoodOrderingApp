@@ -5,6 +5,7 @@ import ui from './reducers/ui';
 import user from './reducers/user';
 import vendors from './reducers/vendors';
 import cart from './reducers/cart';
+import orders from './reducers/orders';
 
 export const Store = React.createContext();
 
@@ -14,6 +15,7 @@ export const initialState = {
   user: user.initialState,
   vendors: vendors.initialState,
   cart: cart.initialState,
+  orders: orders.initialState,
 };
 
 export function StoreProvider(props) {
@@ -23,6 +25,7 @@ export function StoreProvider(props) {
     user: React.useReducer(user.reducer, user.initialState),
     vendors: React.useReducer(vendors.reducer, vendors.initialState),
     cart: React.useReducer(cart.reducer, cart.initialState),
+    orders: React.useReducer(orders.reducer, orders.initialState),
   });
 
   return (
