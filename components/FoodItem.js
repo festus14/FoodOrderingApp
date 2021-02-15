@@ -7,21 +7,19 @@ export default function FoodItem({item, navigation}) {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('SingleFoodScreen')}>
-      <View>
+      onPress={() => navigation.navigate('SingleFoodScreen', {item})}>
+      <View style={styles.imageContainer}>
         <Image
-          source={require('../assets/images/burger.png')}
-          resizeMode="contain"
+          source={{uri: item.food_image}}
+          resizeMode="cover"
           style={styles.image}
         />
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>Spicy Rice</Text>
-        <Text style={styles.body}>
-          Basmati rice made with fresh traditional spices
-        </Text>
-        <Text style={styles.price}>₦1500</Text>
+        <Text style={styles.title}>{item.name}</Text>
+        <Text style={styles.body}>{item.description}</Text>
+        <Text style={styles.price}>₦{item.price}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -30,12 +28,18 @@ const styles = {
   container: {
     marginBottom: 12,
     flexDirection: 'row',
-    height: SCREEN_HEIGHT * 0.11,
+    height: SCREEN_HEIGHT * 0.13,
     width: SCREEN_WIDTH * 0.8,
   },
+  imageContainer: {
+    height: '100%',
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image: {
-    height: 65,
-    width: 65,
+    height: '90%',
+    width: '100%',
   },
   content: {
     justifyContent: 'space-around',

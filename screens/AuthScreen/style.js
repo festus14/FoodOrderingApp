@@ -23,8 +23,11 @@ export const styles = {
         elevation: 0,
       },
     }),
+    height: '15%',
   },
-  topTab: {},
+  details: {
+    marginTop: 0,
+  },
   tabBtn: {
     height: 36,
     width: 100,

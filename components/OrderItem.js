@@ -6,7 +6,7 @@ export default function OrderItem({item, navigation}) {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('OrderDetailsScreen')}>
+      onPress={() => navigation.navigate('OrderDetailsScreen', {item})}>
       <View>
         <Image
           source={require('../assets/images/burger.png')}
@@ -19,7 +19,7 @@ export default function OrderItem({item, navigation}) {
         <Text style={styles.title}>Spicy Rice</Text>
         <Text style={styles.body}>ORDER ID: 01120WD</Text>
         <View style={styles.stateBack}>
-          <Text style={styles.state}>COMPLETED</Text>
+          <Text style={styles.state}>{item.status_of_order}</Text>
         </View>
       </View>
     </TouchableOpacity>

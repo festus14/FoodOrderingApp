@@ -1,9 +1,14 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 
-export default function RoundButton({text, roundBtn = {}, textStyle}) {
+export default function RoundButton({
+  text,
+  roundBtn = {},
+  textStyle = {},
+  onPress = () => {},
+}) {
   return (
-    <TouchableOpacity style={[styles.container, roundBtn]}>
+    <TouchableOpacity onPress={onPress} style={[styles.container, roundBtn]}>
       <Text style={[styles.text, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );

@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -6,79 +7,78 @@ import {
   ImageBackground,
   TouchableOpacity,
   FlatList,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FoodItem from '../../components/FoodItem';
 import Header from '../../components/Header';
-import {SECONDARY_COLOR} from '../../utility/colors';
+import {SECONDARY_COLOR, MAIN_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
-
-const DATA = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 3,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 4,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 5,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
-
-const DATA_TWO = [
-  {
-    id: 1,
-    imageURL: '../../assets/images/burger.png',
-  },
-  {
-    id: 2,
-    imageURL: '../../assets/images/burger.png',
-  },
-];
+import {Store} from '../../store';
+import {getVendorMenus, setCheckoutInfo} from '../../store/actions';
+import {isEmpty} from '../../utility/helpers';
 
 const SingleVendorScreen = ({navigation, route}) => {
   const [vendor, extraInfo] = route.params.item;
-  console.log('Vendor...', vendor);
-  console.log('extraInfo...', extraInfo);
-  const [locale, setLocale] = useState('continental');
+  const {
+    state: {
+      ui: {isVendorsMenuLoading: isLoading},
+      cart: {cart},
+    },
+    dispatch,
+  } = useContext(Store);
+  const [vendorMenus, setVendorMenus] = useState([]);
+
+  useEffect(() => {
+    const fetchMenus = async () => {
+      let info = await dispatch(getVendorMenus(vendor.restaurant.id));
+      setVendorMenus(info);
+      if (info.length > 0) {
+        setLocaleHandler(info[0].name, info[0].menu);
+      } else {
+        Alert.alert('Error', 'This vendor has no menu');
+      }
+    };
+
+    fetchMenus();
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    const setCheckoutInfoHandler = async () => {
+      await dispatch(
+        setCheckoutInfo({
+          ...extraInfo.additional_info,
+          restaurant_id: vendor.id,
+        }),
+      );
+    };
+    setCheckoutInfoHandler();
+  }, []);
+
+  const [locale, setLocale] = useState('');
+  const [menu, setMenu] = useState([]);
 
   const goBack = () => navigation.goBack();
 
-  const view =
-    locale === 'continental' ? (
-      <FlatList
-        data={DATA}
-        renderItem={({item, index, separators}) => (
-          <FoodItem item={item} navigation={navigation} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
-        onRefresh={() => console.warn('Refreshed')}
-        showsVerticalScrollIndicator={false}
-      />
-    ) : (
-      <FlatList
-        data={DATA_TWO}
-        renderItem={({item, index, separators}) => (
-          <FoodItem item={item} navigation={navigation} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
-        onRefresh={() => console.warn('Refreshed')}
-        showsVerticalScrollIndicator={false}
-      />
-    );
+  const view = (
+    <FlatList
+      data={menu}
+      renderItem={({item, index, separators}) => (
+        <FoodItem item={item} navigation={navigation} />
+      )}
+      keyExtractor={(item) => item.id.toString()}
+      refreshing={false}
+      onRefresh={() => console.warn('Refreshed')}
+      showsVerticalScrollIndicator={false}
+    />
+  );
+
+  const setLocaleHandler = (name, currentMenu) => {
+    setLocale(name);
+    setMenu(currentMenu);
+  };
 
   return (
     <>
@@ -87,7 +87,7 @@ const SingleVendorScreen = ({navigation, route}) => {
           leftIcon="ios-arrow-back"
           title={vendor.restaurant.firstname}
           onLeftPress={goBack}
-          rightIcon="ios-cart-outline"
+          rightIcon={cart.length > 0 && 'ios-cart-outline'}
           onRightPress={() =>
             navigation.navigate('CheckoutModal', {title: 'Checkout'})
           }
@@ -141,32 +141,37 @@ const SingleVendorScreen = ({navigation, route}) => {
             </View>
           </View>
 
-          <View style={styles.topTabs}>
-            <View
-              style={[
-                styles.topTab,
-                locale === 'continental' && styles.activeTopTab,
-              ]}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => setLocale('continental')}>
-                <Text style={styles.topText}>CONTINENTAL</Text>
-              </TouchableOpacity>
+          {isLoading ? (
+            <View style={styles.loader}>
+              <ActivityIndicator size={30} color={MAIN_COLOR} />
             </View>
-            <View
-              style={[
-                styles.topTab,
-                locale === 'traditional' && styles.activeTopTab,
-              ]}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => setLocale('traditional')}>
-                <Text style={styles.topText}>TRADITIONAL</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          ) : (
+            <>
+              <FlatList
+                data={vendorMenus}
+                renderItem={({item, index, separators}) => (
+                  <View
+                    style={[
+                      styles.topTab,
+                      locale === item.name && styles.activeTopTab,
+                    ]}>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => setLocaleHandler(item.name, item.menu)}>
+                      <Text style={styles.topText}>{item.name}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                refreshing={false}
+                onRefresh={() => console.warn('Refreshed')}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+              />
 
-          {view}
+              {view}
+            </>
+          )}
         </View>
       </SafeAreaView>
     </>
@@ -202,22 +207,21 @@ const styles = {
     alignItems: 'center',
     paddingVertical: 8,
   },
-  infoHeader: {},
+  infoHeader: {
+    marginBottom: 20,
+  },
   rating: {
     flexDirection: 'row',
     marginTop: 2,
   },
-  topTabs: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   topTab: {
     color: '#fff',
     justifyContent: 'flex-end',
-    width: '50%',
+    marginBottom: 30,
+    height: 20,
+    alignItems: 'center',
+    marginHorizontal: 4,
+    paddingHorizontal: 12,
   },
   activeTopTab: {
     borderBottomWidth: 1,
@@ -225,9 +229,18 @@ const styles = {
   },
   topText: {
     justifyContent: 'center',
+    fontWeight: '100',
+    fontSize: 16,
+    textTransform: 'uppercase',
   },
   btn: {
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+  },
+  loader: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
 };

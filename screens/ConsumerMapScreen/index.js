@@ -143,14 +143,14 @@ const ConsumerMapScreen = ({navigation}) => {
       />
     </MapView>
   ) : (
-    <ActivityIndicator style={{height: 16, width: 16}} color={MAIN_COLOR} />
+    <ActivityIndicator size="large" color={MAIN_COLOR} />
   );
 
   return (
     <>
       <Header title="Location" />
 
-      <KeyboardAvoidingView style={{flex: 1}}>
+      <KeyboardAvoidingView style={{flex: 1}} behaviour="height">
         <View style={styles.container}>{view}</View>
         <GooglePlacesInput
           setLocation={setLocation}

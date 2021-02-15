@@ -6,6 +6,12 @@ export {
   userUiStopLoading,
   vendorsUiStartLoading,
   vendorsUiStopLoading,
+  vendorsMenuUiStartLoading,
+  vendorsMenuUiStopLoading,
+  cartUiStartLoading,
+  cartUiStopLoading,
+  ordersUiStartLoading,
+  ordersUiStopLoading,
 } from './ui';
 
 // auth actions
@@ -26,4 +32,14 @@ export {
 export {setUser, getUser, getUserId} from './user';
 
 // vendor actions
-export {getVendors} from './vendors';
+export {getVendors, getVendorMenus} from './vendors';
+
+// consumer cart actions
+export {
+  setCart,
+  updateCart,
+  deleteCart,
+  resetCart,
+  getCartSubtotal,
+  setCheckoutInfo,
+} from './cart';

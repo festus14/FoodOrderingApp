@@ -17,14 +17,18 @@ const Header = ({
   component,
   onLeftPress,
   onRightPress,
+  details,
 }) => {
   return (
     <View style={[styles.header, style]}>
       <StatusBar
         barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
+        animated={true}
+        backgroundColor={MAIN_COLOR}
+        translucent={true}
       />
       {Platform.OS !== 'android' && <View style={styles.status} />}
-      <View style={styles.details}>
+      <View style={[styles.details, details]}>
         <View style={styles.iconContainer}>
           {leftIcon && (
             <TouchableOpacity onPress={onLeftPress} style={styles.icon}>
@@ -75,6 +79,8 @@ const styles = {
         height: '10%',
       },
     }),
+    justifyContent: 'center',
+    paddingTop: 20,
   },
   status: {
     height: STATUS_BAR_HEIGHT,
@@ -88,10 +94,13 @@ const styles = {
   },
   text: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   iconContainer: {
     width: '10%',
   },
+  // paddingTop: 20,
 };

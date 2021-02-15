@@ -1,11 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
-import {
-  LIGHTER_GREY,
-  MAIN_COLOR,
-  SECONDARY_COLOR,
-  WHITE,
-} from '../utility/colors';
+import {LIGHTER_GREY, MAIN_COLOR} from '../utility/colors';
 
 const TopBar = ({
   leftText,
