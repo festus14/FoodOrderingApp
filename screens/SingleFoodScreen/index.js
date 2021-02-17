@@ -270,5 +270,6 @@ const styles = {
   },
   addStyle: {
     marginBottom: 25,
+    justifyContent: 'center',
   },
 };

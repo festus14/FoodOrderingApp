@@ -63,9 +63,16 @@ export const postOrder = ({deliveryMode}) => {
 export const getOrders = () => {
   return async (dispatch, state) => {
     try {
-      dispatch(ordersUiStartLoading());
+      await dispatch(ordersUiStartLoading());
 
       let token = await dispatch(getAuthToken());
+
+      setTimeout(async () => {
+        await dispatch(ordersUiStopLoading());
+        if (!res) {
+          return 'Check your internet connection and try again!';
+        }
+      }, 15000);
 
       let res = await sendRequest(
         `${API_URL}/order/orders-made/get-orders/`,
@@ -75,16 +82,56 @@ export const getOrders = () => {
         token,
       );
 
+      await dispatch(ordersUiStopLoading());
+
       if (res.ok) {
         let resJson = await res.json();
         await dispatch(setOrders(resJson.open_orders, resJson.closed_orders));
         return null;
       }
-
-      dispatch(ordersUiStopLoading());
       return 'Failed';
     } catch (error) {
-      dispatch(ordersUiStopLoading());
+      await dispatch(ordersUiStopLoading());
+      console.log(error);
+      return 'Something went wrong. Please check your internet connection and try again';
+    }
+  };
+};
+
+export const cancelOrder = (id) => {
+  return async (dispatch, state) => {
+    try {
+      await dispatch(ordersUiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+
+      setTimeout(async () => {
+        await dispatch(ordersUiStopLoading());
+        if (!res) {
+          return 'Check your internet connection and try again!';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/order/orders-made/${id}/`,
+        'PATCH',
+        {status_of_order: 'CANCELLED'},
+        {},
+        token,
+      );
+
+      console.log('res...', res);
+
+      await dispatch(ordersUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+        await dispatch(getOrders());
+        return null;
+      }
+      return 'Failed';
+    } catch (error) {
+      await dispatch(ordersUiStopLoading());
       console.log(error);
       return 'Something went wrong. Please check your internet connection and try again';
     }

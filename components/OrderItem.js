@@ -3,22 +3,36 @@ import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
 
 export default function OrderItem({item, navigation}) {
+  const getStateColor = () => {
+    switch (item.status_of_order) {
+      case 'PENDING':
+        return '#FBBC05';
+      case 'COMPLETE':
+        return '#009C22';
+      case 'CANCELLED':
+        return '#FF1500';
+      default:
+        return '#FBBC05';
+    }
+  };
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigation.navigate('OrderDetailsScreen', {item})}>
       <View>
         <Image
-          source={require('../assets/images/burger.png')}
+          source={{uri: item?.restaurant?.restaurant_image}}
           resizeMode="contain"
           style={styles.image}
         />
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>Spicy Rice</Text>
-        <Text style={styles.body}>ORDER ID: 01120WD</Text>
-        <View style={styles.stateBack}>
+        <Text style={styles.title}>
+          {item?.restaurant?.restaurant_name ?? ''}
+        </Text>
+        <Text style={styles.body}>ORDER ID: {item?.id.slice(0, 6)}...</Text>
+        <View style={{...styles.stateBack, backgroundColor: getStateColor()}}>
           <Text style={styles.state}>{item.status_of_order}</Text>
         </View>
       </View>
@@ -45,6 +59,7 @@ const styles = {
   },
   body: {
     fontWeight: '100',
+    textTransform: 'uppercase',
   },
   state: {
     fontWeight: 'bold',

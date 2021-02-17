@@ -43,3 +43,6 @@ export {
   getCartSubtotal,
   setCheckoutInfo,
 } from './cart';
+
+// consumer orders actions
+export {setOrders, postOrder, getOrders, cancelOrder} from './orders';

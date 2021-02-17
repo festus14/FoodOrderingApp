@@ -31,6 +31,7 @@ const MyButton = ({
       <View style={iconStyle}>
         {icon && <Icon name={icon} size={iconSize} color={iconColor} />}
       </View>
+
       {!isEmpty(text) &&
         (isLoading ? (
           <ActivityIndicator
@@ -40,11 +41,11 @@ const MyButton = ({
         ) : (
           <Text style={[styles.text, textStyle || {}]}>{text}</Text>
         ))}
-      <View>
-        {rightIcon && (
+      {rightIcon && (
+        <View>
           <Icon name={rightIcon} size={iconSize} color={iconColor} />
-        )}
-      </View>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

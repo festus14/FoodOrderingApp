@@ -39,11 +39,11 @@ export default function CheckoutModal({navigation, route}) {
   const resetCartHandler = async () => {
     Alert.alert('Warning', 'Are you sure you want to clear your cart?', [
       {
-        text: 'Cancel',
+        text: 'Close',
         onPress: () => {},
         style: 'cancel',
       },
-      {text: 'OK', onPress: async () => await dispatch(resetCart())},
+      {text: 'Clear', onPress: async () => await dispatch(resetCart())},
     ]);
   };
 
@@ -382,5 +382,6 @@ const styles = {
 
   orderBtn: {
     marginVertical: 35,
+    justifyContent: 'center',
   },
 };
