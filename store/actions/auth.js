@@ -440,7 +440,6 @@ export const logout = () => {
       );
 
       let resJson = await res.json();
-      console.warn(resJson);
 
       dispatch(uiStopLoading());
       if (resJson.error || resJson.message === 'Unauthenticated.') {

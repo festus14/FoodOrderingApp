@@ -9,6 +9,7 @@ import {
   StyleSheet,
   PermissionsAndroid,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Header from '../../components/Header';
@@ -20,6 +21,7 @@ import {SCREEN_HEIGHT} from '../../utility/constants';
 import Geolocation from 'react-native-geolocation-service';
 import {isEmpty} from '../../utility/helpers';
 import {getVendors} from '../../store/actions';
+import DismissKeyboard from '../../components/DismissKeyboard';
 
 const ConsumerMapScreen = ({navigation}) => {
   const {
@@ -96,6 +98,7 @@ const ConsumerMapScreen = ({navigation}) => {
         },
         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
       );
+    } else {
     }
   }, []);
 
@@ -143,28 +146,30 @@ const ConsumerMapScreen = ({navigation}) => {
       />
     </MapView>
   ) : (
-    <ActivityIndicator size="large" color={MAIN_COLOR} />
+    <ActivityIndicator size={30} color={MAIN_COLOR} />
   );
 
   return (
-    <>
+    <SafeAreaView style={{flex: 1}}>
       <Header title="Location" />
+      <DismissKeyboard>
+        <KeyboardAvoidingView style={{flex: 1}} behaviour="padding">
+          <View style={styles.container}>{view}</View>
+          <GooglePlacesInput
+            setLocation={setLocation}
+            onSearch={searchLocationHandler}
+            location={location}
+          />
 
-      <KeyboardAvoidingView style={{flex: 1}} behaviour="height">
-        <View style={styles.container}>{view}</View>
-        <GooglePlacesInput
-          setLocation={setLocation}
-          onSearch={searchLocationHandler}
-        />
-
-        <MyButton
-          text="Choose this address"
-          style={styles.button}
-          onPress={searchLocationHandler}
-          isLoading={isLoading}
-        />
-      </KeyboardAvoidingView>
-    </>
+          <MyButton
+            text="Choose this address"
+            style={styles.button}
+            onPress={searchLocationHandler}
+            isLoading={isLoading}
+          />
+        </KeyboardAvoidingView>
+      </DismissKeyboard>
+    </SafeAreaView>
   );
 };
 
@@ -190,5 +195,6 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     bottom: SCREEN_HEIGHT * 0.015,
+    justifyContent: 'center',
   },
 });

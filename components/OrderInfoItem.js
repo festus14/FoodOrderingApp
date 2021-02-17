@@ -5,40 +5,33 @@ import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
 
 export default function OrderInfoItem({item, navigation}) {
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => navigation.navigate('OrderDetailsScreen')}>
-      <View>
-        <Image
-          source={require('../assets/images/burger.png')}
-          resizeMode="contain"
-          style={styles.image}
-        />
-      </View>
+    <View style={styles.container}>
+      <Image
+        source={{uri: item?.menu_item?.food_image}}
+        resizeMode="cover"
+        style={styles.image}
+      />
 
       <View style={styles.content}>
-        <Text style={styles.title}>Spicy Rice</Text>
+        <Text style={styles.title}>{item.menu_item.name}</Text>
         <View style={styles.bottom}>
-          <Text style={styles.price}>#1500</Text>
-          <Text style={styles.countText}>1</Text>
+          <Text style={styles.price}>#{item.price}</Text>
+          <Text style={styles.countText}>{item.quantity}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 const styles = {
   container: {
-    marginBottom: 10,
     flexDirection: 'row',
-    height: SCREEN_HEIGHT * 0.11,
+    height: SCREEN_HEIGHT * 0.045,
+    alignItems: 'center',
+    marginVertical: 20,
   },
   image: {
     height: 65,
     width: 65,
-  },
-  content: {
-    justifyContent: 'space-around',
-    paddingLeft: 12,
   },
   title: {
     fontWeight: 'bold',
@@ -52,7 +45,7 @@ const styles = {
     paddingLeft: 12,
   },
   bottom: {
-    width: '65%',
+    width: '69%',
     alignItems: 'center',
     marginTop: 18,
     flexDirection: 'row',

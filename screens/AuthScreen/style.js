@@ -45,6 +45,7 @@ export const styles = {
   btn: {
     width: '100%',
     marginTop: 20,
+    justifyContent: 'center',
   },
   forgot: {
     marginTop: 5,

@@ -25,12 +25,14 @@ export default function MainAppNavigator() {
 
   return (
     <MainStack.Navigator headerMode="none">
-      <MainStack.Screen name="LandingScreen" component={LandingScreen} />
       {token === null ? (
-        <MainStack.Screen
-          name="AuthStackNavigator"
-          component={AuthStackNavigator}
-        />
+        <>
+          <MainStack.Screen name="LandingScreen" component={LandingScreen} />
+          <MainStack.Screen
+            name="AuthStackNavigator"
+            component={AuthStackNavigator}
+          />
+        </>
       ) : (
         <>
           <MainStack.Screen

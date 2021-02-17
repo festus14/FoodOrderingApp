@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
@@ -5,15 +6,15 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import FoodItem from '../../components/FoodItem';
 import Header from '../../components/Header';
 import OrderItem from '../../components/OrderItem';
-import {SECONDARY_COLOR} from '../../utility/colors';
+import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
-import {getOrders} from '../../store/actions/orders';
+import {getOrders} from '../../store/actions';
 
 const OrdersScreen = ({navigation}) => {
   const {
@@ -27,8 +28,9 @@ const OrdersScreen = ({navigation}) => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      if (openOrders.length < 1 && closedOrders.length < 1) {
-        let error = await dispatch(getOrders());
+      let error = await dispatch(getOrders());
+      if (error) {
+        Alert.alert('Error', error);
       }
     };
 
@@ -36,8 +38,6 @@ const OrdersScreen = ({navigation}) => {
   }, []);
 
   const [locale, setLocale] = useState('pending');
-
-  const goBack = () => navigation.goBack();
 
   const view =
     locale === 'pending' ? (
@@ -48,7 +48,7 @@ const OrdersScreen = ({navigation}) => {
         )}
         keyExtractor={(item) => item.id.toString()}
         refreshing={false}
-        onRefresh={() => console.warn('Refreshed')}
+        onRefresh={async () => await dispatch(getOrders())}
         showsVerticalScrollIndicator={false}
       />
     ) : (
@@ -59,7 +59,7 @@ const OrdersScreen = ({navigation}) => {
         )}
         keyExtractor={(item) => item.id.toString()}
         refreshing={false}
-        onRefresh={() => console.warn('Refreshed')}
+        onRefresh={async () => await dispatch(getOrders())}
         showsVerticalScrollIndicator={false}
       />
     );
@@ -101,7 +101,13 @@ const OrdersScreen = ({navigation}) => {
             </View>
           </View>
 
-          {view}
+          {isLoading ? (
+            <View style={styles.loader}>
+              <ActivityIndicator size={30} color={MAIN_COLOR} />
+            </View>
+          ) : (
+            view
+          )}
         </View>
       </SafeAreaView>
     </>
@@ -164,5 +170,10 @@ const styles = {
   btn: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loader: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
 };
