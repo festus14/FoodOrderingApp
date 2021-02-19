@@ -142,7 +142,9 @@ const OrderDetailsScreen = ({navigation, route}) => {
                 iconColor="#fff"
                 iconSize={18}
                 iconStyle={styles.iconStyle}
-                // onPress={}
+                onPress={() =>
+                  navigation.navigate('SingleChatScreen', {chat_id: item.chat})
+                }
               />
             </View>
           </View>

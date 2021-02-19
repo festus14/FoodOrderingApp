@@ -1,14 +1,14 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {ActivityIndicator, View, Alert} from 'react-native';
 import LandingScreen from '../screens/LandingScreen';
 import ConsumerMapScreen from '../screens/ConsumerMapScreen';
 import AuthStackNavigator from './AuthStackNavigator';
 import ConsumerBottomNavigator from './ConsumerBottomNavigator';
 import RestaurantBottomNavigator from './RestaurantBottomNavigator';
 import {Store} from '../store';
-import {getUser} from '../store/actions/user';
 import CheckoutModal from '../screens/CheckoutModal';
+import SingleChatScreen from '../screens/SingleChatScreen';
+import ChatsScreen from '../screens/ChatsScreen';
 
 const MainStack = createStackNavigator();
 
@@ -21,8 +21,6 @@ export default function MainAppNavigator() {
     dispatch,
   } = useContext(Store);
 
-  // console.warn(userRole);
-
   return (
     <MainStack.Navigator headerMode="none">
       {token === null ? (
@@ -33,31 +31,32 @@ export default function MainAppNavigator() {
             component={AuthStackNavigator}
           />
         </>
-      ) : (
+      ) : userRole === 'CONSUMER' ? (
         <>
           <MainStack.Screen
             name="ConsumerMapScreen"
             component={ConsumerMapScreen}
           />
-          {userRole === 'CONSUMER' ? (
-            <>
-              <MainStack.Screen
-                name="ConsumerBottomNavigator"
-                component={ConsumerBottomNavigator}
-              />
-              <MainStack.Screen
-                name="CheckoutModal"
-                component={CheckoutModal}
-                header={{mode: 'screen'}}
-              />
-            </>
-          ) : (
-            <MainStack.Screen
-              name="RestaurantBottomNavigator"
-              component={RestaurantBottomNavigator}
-            />
-          )}
+          <MainStack.Screen
+            name="ConsumerBottomNavigator"
+            component={ConsumerBottomNavigator}
+          />
+          <MainStack.Screen
+            name="SingleChatScreen"
+            component={SingleChatScreen}
+          />
+          <MainStack.Screen name="ChatsScreen" component={ChatsScreen} />
+          <MainStack.Screen
+            name="CheckoutModal"
+            component={CheckoutModal}
+            header={{mode: 'screen'}}
+          />
         </>
+      ) : (
+        <MainStack.Screen
+          name="RestaurantBottomNavigator"
+          component={RestaurantBottomNavigator}
+        />
       )}
     </MainStack.Navigator>
   );

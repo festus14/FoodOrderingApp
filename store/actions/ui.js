@@ -11,6 +11,8 @@ import {
   CART_UI_STOP_LOADING,
   ORDERS_UI_START_LOADING,
   ORDERS_UI_STOP_LOADING,
+  ORDER_CHAT_UI_START_LOADING,
+  ORDER_CHAT_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -82,5 +84,17 @@ export const ordersUiStartLoading = () => {
 export const ordersUiStopLoading = () => {
   return {
     type: ORDERS_UI_STOP_LOADING,
+  };
+};
+
+export const orderChatUiStartLoading = () => {
+  return {
+    type: ORDER_CHAT_UI_START_LOADING,
+  };
+};
+
+export const orderChatUiStopLoading = () => {
+  return {
+    type: ORDER_CHAT_UI_STOP_LOADING,
   };
 };
