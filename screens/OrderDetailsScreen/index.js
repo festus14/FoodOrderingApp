@@ -165,7 +165,6 @@ const styles = {
     backgroundColor: '#fff',
     paddingVertical: 15,
     paddingHorizontal: 18,
-    marginBottom: 20,
   },
   state: {
     fontWeight: 'bold',
@@ -198,7 +197,7 @@ const styles = {
   orderTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 5,
+    marginVertical: 10,
     paddingLeft: 18,
   },
   cancelBtn: {

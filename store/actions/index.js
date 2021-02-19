@@ -46,3 +46,6 @@ export {
 
 // consumer orders actions
 export {setOrders, postOrder, getOrders, cancelOrder} from './orders';
+
+// order chat actions
+export {setOrderChat, getOrderChat} from './chats';

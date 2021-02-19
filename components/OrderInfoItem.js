@@ -27,7 +27,7 @@ const styles = {
     flexDirection: 'row',
     height: SCREEN_HEIGHT * 0.045,
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 16,
   },
   image: {
     height: 65,

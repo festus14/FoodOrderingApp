@@ -120,8 +120,6 @@ export const cancelOrder = (id) => {
         token,
       );
 
-      console.log('res...', res);
-
       await dispatch(ordersUiStopLoading());
 
       if (res.ok) {
