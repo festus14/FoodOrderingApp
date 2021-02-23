@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   View,
-  Text,
   SafeAreaView,
-  TouchableOpacity,
   FlatList,
   Alert,
   ActivityIndicator,
@@ -14,65 +12,28 @@ import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getOrders} from '../../store/actions';
-import ChatItem from '../../components/ChatItem';
+import PaymentItem from '../../components/PaymentItem';
 
-const ChatsScreen = ({navigation}) => {
-  const {
-    state: {
-      ui: {isOrdersLoading: isLoading},
-      cart: {cart},
-    },
-    dispatch,
-  } = useContext(Store);
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      let error = await dispatch(getOrders());
-      if (error) {
-        Alert.alert('Error', error);
-      }
-    };
-
-    fetchOrders();
-  }, []);
-
+const PaymentScreen = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
         <Header
-          title="Chats"
-          rightIcon={cart.length > 0 && 'ios-cart-outline'}
-          onRightPress={() =>
-            navigation.navigate('CheckoutScreen', {title: 'Checkout'})
-          }
+          title="Payment Method"
           leftIcon="ios-arrow-back"
           onLeftPress={() => navigation.goBack()}
         />
 
         <View style={styles.container}>
-          {isLoading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator size={30} color={MAIN_COLOR} />
-            </View>
-          ) : (
-            <FlatList
-              data={[{id: '200'}, {id: '20'}]}
-              renderItem={({item, index, separators}) => (
-                <ChatItem item={item} navigation={navigation} />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              refreshing={false}
-              onRefresh={async () => await console.log('Refreshed')}
-              showsVerticalScrollIndicator={false}
-            />
-          )}
+          <PaymentItem navigation={navigation} />
+          <PaymentItem navigation={navigation} />
         </View>
       </SafeAreaView>
     </>
   );
 };
 
-export default ChatsScreen;
+export default PaymentScreen;
 
 const styles = {
   container: {

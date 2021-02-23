@@ -29,7 +29,7 @@ export {
 } from './auth';
 
 // user actions
-export {setUser, getUser, getUserId} from './user';
+export {setUser, getUser, getUserId, verifyAccount, getAllBanks} from './user';
 
 // vendor actions
 export {getVendors, getVendorMenus} from './vendors';
