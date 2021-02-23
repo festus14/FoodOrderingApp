@@ -1,7 +1,4 @@
-import {Platform} from 'react-native';
 import {SCREEN_HEIGHT} from '../../utility/constants';
-
-import {LIGHT_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 export const styles = {
   container: {
@@ -23,9 +20,7 @@ export const styles = {
     color: '#555',
     fontSize: 19,
   },
-  containerStyle: {
-    // marginTop: 30,
-  },
+  containerStyle: {},
   btn: {
     width: '100%',
     marginTop: 25,
@@ -33,7 +28,6 @@ export const styles = {
   },
   label: {
     marginTop: 30,
-    // paddingLeft: 12,
     fontSize: 16,
   },
 };

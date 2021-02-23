@@ -12,7 +12,7 @@ const PromotionScreen = ({navigation}) => {
     field: 'Code',
     value: '',
     validationRules: {
-      minLength: 4,
+      minLength: 2,
     },
   });
 
@@ -22,7 +22,7 @@ const PromotionScreen = ({navigation}) => {
     <>
       <Header
         leftIcon="ios-arrow-back"
-        title="Enter OTP"
+        title="Promotions"
         onLeftPress={goBack}
       />
 
@@ -31,11 +31,8 @@ const PromotionScreen = ({navigation}) => {
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles.container}>
           <View style={styles.form}>
-            <Text style={styles.codeText}>
-              We have sent a verification code to your email
-            </Text>
             <InputText
-              placeholder="Enter verification code"
+              placeholder="Enter promo code"
               placeholderTextColor={LIGHT_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
@@ -45,11 +42,12 @@ const PromotionScreen = ({navigation}) => {
               autoCapitalize="none"
               returnKeyType="go"
             />
+            <Text style={styles.codeText}>Get your first promotion</Text>
             <MyButton
-              text="Verify"
+              text="Apply"
               style={styles.btn}
               onPress={() => {
-                navigation.navigate('HomeBottomNavigator');
+                goBack();
               }}
             />
           </View>

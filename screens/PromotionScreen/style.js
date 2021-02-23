@@ -1,7 +1,4 @@
-import {Platform} from 'react-native';
 import {SCREEN_HEIGHT} from '../../utility/constants';
-
-import {LIGHT_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 export const styles = {
   container: {
@@ -21,7 +18,8 @@ export const styles = {
   titleStyle: {},
   codeText: {
     color: '#555',
-    fontSize: 19,
+    textAlign: 'center',
+    marginTop: 70,
   },
   containerStyle: {
     marginTop: 30,
@@ -29,5 +27,6 @@ export const styles = {
   btn: {
     width: '100%',
     marginTop: 25,
+    justifyContent: 'center',
   },
 };

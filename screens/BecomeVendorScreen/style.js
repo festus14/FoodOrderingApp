@@ -23,11 +23,15 @@ export const styles = {
     color: '#555',
     fontSize: 19,
   },
+  label: {
+    fontSize: 12,
+  },
   containerStyle: {
-    marginTop: 30,
+    marginBottom: 30,
   },
   btn: {
     width: '100%',
     marginTop: 25,
+    justifyContent: 'center',
   },
 };

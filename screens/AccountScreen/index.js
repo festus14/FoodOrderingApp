@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, KeyboardAvoidingView, Platform, Image} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import Header from '../../components/Header';
 import InputText from '../../components/InputText';
@@ -30,19 +32,56 @@ const AccountScreen = ({navigation}) => {
           />
           <View style={styles.details}>
             <Text style={styles.title}>Presh Presh</Text>
-            <Text style={styles.account}>View account</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('EditAccountScreen')}>
+              <Text style={styles.account}>View account</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.body}>
-          <View style={styles.views}>
-            <View style={styles.icon}>
-              <Text>Icon</Text>
-            </View>
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => navigation.navigate('PromotionScreen')}>
+          <View style={styles.icon}>
+            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Promotions</Text>
+          </View>
+        </TouchableOpacity>
 
-            <View style={styles.textContainer}>
-              <Text style={styles.text}>Promotions</Text>
-            </View>
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => navigation.navigate('AboutScreen')}>
+          <View style={styles.icon}>
+            <Icon
+              name="md-chatbox-ellipses-sharp"
+              size={35}
+              color={SECONDARY_COLOR}
+            />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>About</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => navigation.navigate('BecomeVendorScreen')}>
+          <View style={styles.icon}>
+            <Icon name="person-sharp" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Become a vendor</Text>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.body}>
+          <View style={styles.icon}>
+            <Icon name="md-bicycle-sharp" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Driver's page</Text>
           </View>
         </View>
       </View>
@@ -55,7 +94,7 @@ export default AccountScreen;
 const styles = {
   container: {
     backgroundColor: '#fff',
-    paddingVertical: 20,
+    paddingTop: 20,
   },
   head: {
     flexDirection: 'row',
@@ -80,4 +119,27 @@ const styles = {
   account: {
     color: SECONDARY_COLOR,
   },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingLeft: 35,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderColor: LIGHTER_GREY,
+  },
+  icon: {
+    marginRight: 40,
+    paddingVertical: 18,
+    paddingLeft: 30,
+  },
+  textContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderColor: LIGHTER_GREY,
+  },
+  body: {flexDirection: 'row'},
+  text: {fontSize: 18},
 };
