@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import VendorsStackNavigator from './VendorsStackNavigator';
+import RestaurantOrdersStackNavigator from './RestaurantOrdersStackNavigator';
 import {MAIN_COLOR} from '../utility/colors';
 import OrdersStackNavigator from './OrdersStackNavigator';
 import AccountStackNavigator from './AccountStackNavigator';
@@ -20,8 +20,8 @@ export default function RestaurantBottomNavigator() {
         labelStyle: {fontSize: 20},
       }}>
       <Tab.Screen
-        name="VendorsStackNavigator"
-        component={VendorsStackNavigator}
+        name="RestaurantOrdersStackNavigator"
+        component={RestaurantOrdersStackNavigator}
         options={{title: 'Orders'}}
       />
       <Tab.Screen
