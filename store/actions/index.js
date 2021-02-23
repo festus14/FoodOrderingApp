@@ -29,7 +29,7 @@ export {
 } from './auth';
 
 // user actions
-export {setUser, getUser, getUserId} from './user';
+export {setUser, getUser, getUserId, verifyAccount, getAllBanks} from './user';
 
 // vendor actions
 export {getVendors, getVendorMenus} from './vendors';
@@ -46,3 +46,6 @@ export {
 
 // consumer orders actions
 export {setOrders, postOrder, getOrders, cancelOrder} from './orders';
+
+// order chat actions
+export {setOrderChat, getOrderChat} from './chats';

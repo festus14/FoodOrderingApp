@@ -15,7 +15,7 @@ import {Store} from '../../store';
 import {resetCart, deleteCart, updateCart} from '../../store/actions';
 import {postOrder} from '../../store/actions/orders';
 
-export default function CheckoutModal({navigation, route}) {
+export default function CheckoutScreen({navigation, route}) {
   const {
     state: {
       ui: {isCartLoading: isLoading, isOrdersLoading},
@@ -292,7 +292,8 @@ export default function CheckoutModal({navigation, route}) {
           <MyButton
             style={styles.orderBtn}
             text="Place Order"
-            onPress={placeOrderHandler}
+            // onPress={placeOrderHandler}
+            onPress={() => navigation.navigate('PaymentScreen')}
             isLoading={isOrdersLoading}
           />
         </ScrollView>

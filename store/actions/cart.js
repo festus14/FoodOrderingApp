@@ -5,7 +5,6 @@ import {
   SET_CHECKOUT_INFO,
   RESET_CART,
 } from './actionTypes';
-import {cartUiStartLoading} from './';
 
 export const setCart = (cart) => {
   return {

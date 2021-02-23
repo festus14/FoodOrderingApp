@@ -29,5 +29,6 @@ export const styles = {
   btn: {
     width: '100%',
     marginTop: 25,
+    justifyContent: 'center',
   },
 };

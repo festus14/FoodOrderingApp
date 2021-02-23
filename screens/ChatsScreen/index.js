@@ -10,18 +10,17 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Header from '../../components/Header';
-import OrderItem from '../../components/OrderItem';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getOrders} from '../../store/actions';
+import ChatItem from '../../components/ChatItem';
 
-const OrdersScreen = ({navigation}) => {
+const ChatsScreen = ({navigation}) => {
   const {
     state: {
       ui: {isOrdersLoading: isLoading},
       cart: {cart},
-      orders: {openOrders, closedOrders},
     },
     dispatch,
   } = useContext(Store);
@@ -37,76 +36,35 @@ const OrdersScreen = ({navigation}) => {
     fetchOrders();
   }, []);
 
-  const [locale, setLocale] = useState('pending');
-
-  const view =
-    locale === 'pending' ? (
-      <FlatList
-        data={openOrders}
-        renderItem={({item, index, separators}) => (
-          <OrderItem item={item} navigation={navigation} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
-        onRefresh={async () => await dispatch(getOrders())}
-        showsVerticalScrollIndicator={false}
-      />
-    ) : (
-      <FlatList
-        data={closedOrders}
-        renderItem={({item, index, separators}) => (
-          <OrderItem item={item} navigation={navigation} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
-        onRefresh={async () => await dispatch(getOrders())}
-        showsVerticalScrollIndicator={false}
-      />
-    );
-
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
         <Header
-          title="Orders"
+          title="Chats"
           rightIcon={cart.length > 0 && 'ios-cart-outline'}
           onRightPress={() =>
             navigation.navigate('CheckoutScreen', {title: 'Checkout'})
           }
+          leftIcon="ios-arrow-back"
+          onLeftPress={() => navigation.goBack()}
         />
 
         <View style={styles.container}>
-          <View style={styles.topTabs}>
-            <View
-              style={[
-                styles.topTab,
-                locale === 'pending' && styles.activeTopTab,
-              ]}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => setLocale('pending')}>
-                <Text style={styles.topText}>Pending</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={[
-                styles.topTab,
-                locale === 'closed' && styles.activeTopTab,
-              ]}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => setLocale('closed')}>
-                <Text style={styles.topText}>Closed</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
           {isLoading ? (
             <View style={styles.loader}>
               <ActivityIndicator size={30} color={MAIN_COLOR} />
             </View>
           ) : (
-            view
+            <FlatList
+              data={[{id: '200'}, {id: '20'}]}
+              renderItem={({item, index, separators}) => (
+                <ChatItem item={item} navigation={navigation} />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              refreshing={false}
+              onRefresh={async () => await console.log('Refreshed')}
+              showsVerticalScrollIndicator={false}
+            />
           )}
         </View>
       </SafeAreaView>
@@ -114,7 +72,7 @@ const OrdersScreen = ({navigation}) => {
   );
 };
 
-export default OrdersScreen;
+export default ChatsScreen;
 
 const styles = {
   container: {

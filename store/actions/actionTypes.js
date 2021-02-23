@@ -11,6 +11,8 @@ export const CART_UI_START_LOADING = 'CART_UI_START_LOADING';
 export const CART_UI_STOP_LOADING = 'CART_UI_STOP_LOADING';
 export const ORDERS_UI_START_LOADING = 'ORDERS_UI_START_LOADING';
 export const ORDERS_UI_STOP_LOADING = 'ORDERS_UI_STOP_LOADING';
+export const ORDER_CHAT_UI_START_LOADING = 'ORDER_CHAT_UI_START_LOADING';
+export const ORDER_CHAT_UI_STOP_LOADING = 'ORDER_CHAT_UI_STOP_LOADING';
 
 // Authentication action types
 export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN';
@@ -32,6 +34,9 @@ export const SET_CHECKOUT_INFO = 'SET_CHECKOUT_INFO';
 // Consumer order action types
 export const SET_ORDERS = 'SET_ORDERS';
 
+// Single order chat action types
+export const SET_ORDER_CHAT = 'SET_ORDER_CHAT';
+
 // RESETS
 export const RESET_UI = 'RESET_UI';
 export const RESET_AUTH = 'RESET_AUTH';
@@ -39,3 +44,4 @@ export const RESET_USER = 'RESET_USER';
 export const RESET_VENDORS = 'RESET_VENDORS';
 export const RESET_CART = 'RESET_CART';
 export const RESET_ORDERS = 'RESET_ORDERS';
+export const RESET_ORDER_CHAT = 'RESET_ORDER_CHAT';
