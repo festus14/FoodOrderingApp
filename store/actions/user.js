@@ -14,7 +14,6 @@ import {
   uiStartLoading,
   uiStopLoading,
 } from './ui';
-import {Alert} from 'react-native';
 
 export const setUser = (user) => {
   return {
@@ -95,6 +94,41 @@ export const getUser = () => {
         await dispatch(userUiStopLoading());
         return null;
       }
+    } catch (e) {
+      dispatch(userUiStopLoading());
+      console.warn(e);
+      return 'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in';
+    }
+  };
+};
+
+export const updateUser = (userData) => {
+  return async (dispatch, state) => {
+    dispatch(userUiStartLoading());
+    console.log(userData);
+    try {
+      let token = await dispatch(getAuthToken());
+      let userId = await dispatch(getUserId());
+
+      let res = await sendRequest(
+        `${API_URL}/auth/users/${userId}/`,
+        'PATCH',
+        {...userData},
+        {},
+        token,
+      );
+
+      console.log(res);
+      await dispatch(userUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+        console.warn('In update User...', resJson);
+
+        dispatch(setUser(resJson));
+        return null;
+      }
+      return 'Failed';
     } catch (e) {
       dispatch(userUiStopLoading());
       console.warn(e);

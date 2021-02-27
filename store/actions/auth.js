@@ -168,8 +168,7 @@ export const resetPassword = (authData) => {
         `${API_URL}/auth/users/create-password/`,
         'POST',
         {
-          token: authData.token,
-          password: authData.password,
+          ...authData,
         },
         {Authorization: ''},
       );

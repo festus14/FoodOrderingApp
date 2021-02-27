@@ -1,22 +1,177 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, Text, SafeAreaView, ScrollView, Alert} from 'react-native';
 import Header from '../../components/Header';
 import InputText from '../../components/InputText';
 import MyButton from '../../components/MyButton';
-import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
-import {cancelOrder} from '../../store/actions';
 import {LIGHTER_GREY, MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
+import {validate} from '../../utility/validation';
+import {updateUser, resetPassword} from '../../store/actions';
+import {capitalize} from '../../utility/helpers';
 
 const EditAccountScreen = ({navigation}) => {
   const {
     state: {
-      ui: {isOrdersLoading: isLoading},
+      ui: {isUserLoading: isLoading},
+      user: {user},
     },
     dispatch,
   } = useContext(Store);
 
+  const names = user?.fullname?.split(' ') ?? [
+    user?.firstname ?? ' ',
+    user?.lastname ?? ' ',
+  ];
+
+  const [email, setEmail] = useState({
+    field: 'Email',
+    value: user.email,
+    validationRules: {
+      isEmail: true,
+      minLength: 5,
+    },
+  });
+
+  const [firstName, setFirstName] = useState({
+    field: 'First name',
+    value: capitalize(names[0]),
+    validationRules: {
+      minLength: 2,
+    },
+  });
+
+  const [lastName, setLastName] = useState({
+    field: 'Last name',
+    value: capitalize(names[1]),
+    validationRules: {
+      minLength: 2,
+    },
+  });
+
+  const [phoneNumber, setPhoneNumber] = useState({
+    field: 'Phone number',
+    value: user.phone,
+    validationRules: {
+      minLength: 10,
+    },
+  });
+
+  const [password, setPassword] = useState({
+    field: 'Password',
+    value: '',
+    validationRules: {
+      minLength: 4,
+    },
+  });
+
+  const [newPassword, setNewPassword] = useState({
+    field: 'New password',
+    value: '',
+    validationRules: {
+      minLength: 8,
+    },
+  });
+
+  const [authError, setAuthError] = useState('');
+
   const goBack = () => navigation.goBack();
+
+  const setError = (error) => {
+    setAuthError(error);
+    Alert.alert('Error', error);
+
+    setTimeout(() => {
+      setAuthError('');
+    }, 5000);
+  };
+
+  const setSuccess = (message) => {
+    setAuthError(message);
+    Alert.alert('Success', message);
+
+    setTimeout(() => {
+      setAuthError('');
+    }, 5000);
+  };
+
+  const validateUser = () => {
+    let error = '';
+    error = validate(
+      firstName.value,
+      firstName.validationRules,
+      firstName.field,
+    );
+    if (error) {
+      return error;
+    }
+    error = validate(lastName.value, lastName.validationRules, lastName.field);
+    if (error) {
+      return error;
+    }
+    error = validate(email.value, email.validationRules, email.field);
+    if (error) {
+      return error;
+    }
+    error = validate(
+      phoneNumber.value,
+      phoneNumber.validationRules,
+      phoneNumber.field,
+    );
+    return error;
+  };
+
+  const editUserHandler = async () => {
+    let error = validateUser();
+    if (error) {
+      setError(error);
+    } else {
+      try {
+        const userData = {
+          email: email.value.toLowerCase(),
+          firstname: firstName.value.toLowerCase(),
+          lastname: lastName.value.toLowerCase(),
+          phone: phoneNumber.value,
+        };
+
+        error = await dispatch(updateUser(userData));
+        if (error) {
+          setError(error);
+        } else {
+          setSuccess('User has being updated');
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const validatePassword = () => {
+    let error = validate(
+      password.value,
+      password.validationRules,
+      password.field,
+    );
+    if (error) {
+      return error;
+    }
+    error = validate(
+      newPassword.value,
+      newPassword.validationRules,
+      newPassword.field,
+    );
+    return error;
+  };
+
+  const changePasswordHandler = async () => {
+    if (password.value.length > 4 && newPassword.value > 4) {
+      let error = validatePassword();
+      if (error) {
+        setAuthError(error);
+      } else {
+        error = await resetPassword({password: newPassword});
+      }
+    }
+  };
 
   return (
     <>
@@ -36,10 +191,12 @@ const EditAccountScreen = ({navigation}) => {
               placeholderTextColor={LIGHTER_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
-              value={''}
+              value={firstName.value}
               onSubmitEditing={() => {}}
-              onChangeText={(input) => console.log('hello')}
-              autoCapitalize="none"
+              onChangeText={(input) =>
+                setFirstName({...firstName, value: input})
+              }
+              autoCapitalize="words"
               returnKeyType="next"
             />
 
@@ -49,10 +206,10 @@ const EditAccountScreen = ({navigation}) => {
               placeholderTextColor={LIGHTER_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
-              value={''}
+              value={lastName.value}
               onSubmitEditing={() => {}}
-              onChangeText={(input) => console.log('hello')}
-              autoCapitalize="none"
+              onChangeText={(input) => setLastName({...lastName, value: input})}
+              autoCapitalize="words"
               returnKeyType="next"
             />
 
@@ -62,9 +219,9 @@ const EditAccountScreen = ({navigation}) => {
               placeholderTextColor={LIGHTER_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
-              value={''}
+              value={email.value}
               onSubmitEditing={() => {}}
-              onChangeText={(input) => console.log('hello')}
+              onChangeText={(input) => setEmail({...email, value: input})}
               autoCapitalize="none"
               returnKeyType="next"
               keyboardType="email-address"
@@ -76,11 +233,13 @@ const EditAccountScreen = ({navigation}) => {
               placeholderTextColor={LIGHTER_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
-              value={''}
+              value={phoneNumber.value}
               onSubmitEditing={() => {}}
-              onChangeText={(input) => console.log('hello')}
+              onChangeText={(input) =>
+                setPhoneNumber({...phoneNumber, value: input})
+              }
               autoCapitalize="none"
-              returnKeyType="next"
+              returnKeyType="go"
               keyboardType="phone-pad"
             />
 
@@ -88,7 +247,7 @@ const EditAccountScreen = ({navigation}) => {
               text="Save"
               style={styles.btn}
               isLoading={isLoading}
-              onPress={() => console.log('Edited')}
+              onPress={editUserHandler}
             />
           </View>
 
@@ -101,9 +260,9 @@ const EditAccountScreen = ({navigation}) => {
               placeholderTextColor={LIGHTER_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
-              value={''}
+              value={password.value}
               onSubmitEditing={() => {}}
-              onChangeText={(input) => console.log('hello')}
+              onChangeText={(input) => setPassword({...password, value: input})}
               autoCapitalize="none"
               returnKeyType="next"
             />
@@ -114,18 +273,20 @@ const EditAccountScreen = ({navigation}) => {
               placeholderTextColor={LIGHTER_GREY}
               containerStyle={styles.containerStyle}
               autoCorrect={false}
-              value={''}
+              value={newPassword.value}
               onSubmitEditing={() => {}}
-              onChangeText={(input) => console.log('hello')}
+              onChangeText={(input) =>
+                setNewPassword({...newPassword, value: input})
+              }
               autoCapitalize="none"
-              returnKeyType="next"
+              returnKeyType="go"
             />
 
             <MyButton
               text="Change Password"
               style={styles.btn}
               isLoading={isLoading}
-              onPress={() => console.log('Edited')}
+              onPress={changePasswordHandler}
             />
           </View>
         </ScrollView>

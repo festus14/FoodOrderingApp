@@ -26,7 +26,6 @@ export default function BecomeVendorScreen({navigation}) {
     dispatch,
   } = useContext(Store);
 
-  const [authState, setAuthState] = useState('login');
   const [authError, setAuthError] = useState('');
 
   const [email, setEmail] = useState({
@@ -38,7 +37,7 @@ export default function BecomeVendorScreen({navigation}) {
     },
   });
 
-  const [firstName, setFirstName] = useState({
+  const [restaurantName, setRestaurantName] = useState({
     field: 'First name',
     value: '',
     validationRules: {
@@ -46,16 +45,8 @@ export default function BecomeVendorScreen({navigation}) {
     },
   });
 
-  const [lastName, setLastName] = useState({
-    field: 'Last name',
-    value: '',
-    validationRules: {
-      minLength: 2,
-    },
-  });
-
-  const [phoneNumber, setPhoneNumber] = useState({
-    field: 'Phone number',
+  const [contactNumber, setContactNumber] = useState({
+    field: 'Contact number',
     value: '',
     validationRules: {
       minLength: 10,
@@ -66,21 +57,25 @@ export default function BecomeVendorScreen({navigation}) {
     field: 'Password',
     value: '',
     validationRules: {
-      minLength: 8,
+      minLength: 6,
+    },
+  });
+
+  const [address, setAddress] = useState({
+    field: 'Address',
+    value: '',
+    validationRules: {
+      minLength: 3,
     },
   });
 
   const validateUser = () => {
     let error = '';
     error = validate(
-      firstName.value,
-      firstName.validationRules,
-      firstName.field,
+      restaurantName.value,
+      restaurantName.validationRules,
+      restaurantName.field,
     );
-    if (error) {
-      return error;
-    }
-    error = validate(lastName.value, lastName.validationRules, lastName.field);
     if (error) {
       return error;
     }
@@ -88,10 +83,14 @@ export default function BecomeVendorScreen({navigation}) {
     if (error) {
       return error;
     }
+    error = validate(address.value, address.validationRules, address.field);
+    if (error) {
+      return error;
+    }
     error = validate(
-      phoneNumber.value,
-      phoneNumber.validationRules,
-      phoneNumber.field,
+      contactNumber.value,
+      contactNumber.validationRules,
+      contactNumber.field,
     );
     if (error) {
       return error;
@@ -118,7 +117,7 @@ export default function BecomeVendorScreen({navigation}) {
     }, 5000);
   };
 
-  const signUpHandler = async () => {
+  const becomeVendorHandler = async () => {
     let error = validateUser();
     if (error) {
       setError(error);
@@ -126,9 +125,9 @@ export default function BecomeVendorScreen({navigation}) {
       try {
         const authData = {
           email: email.value.toLowerCase(),
-          firstName: firstName.value.toLowerCase(),
-          lastName: lastName.value.toLowerCase(),
-          phoneNumber: phoneNumber.value,
+          restaurant_name: restaurantName.value.toLowerCase(),
+          contact_number: contactNumber.value,
+          address: address.value,
           password: password.value,
         };
 
@@ -136,8 +135,7 @@ export default function BecomeVendorScreen({navigation}) {
         if (error) {
           setError(error);
         } else {
-          setSuccess('Sign up successful');
-          navigation.navigate('VerificationScreen');
+          setSuccess('You have successfully become a vendor');
         }
       } catch (e) {
         console.log(e);
@@ -170,9 +168,11 @@ export default function BecomeVendorScreen({navigation}) {
             placeholderTextColor={LIGHTER_GREY}
             containerStyle={styles.containerStyle}
             autoCorrect={false}
-            value={''}
+            value={restaurantName.value}
             onSubmitEditing={() => {}}
-            onChangeText={(input) => console.log('hello')}
+            onChangeText={(input) =>
+              setRestaurantName({...restaurantName, value: input})
+            }
             autoCapitalize="none"
             returnKeyType="next"
           />
@@ -183,9 +183,9 @@ export default function BecomeVendorScreen({navigation}) {
             placeholderTextColor={LIGHTER_GREY}
             containerStyle={styles.containerStyle}
             autoCorrect={false}
-            value={''}
+            value={email.value}
             onSubmitEditing={() => {}}
-            onChangeText={(input) => console.log('hello')}
+            onChangeText={(input) => setEmail({...email, value: input})}
             autoCapitalize="none"
             returnKeyType="next"
             keyboardType="email-address"
@@ -212,9 +212,9 @@ export default function BecomeVendorScreen({navigation}) {
             placeholderTextColor={LIGHTER_GREY}
             containerStyle={styles.containerStyle}
             autoCorrect={false}
-            value={password.value}
+            value={address.value}
             onSubmitEditing={() => {}}
-            onChangeText={(input) => setPassword({...password, value: input})}
+            onChangeText={(input) => setAddress({...address, value: input})}
             autoCapitalize="none"
             returnKeyType="next"
           />
@@ -225,11 +225,13 @@ export default function BecomeVendorScreen({navigation}) {
             placeholderTextColor={LIGHTER_GREY}
             containerStyle={styles.containerStyle}
             autoCorrect={false}
-            value={''}
+            value={contactNumber.value}
             onSubmitEditing={() => {}}
-            onChangeText={(input) => console.log('hello')}
+            onChangeText={(input) =>
+              setContactNumber({...contactNumber, value: input})
+            }
             autoCapitalize="none"
-            returnKeyType="next"
+            returnKeyType="go"
             keyboardType="phone-pad"
           />
 
@@ -237,7 +239,7 @@ export default function BecomeVendorScreen({navigation}) {
             text="Sign Up"
             style={styles.btn}
             isLoading={isLoading}
-            onPress={() => console.log('Edited')}
+            onPress={becomeVendorHandler}
           />
         </ScrollView>
       </KeyboardAvoidingView>

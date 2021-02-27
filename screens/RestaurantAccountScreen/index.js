@@ -1,25 +1,11 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/Header';
-import {Store} from '../../store';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
-import {capitalize} from '../../utility/helpers';
 
-const AccountScreen = ({navigation}) => {
-  const {
-    state: {
-      user: {user},
-    },
-    dispatch,
-  } = useContext(Store);
-
-  const names = user?.fullname?.split(' ') ?? [
-    user?.firstname ?? ' ',
-    user?.lastname ?? ' ',
-  ];
-
+const RestaurantAccountScreen = ({navigation}) => {
   return (
     <>
       <Header title="Account" />
@@ -32,9 +18,7 @@ const AccountScreen = ({navigation}) => {
             style={styles.image}
           />
           <View style={styles.details}>
-            <Text style={styles.title}>
-              {capitalize(names[0]) + ' ' + capitalize(names[1])}
-            </Text>
+            <Text style={styles.title}>Presh Presh</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('EditAccountScreen')}>
               <Text style={styles.account}>View account</Text>
@@ -92,7 +76,7 @@ const AccountScreen = ({navigation}) => {
   );
 };
 
-export default AccountScreen;
+export default RestaurantAccountScreen;
 
 const styles = {
   container: {

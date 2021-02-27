@@ -2,8 +2,8 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestaurantOrdersStackNavigator from './RestaurantOrdersStackNavigator';
 import {MAIN_COLOR} from '../utility/colors';
-import OrdersStackNavigator from './OrdersStackNavigator';
-import AccountStackNavigator from './AccountStackNavigator';
+import RestaurantChatsStackNavigator from './RestaurantChatsStackNavigator';
+import RestaurantAccountStackNavigator from './RestaurantAccountStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,13 +25,13 @@ export default function RestaurantBottomNavigator() {
         options={{title: 'Orders'}}
       />
       <Tab.Screen
-        name="OrdersStackNavigator"
-        component={OrdersStackNavigator}
+        name="RestaurantChatsStackNavigator"
+        component={RestaurantChatsStackNavigator}
         options={{title: 'Chats'}}
       />
       <Tab.Screen
-        name="AccountStackNavigator"
-        component={AccountStackNavigator}
+        name="RestaurantAccountStackNavigator"
+        component={RestaurantAccountStackNavigator}
         options={{title: 'Account'}}
       />
     </Tab.Navigator>
