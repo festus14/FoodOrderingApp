@@ -34,8 +34,9 @@ export const SET_CHECKOUT_INFO = 'SET_CHECKOUT_INFO';
 // Consumer order action types
 export const SET_ORDERS = 'SET_ORDERS';
 
-// Single order chat action types
+// Chat action types
 export const SET_ORDER_CHAT = 'SET_ORDER_CHAT';
+export const SET_CHATS = 'SET_CHATS';
 
 // RESETS
 export const RESET_UI = 'RESET_UI';

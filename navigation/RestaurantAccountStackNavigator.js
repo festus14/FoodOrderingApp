@@ -5,7 +5,7 @@ import PromotionScreen from '../screens/PromotionScreen';
 import AboutScreen from '../screens/AboutScreen';
 import BecomeVendorScreen from '../screens/BecomeVendorScreen';
 import DriversScreen from '../screens/DriversScreen';
-import EditAccountScreen from '../screens/EditAccountScreen';
+import RestaurantEditAccountScreen from '../screens/RestaurantEditAccountScreen';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,10 @@ export default function RestaurantAccountStackNavigator() {
         name="RestaurantAccountScreen"
         component={RestaurantAccountScreen}
       />
-      <Stack.Screen name="EditAccountScreen" component={EditAccountScreen} />
+      <Stack.Screen
+        name="RestaurantEditAccountScreen"
+        component={RestaurantEditAccountScreen}
+      />
       <Stack.Screen name="PromotionScreen" component={PromotionScreen} />
       <Stack.Screen name="AboutScreen" component={AboutScreen} />
       <Stack.Screen name="BecomeVendorScreen" component={BecomeVendorScreen} />

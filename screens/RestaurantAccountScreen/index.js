@@ -1,11 +1,27 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Text, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/Header';
+import {Store} from '../../store';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
+import {capitalize} from '../../utility/helpers';
 
 const RestaurantAccountScreen = ({navigation}) => {
+  const {
+    state: {
+      user: {user},
+    },
+    dispatch,
+  } = useContext(Store);
+
+  const names = user?.fullname?.split(' ') ?? [
+    user?.firstname ?? ' ',
+    user?.lastname ?? ' ',
+  ];
+
+  console.log(user);
+
   return (
     <>
       <Header title="Account" />
@@ -18,9 +34,13 @@ const RestaurantAccountScreen = ({navigation}) => {
             style={styles.image}
           />
           <View style={styles.details}>
-            <Text style={styles.title}>Presh Presh</Text>
+            <Text style={styles.title}>
+              {capitalize(names[0]) + ' ' + capitalize(names[1])}
+            </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('EditAccountScreen')}>
+              onPress={() =>
+                navigation.navigate('RestaurantEditAccountScreen')
+              }>
               <Text style={styles.account}>View account</Text>
             </TouchableOpacity>
           </View>
@@ -33,7 +53,40 @@ const RestaurantAccountScreen = ({navigation}) => {
             <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Promotions</Text>
+            <Text style={styles.text}>Menu</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => navigation.navigate('PromotionScreen')}>
+          <View style={styles.icon}>
+            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Branches</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => navigation.navigate('PromotionScreen')}>
+          <View style={styles.icon}>
+            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Restaurant Details</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.body}
+          onPress={() => navigation.navigate('PromotionScreen')}>
+          <View style={styles.icon}>
+            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Business Metrics</Text>
           </View>
         </TouchableOpacity>
 
@@ -62,15 +115,6 @@ const RestaurantAccountScreen = ({navigation}) => {
             <Text style={styles.text}>Become a vendor</Text>
           </View>
         </TouchableOpacity>
-
-        <View style={styles.body}>
-          <View style={styles.icon}>
-            <Icon name="md-bicycle-sharp" size={35} color={SECONDARY_COLOR} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>Driver's page</Text>
-          </View>
-        </View>
       </View>
     </>
   );

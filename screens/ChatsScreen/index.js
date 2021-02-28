@@ -13,27 +13,28 @@ import Header from '../../components/Header';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
-import {getOrders} from '../../store/actions';
+import {getChats} from '../../store/actions';
 import ChatItem from '../../components/ChatItem';
 
 const ChatsScreen = ({navigation}) => {
   const {
     state: {
-      ui: {isOrdersLoading: isLoading},
+      ui: {isOrderChartLoading: isLoading},
       cart: {cart},
+      chats: {chats},
     },
     dispatch,
   } = useContext(Store);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      let error = await dispatch(getOrders());
+    const fetchChats = async () => {
+      let error = await dispatch(getChats());
       if (error) {
         Alert.alert('Error', error);
       }
     };
 
-    fetchOrders();
+    fetchChats();
   }, []);
 
   return (
@@ -56,13 +57,13 @@ const ChatsScreen = ({navigation}) => {
             </View>
           ) : (
             <FlatList
-              data={[{id: '200'}, {id: '20'}]}
+              data={chats}
               renderItem={({item, index, separators}) => (
                 <ChatItem item={item} navigation={navigation} />
               )}
               keyExtractor={(item) => item.id.toString()}
               refreshing={false}
-              onRefresh={async () => await console.log('Refreshed')}
+              onRefresh={() => console.log('Refreshed')}
               showsVerticalScrollIndicator={false}
             />
           )}

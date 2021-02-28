@@ -1,7 +1,12 @@
-import {RESET_ORDER_CHAT, SET_ORDER_CHAT} from '../actions/actionTypes';
+import {
+  RESET_ORDER_CHAT,
+  SET_CHATS,
+  SET_ORDER_CHAT,
+} from '../actions/actionTypes';
 
 const initialState = {
-  chat: [],
+  orderChat: [],
+  chats: [],
 };
 
 const reducer = (state, action) => {
@@ -9,7 +14,12 @@ const reducer = (state, action) => {
     case SET_ORDER_CHAT:
       return {
         ...state,
-        chats: action.chat,
+        orderChat: action.chat,
+      };
+    case SET_CHATS:
+      return {
+        ...state,
+        chats: action.chats,
       };
     case RESET_ORDER_CHAT:
       return initialState;

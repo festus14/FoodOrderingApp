@@ -16,7 +16,7 @@ import {LIGHTER_GREY, LIGHT_GREY, MAIN_COLOR} from '../../utility/colors';
 import InputText from '../../components/InputText';
 import {validate} from '../../utility/validation';
 import {Store} from '../../store';
-import {signUp} from '../../store/actions';
+import {signUp, resetApp} from '../../store/actions';
 
 export default function BecomeVendorScreen({navigation}) {
   const {
@@ -125,10 +125,11 @@ export default function BecomeVendorScreen({navigation}) {
       try {
         const authData = {
           email: email.value.toLowerCase(),
-          restaurant_name: restaurantName.value.toLowerCase(),
-          contact_number: contactNumber.value,
+          firstName: restaurantName.value.toLowerCase(),
+          phone: contactNumber.value,
           address: address.value,
           password: password.value,
+          roles: 'RESTAURANT',
         };
 
         error = await dispatch(signUp(authData));
@@ -136,6 +137,7 @@ export default function BecomeVendorScreen({navigation}) {
           setError(error);
         } else {
           setSuccess('You have successfully become a vendor');
+          await dispatch(resetApp());
         }
       } catch (e) {
         console.log(e);
@@ -207,7 +209,6 @@ export default function BecomeVendorScreen({navigation}) {
 
           <Text style={styles.label}>Headquarters Address</Text>
           <InputText
-            secureTextEntry
             placeholder="Required"
             placeholderTextColor={LIGHTER_GREY}
             containerStyle={styles.containerStyle}

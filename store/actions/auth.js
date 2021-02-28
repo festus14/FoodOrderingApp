@@ -199,6 +199,55 @@ export const resetPassword = (authData) => {
   };
 };
 
+export const changePassword = (authData) => {
+  return async (dispatch) => {
+    try {
+      dispatch(uiStartLoading());
+      let token = await dispatch(getAuthToken());
+      await dispatch(authRemoveAsyncData());
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(uiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/auth/users/change_password/`,
+        'POST',
+        {
+          ...authData,
+        },
+        {Authorization: token},
+      );
+
+      let resJson = await res.json();
+
+      console.warn('Change password...', resJson);
+
+      dispatch(uiStopLoading());
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          return 'Please log out and sign in again';
+        }
+        return (
+          resJson?.email[0] ??
+          resJson?.message ??
+          'Something went wrong, try again'
+        );
+      }
+
+      return null;
+    } catch (error) {
+      dispatch(uiStopLoading());
+      console.log(error);
+      return 'Authentication failed, please check your internet connection and try again';
+    }
+  };
+};
+
 export const signUp = (authData) => {
   return async (dispatch) => {
     try {
@@ -219,8 +268,10 @@ export const signUp = (authData) => {
           email: authData.email,
           password: authData.password,
           firstname: authData.firstName,
-          lastname: authData.lastName,
+          lastname: authData?.lastName ?? '',
           phone: authData.phoneNumber,
+          address: authData?.address ?? '',
+          roles: authData.roles ? [authData.roles] : ['CONSUMER'],
         },
         {Authorization: ''},
       );

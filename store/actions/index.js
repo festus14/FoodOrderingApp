@@ -26,6 +26,7 @@ export {
   forgotPassword,
   resendVerifyToken,
   resetPassword,
+  changePassword,
 } from './auth';
 
 // user actions
@@ -55,4 +56,7 @@ export {
 export {setOrders, postOrder, getOrders, cancelOrder} from './orders';
 
 // order chat actions
-export {setOrderChat, getOrderChat} from './chats';
+export {setOrderChat, getOrderChat, getChats} from './chats';
+
+// reset app
+export {resetApp} from './reset';
