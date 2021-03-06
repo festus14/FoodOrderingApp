@@ -86,7 +86,12 @@ export const getOrders = () => {
 
       if (res.ok) {
         let resJson = await res.json();
-        await dispatch(setOrders(resJson.open_orders, resJson.closed_orders));
+        await dispatch(
+          setOrders(
+            resJson?.all_orders?.open_orders ?? [],
+            resJson?.all_orders?.closed_orders ?? [],
+          ),
+        );
         return null;
       }
       return 'Failed';

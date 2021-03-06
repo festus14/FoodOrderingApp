@@ -40,7 +40,7 @@ export {
 } from './user';
 
 // vendor actions
-export {getVendors, getVendorMenus} from './vendors';
+export {getVendors, getVendorMenus, getMenus} from './vendors';
 
 // consumer cart actions
 export {

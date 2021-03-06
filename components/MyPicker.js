@@ -3,7 +3,14 @@ import {View, StyleSheet, Text} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {LIGHT_GREY} from '../utility/colors';
 
-export default function MyPicker({items, setSelected, labelText, ...props}) {
+export default function MyPicker({
+  items,
+  setSelected,
+  labelText,
+  pickerStyle = {},
+  picker = {},
+  ...props
+}) {
   const [chosenValue, setChosenValue] = useState('...');
   const setNewValue = (value, index) => {
     setChosenValue(value);
@@ -12,12 +19,12 @@ export default function MyPicker({items, setSelected, labelText, ...props}) {
     }
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, pickerStyle]}>
       {labelText && <Text style={styles.keyText}>{labelText}:</Text>}
       <Picker
         {...props}
         selectedValue={chosenValue}
-        style={styles.picker}
+        style={[styles.picker, picker]}
         onValueChange={(itemValue, itemIndex) => setNewValue(itemValue)}>
         {items.map((option) => (
           <Picker.Item

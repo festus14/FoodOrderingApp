@@ -1,4 +1,4 @@
-import {SET_VENDORS, SET_VENDOR_MENUS} from './actionTypes';
+import {SET_MENUS, SET_VENDORS, SET_VENDOR_MENUS} from './actionTypes';
 import {API_URL} from '../../utility/constants';
 import {
   resetApp,
@@ -23,6 +23,13 @@ export const setVendorMenus = (vendorMenus) => {
   return {
     type: SET_VENDOR_MENUS,
     vendorMenus,
+  };
+};
+
+export const setMenus = (menus) => {
+  return {
+    type: SET_MENUS,
+    menus,
   };
 };
 
@@ -99,6 +106,36 @@ export const getVendorMenus = (id) => {
 
         return resJson.results;
       }
+    } catch (e) {
+      await dispatch(vendorsMenuUiStopLoading());
+      console.warn(e);
+    }
+  };
+};
+
+export const getMenus = (id) => {
+  return async (dispatch, state) => {
+    dispatch(vendorsMenuUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
+      let res = await sendRequest(
+        `${API_URL}/order/menu/`,
+        'GET',
+        {},
+        {},
+        token,
+      );
+
+      await dispatch(vendorsMenuUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+
+        await dispatch(setMenus(resJson.results));
+
+        return null;
+      }
+      return 'Failed';
     } catch (e) {
       await dispatch(vendorsMenuUiStopLoading());
       console.warn(e);

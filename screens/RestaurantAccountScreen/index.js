@@ -15,13 +15,6 @@ const RestaurantAccountScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
-  const names = user?.fullname?.split(' ') ?? [
-    user?.firstname ?? ' ',
-    user?.lastname ?? ' ',
-  ];
-
-  console.log(user);
-
   return (
     <>
       <Header title="Account" />
@@ -34,9 +27,7 @@ const RestaurantAccountScreen = ({navigation}) => {
             style={styles.image}
           />
           <View style={styles.details}>
-            <Text style={styles.title}>
-              {capitalize(names[0]) + ' ' + capitalize(names[1])}
-            </Text>
+            <Text style={styles.title}>{capitalize(user?.fullname ?? '')}</Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('RestaurantEditAccountScreen')
@@ -48,7 +39,7 @@ const RestaurantAccountScreen = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.body}
-          onPress={() => navigation.navigate('PromotionScreen')}>
+          onPress={() => navigation.navigate('MenusScreen')}>
           <View style={styles.icon}>
             <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
           </View>

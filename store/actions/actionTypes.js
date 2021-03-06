@@ -24,6 +24,7 @@ export const SET_USER_ADDRESS = 'SET_USER_ADDRESS';
 // Vendor action types
 export const SET_VENDORS = 'SET_VENDORS';
 export const SET_VENDOR_MENUS = 'SET_VENDOR_MENUS';
+export const SET_MENUS = 'SET_MENUS';
 
 // Consumer cart action types
 export const SET_CART = 'SET_CART';

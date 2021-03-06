@@ -11,6 +11,7 @@ import SingleChatScreen from '../screens/SingleChatScreen';
 import ChatsScreen from '../screens/ChatsScreen';
 import PaymentScreen from '../screens/PaymentScreen';
 import PaystackScreen from '../screens/PaystackScreen';
+import AddMenuModal from '../screens/AddMenuModal';
 
 const MainStack = createStackNavigator();
 
@@ -53,10 +54,13 @@ export default function MainAppNavigator() {
           <MainStack.Screen name="PaystackScreen" component={PaystackScreen} />
         </>
       ) : (
-        <MainStack.Screen
-          name="RestaurantBottomNavigator"
-          component={RestaurantBottomNavigator}
-        />
+        <>
+          <MainStack.Screen
+            name="RestaurantBottomNavigator"
+            component={RestaurantBottomNavigator}
+          />
+          <MainStack.Screen name="AddMenuModal" component={AddMenuModal} />
+        </>
       )}
     </MainStack.Navigator>
   );

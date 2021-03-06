@@ -7,39 +7,52 @@ import Header from '../../components/Header';
 import {Store} from '../../store';
 import {getOrderChat} from '../../store/actions';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
-import {io} from 'socket.io-client';
 
 export default function ChatModal({navigation, route}) {
   const [messages, setMessages] = useState([]);
   const chat_id = route.params.chat_id;
 
+  const socket = new WebSocket(`wss://api.boxin.ng/ws/chat/${chat_id.name}/`);
+
   const {
     state: {
       ui: {isOrderChartLoading: isLoading},
+      user: {user},
     },
     dispatch,
   } = useContext(Store);
 
   useEffect(() => {
-    const socket = new WebSocket(`wss://api.boxin.ng/ws/chat/${chat_id}/`);
-
-    socket.onopen = (data) => {
-      console.log('>> WS OPENED ✅', data);
+    socket.onopen = async () => {
+      try {
+        socket.send(
+          JSON.stringify({
+            chatId: chat_id.id,
+            command: 'fetch_messages',
+          }),
+        );
+      } catch (error) {
+        console.log('Error in fetching', error);
+      }
     };
 
     socket.onmessage = ({data}) => {
-      console.log('>> WS MESSAGE: ');
-
       try {
         data = JSON.parse(data);
 
-        // grab my custom ‘message’ property from the data.
-        const {message} = data;
-        if (data.error !== true && message) {
-          // Handle the ‘type’ and ‘data’ properties...
-          // this.handleMessageType(message.type, message.data)
+        const info = data.messages || [data.message];
+
+        console.log('On message...', info);
+
+        if (data.error !== true && info) {
+          if (info.length === 1) {
+            setMessages((previousMessages) =>
+              GiftedChat.append(previousMessages, info[0]),
+            );
+          } else {
+            setMessages([...messages, ...info]);
+          }
         } else {
-          // do something with the incorrect format
         }
       } catch (err) {
         console.log(`⚠️ WEBSOCKET MESSAGE ERROR - ${err.message}`);
@@ -51,73 +64,38 @@ export default function ChatModal({navigation, route}) {
     };
 
     socket.onclose = (error) => {
-      console.log('>> WS CLOSED -', error.message);
+      console.log('>> WS CLOSED -', error);
     };
-
-    //   try {
-    //     const socket = io(`wss://echo.websocket.org/`);
-    //     // console.log('Socket...', socket);
-    //     socket.on('message', (message) => {
-    //       console.log('Message on component mount...', message);
-    //       // setMessages([...messages, message]);
-    //       return () => socket.disconnect();
-    //     });
-    //   } catch (error) {
-    //     console.log('Socket error', error);
-    //   }
   }, []);
 
   // useEffect(() => {
-  //   const fetchOrderChat = async () => {
-  //     let error = await dispatch(getOrderChat(chat_id));
-  //     if (error) {
-  //       Alert.alert('Error', error);
-  //     }
-  //   };
-
-  //   fetchOrderChat();
+  //   setMessages([
+  //     {
+  //       _id: 1,
+  //       text: 'Hello consumer, how may I help you',
+  //       createdAt: new Date(),
+  //       user: {
+  //         _id: 1,
+  //         name: 'React Native',
+  //         avatar: 'https://placeimg.com/140/140/any',
+  //       },
+  //     },
+  //   ]);
   // }, []);
 
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello consumer, how may I help you',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 2,
-        text: 'Hello consumer, how may I help you',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 3,
-        text: 'Hello consumer, how may I help you',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ]);
-  }, []);
-
-  const onSend = useCallback((message = []) => {
+  const onSend = useCallback(async (message = []) => {
     console.log('Message after each send...', message);
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, message),
-    );
+    try {
+      const msg = JSON.stringify({
+        chatId: chat_id.id,
+        message: message[0].text,
+        from: user.user_id,
+        command: 'new_message',
+      });
+      socket.send(msg);
+    } catch (error) {
+      console.log('Error in sending...', error);
+    }
   }, []);
 
   return (
@@ -133,7 +111,7 @@ export default function ChatModal({navigation, route}) {
           messages={messages}
           onSend={(message) => onSend(message)}
           user={{
-            _id: 1,
+            _id: user.user_id,
           }}
           scrollToBottom={true}
           alignTop={true}

@@ -123,7 +123,6 @@ export const updateUser = (userData) => {
 
       if (res.ok) {
         let resJson = await res.json();
-        console.warn('In update User...', resJson);
 
         dispatch(setUser(resJson));
         return null;
