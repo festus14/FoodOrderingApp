@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import SearchBar from './SearchBar';
 import {SCREEN_WIDTH} from '../utility/constants';
@@ -31,6 +31,11 @@ const GooglePlacesInput = ({setLocation = () => {}, onSearch = () => {}}) => {
           borderRadius: 5,
         },
         inputStyle: {},
+        // ref:{(input) => {
+        //   getRef(input);
+        // }},
+        // ref: useRef(),
+        getRef: () => {},
         onSearch: () => onSearch(),
       }}
     />

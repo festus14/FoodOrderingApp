@@ -1,11 +1,20 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, KeyboardAvoidingView, Platform, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Modal,
+  Pressable,
+} from 'react-native';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import Header from '../../components/Header';
 import InputText from '../../components/InputText';
 import MyButton from '../../components/MyButton';
 import {
   ALMOST_BLACK,
+  GREY,
   LIGHTER_GREY,
   LIGHT_GREY,
   MAIN_COLOR,
@@ -48,7 +57,23 @@ const AddMenuModal = ({navigation}) => {
     },
   });
 
+  const [variantName, setVariantName] = useState({
+    field: 'Variant name',
+    value: '',
+    validationRules: {
+      minLength: 2,
+    },
+  });
+
   const [price, setPrice] = useState({
+    field: 'Price',
+    value: '',
+    validationRules: {
+      minLength: 1,
+    },
+  });
+
+  const [variantPrice, setVariantPrice] = useState({
     field: 'Price',
     value: '',
     validationRules: {
@@ -60,6 +85,14 @@ const AddMenuModal = ({navigation}) => {
     field: 'Description',
     value: '',
     validationRules: {},
+  });
+
+  const [categoryName, setCategoryName] = useState({
+    field: 'Category name',
+    value: '',
+    validationRules: {
+      minLength: 3,
+    },
   });
 
   const [selectedCategory, setSelectedCategory] = useState({
@@ -131,6 +164,8 @@ const AddMenuModal = ({navigation}) => {
     }
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <>
       <Header
@@ -139,9 +174,45 @@ const AddMenuModal = ({navigation}) => {
         onLeftPress={goBack}
       />
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <InputText
+              placeholder="Category name"
+              placeholderTextColor={LIGHTER_GREY}
+              containerStyle={styles.containerStyle}
+              autoCorrect={false}
+              value={categoryName.value}
+              onSubmitEditing={() => {}}
+              onChangeText={(input) =>
+                setCategoryName({...categoryName, value: input})
+              }
+              autoCapitalize="none"
+              returnKeyType="next"
+            />
+            <MyButton
+              style={styles.chatBtn}
+              text="Save"
+              textStyle={styles.varStyle}
+              iconStyle={styles.iconStyle}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
+
       <DismissKeyboard>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
           style={styles.container}>
           <View style={styles.form}>
             <View style={styles.imageView}>
@@ -183,7 +254,22 @@ const AddMenuModal = ({navigation}) => {
                 />
               </View>
               <View style={styles.categoryContainer}>
-                <Text style={styles.priceTitle}>Category</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={styles.priceTitle}>Category</Text>
+                  <MyButton
+                    style={styles.catBtn}
+                    text=""
+                    textStyle={styles.varStyle}
+                    icon="plus"
+                    iconColor="#fff"
+                    iconSize={10}
+                    onPress={() => setModalVisible(true)}
+                  />
+                </View>
                 <MyPicker
                   items={categories}
                   setSelected={(value) =>
@@ -216,8 +302,8 @@ const AddMenuModal = ({navigation}) => {
               returnKeyType="next"
             />
 
-            <View style={styles.priceRow}>
-              <Text>Variant</Text>
+            <View style={styles.variantRow}>
+              <Text style={styles.varText}>Variant</Text>
 
               <MyButton
                 style={styles.chatBtn}
@@ -232,9 +318,41 @@ const AddMenuModal = ({navigation}) => {
             </View>
 
             <View style={styles.variant}>
-              <View style={styles.varBox}></View>
+              <View style={styles.varBox}>
+                <InputText
+                  placeholder="Name"
+                  placeholderTextColor={GREY}
+                  containerStyle={styles.nameStyle}
+                  autoCorrect={false}
+                  value={variantName.value}
+                  onSubmitEditing={() => {}}
+                  onChangeText={(input) =>
+                    setVariantName({...variantName, value: input})
+                  }
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                />
 
-              {/* <View style={styles.clear}>
+                <InputText
+                  placeholder=""
+                  placeholderTextColor={LIGHT_GREY}
+                  title="#"
+                  autoCorrect={false}
+                  value={variantPrice.value}
+                  containerStyle={styles.varPriceStyle}
+                  inputStyle={styles.inputStyle}
+                  titleStyle={styles.varTitleStyle}
+                  onSubmitEditing={() => {}}
+                  onChangeText={(input) =>
+                    setVariantPrice({...variantPrice, value: input})
+                  }
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  keyboardType="decimal-pad"
+                />
+              </View>
+
+              <View style={styles.clear}>
                 <MyButton
                   style={styles.clearBtn}
                   textStyle={styles.clearStyle}
@@ -243,7 +361,7 @@ const AddMenuModal = ({navigation}) => {
                   iconSize={15}
                   onPress={() => {}}
                 />
-              </View> */}
+              </View>
             </View>
 
             <MyButton

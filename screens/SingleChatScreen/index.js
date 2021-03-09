@@ -42,8 +42,6 @@ export default function ChatModal({navigation, route}) {
 
         const info = data.messages || [data.message];
 
-        console.log('On message...', info);
-
         if (data.error !== true && info) {
           if (info.length === 1) {
             setMessages((previousMessages) =>
@@ -68,23 +66,7 @@ export default function ChatModal({navigation, route}) {
     };
   }, []);
 
-  // useEffect(() => {
-  //   setMessages([
-  //     {
-  //       _id: 1,
-  //       text: 'Hello consumer, how may I help you',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 1,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //   ]);
-  // }, []);
-
   const onSend = useCallback(async (message = []) => {
-    console.log('Message after each send...', message);
     try {
       const msg = JSON.stringify({
         chatId: chat_id.id,
