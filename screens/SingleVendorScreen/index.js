@@ -36,7 +36,7 @@ const SingleVendorScreen = ({navigation, route}) => {
     if (info.length > 0) {
       setLocaleHandler(info[0].name, info[0].menu);
     } else {
-      Alert.alert('Error', 'This vendor has no menu');
+      Alert.alert('Info', 'This vendor has no menu');
     }
   };
 
@@ -165,7 +165,7 @@ const SingleVendorScreen = ({navigation, route}) => {
                 )}
                 keyExtractor={(item) => item.id.toString()}
                 refreshing={false}
-                onRefresh={() => console.warn('Refreshed')}
+                onRefresh={() => {}}
                 showsHorizontalScrollIndicator={false}
                 horizontal
               />

@@ -91,3 +91,4 @@ export function isEmpty(value) {
     (typeof value === 'string' && value.trim().length === 0)
   );
 }
+

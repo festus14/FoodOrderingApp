@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
+import MyImage from './MyImage';
 
 export default function OrderItem({item, navigation}) {
   const getStateColor = () => {
@@ -20,9 +21,10 @@ export default function OrderItem({item, navigation}) {
       style={styles.container}
       onPress={() => navigation.navigate('OrderDetailsScreen', {item})}>
       <View>
-        <Image
-          source={{uri: item?.restaurant?.restaurant_image}}
+        <MyImage
+          uri={item?.restaurant?.restaurant_image}
           resizeMode="contain"
+          priority="normal"
           style={styles.image}
         />
       </View>

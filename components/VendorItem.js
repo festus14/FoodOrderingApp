@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SECONDARY_COLOR} from '../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
+import MyImage from './MyImage';
 
 const VendorItem = ({item, onPress}) => {
   const [selected, setSelected] = useState(false);
@@ -24,9 +25,10 @@ const VendorItem = ({item, onPress}) => {
           )}
         </View>
         <View style={styles.center}>
-          <Image
-            source={{uri: vendor.restaurant.image}}
+          <MyImage
+            uri={vendor.restaurant.image}
             resizeMode="cover"
+            priority="normal"
             style={styles.image}
           />
         </View>

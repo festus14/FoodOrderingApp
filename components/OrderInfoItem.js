@@ -1,13 +1,15 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text} from 'react-native';
 import {SECONDARY_COLOR} from '../utility/colors';
-import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
+import {SCREEN_HEIGHT} from '../utility/constants';
+import MyImage from './MyImage';
 
 export default function OrderInfoItem({item, navigation}) {
   return (
     <View style={styles.container}>
-      <Image
-        source={{uri: item?.menu_item?.food_image}}
+      <MyImage
+        uri={item?.menu_item?.food_image}
+        priority="normal"
         resizeMode="cover"
         style={styles.image}
       />

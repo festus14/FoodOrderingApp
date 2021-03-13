@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {SECONDARY_COLOR} from '../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
+import {trimString} from '../utility/helpers';
+import MyImage from './MyImage';
 
 export default function FoodItem({item, navigation}) {
   return (
@@ -9,8 +11,9 @@ export default function FoodItem({item, navigation}) {
       style={styles.container}
       onPress={() => navigation.navigate('SingleFoodScreen', {item})}>
       <View style={styles.imageContainer}>
-        <Image
-          source={{uri: item.food_image}}
+        <MyImage
+          uri={item.food_image}
+          priority="normal"
           resizeMode="cover"
           style={styles.image}
         />
@@ -18,7 +21,7 @@ export default function FoodItem({item, navigation}) {
 
       <View style={styles.content}>
         <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.body}>{item.description}</Text>
+        <Text style={styles.body}>{trimString(item.description, 100)}</Text>
         <Text style={styles.price}>₦{item.price}</Text>
       </View>
     </TouchableOpacity>
@@ -43,7 +46,8 @@ const styles = {
   },
   content: {
     justifyContent: 'space-around',
-    paddingLeft: 12,
+    paddingLeft: 10,
+    paddingRight: 20,
   },
   title: {
     fontWeight: 'bold',
