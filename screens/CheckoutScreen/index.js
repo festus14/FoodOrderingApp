@@ -293,7 +293,12 @@ export default function CheckoutScreen({navigation, route}) {
             style={styles.orderBtn}
             text="Place Order"
             // onPress={placeOrderHandler}
-            onPress={() => navigation.navigate('PaymentScreen')}
+            onPress={() =>
+              navigation.navigate('PaymentScreen', {
+                total: getTotal(),
+                deliveryMode,
+              })
+            }
             isLoading={isOrdersLoading}
           />
         </ScrollView>

@@ -1,3 +1,8 @@
+import RNPaystack from 'react-native-paystack';
+
+RNPaystack.init({
+  publicKey: 'pk_test_b3b4e25efbb878f097556f7238f24588ea7f5e67',
+});
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {StoreProvider} from './store';

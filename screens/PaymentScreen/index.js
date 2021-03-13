@@ -14,7 +14,9 @@ import {Store} from '../../store';
 import {getOrders} from '../../store/actions';
 import PaymentItem from '../../components/PaymentItem';
 
-const PaymentScreen = ({navigation}) => {
+const PaymentScreen = ({navigation, route}) => {
+  const {total, deliveryMode} = route.params;
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -25,7 +27,11 @@ const PaymentScreen = ({navigation}) => {
         />
 
         <View style={styles.container}>
-          <PaymentItem navigation={navigation} />
+          <PaymentItem
+            total={total}
+            deliveryMode={deliveryMode}
+            navigation={navigation}
+          />
           <PaymentItem navigation={navigation} />
         </View>
       </SafeAreaView>

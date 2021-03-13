@@ -11,7 +11,7 @@ export const setOrders = (openOrders, closedOrders) => {
   };
 };
 
-export const postOrder = ({deliveryMode}) => {
+export const postOrder = ({deliveryMode, reference}) => {
   return async (dispatch, state) => {
     try {
       dispatch(ordersUiStartLoading());
@@ -41,13 +41,18 @@ export const postOrder = ({deliveryMode}) => {
           service_fee: 0,
           order_type: deliveryMode === 'delivery' ? 'DELIVERY' : 'PICK UP',
           restaurant: cart.checkoutInfo.restaurant_id,
+          reference,
         },
         {},
         token,
       );
 
+      console.log('Order made', res);
+
       dispatch(ordersUiStopLoading());
       if (res.ok) {
+        let resJson = await res.json();
+        console.log('Order made, resJson', resJson);
         return null;
       }
 

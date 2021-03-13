@@ -7,7 +7,7 @@ export const styles = {
   },
   form: {
     padding: 16,
-    height: SCREEN_HEIGHT * 0.4,
+    // height: SCREEN_HEIGHT * 0.4,
     marginHorizontal: 5,
     marginTop: 50,
     backgroundColor: '#fff',
