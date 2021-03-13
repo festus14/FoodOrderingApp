@@ -58,13 +58,6 @@ const VendorsScreen = ({navigation}) => {
         component={headerComponent}
       />
 
-      <SearchBar
-        leftIcon="search"
-        rightIcon="ios-menu-outline"
-        placeholder="Search for vendors"
-        returnKeyType="search"
-      />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={{flex: 1}}>
