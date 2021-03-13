@@ -18,6 +18,7 @@ import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getMenus} from '../../store/actions';
 import MyButton from '../../components/MyButton';
+import EmptyComponent from '../../components/EmptyComponent';
 
 const MenusScreen = ({navigation}) => {
   const {
@@ -28,15 +29,15 @@ const MenusScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
-  useEffect(() => {
-    const fetchMenus = async () => {
-      let error = await dispatch(getMenus());
-      if (error) {
-        Alert.alert('Error', error);
-      } else {
-      }
-    };
+  const fetchMenus = async () => {
+    let error = await dispatch(getMenus());
+    if (error) {
+      Alert.alert('Error', error);
+    } else {
+    }
+  };
 
+  useEffect(() => {
     fetchMenus();
     return () => {};
   }, []);
@@ -53,33 +54,24 @@ const MenusScreen = ({navigation}) => {
             <View style={styles.loader}>
               <ActivityIndicator size={30} color={MAIN_COLOR} />
             </View>
-          ) : menus.length !== 0 ? (
-            <>
-              <FlatList
-                data={menus}
-                renderItem={({item, index, separators}) => (
-                  <FoodItem item={item} navigation={navigation} />
-                )}
-                keyExtractor={(item) => item.id.toString()}
-                refreshing={false}
-                onRefresh={() => console.warn('Refreshed')}
-                showsVerticalScrollIndicator={false}
-              />
-            </>
           ) : (
-            <View style={styles.empty}>
-              <Text style={styles.emptyText}>
-                There seems to be no menu yet.
-              </Text>
-              <MyButton
-                text="Add to Menu"
-                style={styles.btnStyle}
-                textStyle={styles.textStyle}
-                icon="plus"
-                iconColor={MAIN_COLOR}
-                onPress={() => navigation.navigate('AddMenuModal')}
-              />
-            </View>
+            <FlatList
+              data={menus}
+              renderItem={({item, index, separators}) => (
+                <FoodItem item={item} navigation={navigation} />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              refreshing={isLoading}
+              onRefresh={fetchMenus}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={
+                <EmptyComponent
+                  text="menu"
+                  onRefresh={fetchMenus}
+                  onPress={() => navigation.navigate('AddMenuModal')}
+                />
+              }
+            />
           )}
         </View>
       </SafeAreaView>

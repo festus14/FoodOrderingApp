@@ -15,6 +15,7 @@ import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getOrders} from '../../store/actions';
+import EmptyComponent from '../../components/EmptyComponent';
 
 const OrdersScreen = ({navigation}) => {
   const {
@@ -26,14 +27,14 @@ const OrdersScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      let error = await dispatch(getOrders());
-      if (error) {
-        Alert.alert('Error', error);
-      }
-    };
+  const fetchOrders = async () => {
+    let error = await dispatch(getOrders());
+    if (error) {
+      Alert.alert('Error', error);
+    }
+  };
 
+  useEffect(() => {
     fetchOrders();
   }, []);
 
@@ -47,9 +48,12 @@ const OrdersScreen = ({navigation}) => {
           <OrderItem item={item} navigation={navigation} />
         )}
         keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
+        refreshing={isLoading}
         onRefresh={async () => await dispatch(getOrders())}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <EmptyComponent text="pending order" onRefresh={fetchOrders} />
+        }
       />
     ) : (
       <FlatList
@@ -58,9 +62,12 @@ const OrdersScreen = ({navigation}) => {
           <OrderItem item={item} navigation={navigation} />
         )}
         keyExtractor={(item) => item.id.toString()}
-        refreshing={false}
+        refreshing={isLoading}
         onRefresh={async () => await dispatch(getOrders())}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <EmptyComponent text="closed order" onRefresh={fetchOrders} />
+        }
       />
     );
 

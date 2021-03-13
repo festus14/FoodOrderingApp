@@ -15,6 +15,7 @@ import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getChats} from '../../store/actions';
 import ChatItem from '../../components/ChatItem';
+import EmptyComponent from '../../components/EmptyComponent';
 
 const ChatsScreen = ({navigation}) => {
   const {
@@ -26,14 +27,14 @@ const ChatsScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
-  useEffect(() => {
-    const fetchChats = async () => {
-      let error = await dispatch(getChats());
-      if (error) {
-        Alert.alert('Error', error);
-      }
-    };
+  const fetchChats = async () => {
+    let error = await dispatch(getChats());
+    if (error) {
+      Alert.alert('Error', error);
+    }
+  };
 
+  useEffect(() => {
     fetchChats();
   }, []);
 
@@ -62,9 +63,12 @@ const ChatsScreen = ({navigation}) => {
                 <ChatItem item={item} navigation={navigation} />
               )}
               keyExtractor={(item) => item.id.toString()}
-              refreshing={false}
-              onRefresh={() => console.log('Refreshed')}
+              refreshing={isLoading}
+              onRefresh={fetchChats}
               showsVerticalScrollIndicator={false}
+              ListEmptyComponent={
+                <EmptyComponent text="closed order" onRefresh={fetchChats} />
+              }
             />
           )}
         </View>

@@ -81,8 +81,8 @@ const VendorsScreen = ({navigation}) => {
             )}
             keyExtractor={(item) => item.id}
             numColumns={2}
-            refreshing={false}
-            onRefresh={() => console.warn('Refreshed')}
+            refreshing={isLoading}
+            onRefresh={() => {}}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <Text style={styles.vendorText}>All Vendors</Text>

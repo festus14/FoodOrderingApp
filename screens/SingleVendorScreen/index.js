@@ -17,6 +17,7 @@ import {SECONDARY_COLOR, MAIN_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getVendorMenus, setCheckoutInfo} from '../../store/actions';
+import EmptyComponent from '../../components/EmptyComponent';
 
 const SingleVendorScreen = ({navigation, route}) => {
   const [vendor, extraInfo] = route.params.item;
@@ -29,17 +30,17 @@ const SingleVendorScreen = ({navigation, route}) => {
   } = useContext(Store);
   const [vendorMenus, setVendorMenus] = useState([]);
 
-  useEffect(() => {
-    const fetchMenus = async () => {
-      let info = await dispatch(getVendorMenus(vendor.restaurant.id));
-      setVendorMenus(info);
-      if (info.length > 0) {
-        setLocaleHandler(info[0].name, info[0].menu);
-      } else {
-        Alert.alert('Error', 'This vendor has no menu');
-      }
-    };
+  const fetchMenus = async () => {
+    let info = await dispatch(getVendorMenus(vendor.restaurant.id));
+    setVendorMenus(info);
+    if (info.length > 0) {
+      setLocaleHandler(info[0].name, info[0].menu);
+    } else {
+      Alert.alert('Error', 'This vendor has no menu');
+    }
+  };
 
+  useEffect(() => {
     fetchMenus();
     return () => {};
   }, []);
@@ -68,9 +69,10 @@ const SingleVendorScreen = ({navigation, route}) => {
         <FoodItem item={item} navigation={navigation} />
       )}
       keyExtractor={(item) => item.id.toString()}
-      refreshing={false}
-      onRefresh={() => console.warn('Refreshed')}
+      refreshing={isLoading}
+      onRefresh={fetchMenus}
       showsVerticalScrollIndicator={false}
+      ListEmptyComponent={<EmptyComponent text="menu" onRefresh={fetchMenus} />}
     />
   );
 
