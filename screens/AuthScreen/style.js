@@ -23,19 +23,22 @@ export const styles = {
         elevation: 0,
       },
     }),
-    height: '15%',
+    height: 100,
   },
   details: {
     marginTop: 0,
   },
   tabBtn: {
-    height: 36,
-    width: 100,
+    height: 35,
+    width: 90,
+  },
+  topBar: {
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   form: {
     flex: 1,
     padding: 16,
-    marginTop: 30,
   },
   inputStyle: {},
   titleStyle: {},
@@ -85,5 +88,6 @@ export const styles = {
     color: '#555',
     fontSize: 19,
     marginBottom: 30,
+    textAlign: 'center',
   },
 };

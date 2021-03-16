@@ -13,6 +13,7 @@ import SearchBar from '../../components/SearchBar';
 import VendorItem from '../../components/VendorItem';
 import {SECONDARY_COLOR} from '../../utility/colors';
 import {Store} from '../../store';
+import {trimString} from '../../utility/helpers';
 
 const VendorsScreen = ({navigation}) => {
   const {
@@ -46,7 +47,7 @@ const VendorsScreen = ({navigation}) => {
           textAlign: 'center',
           textAlignVertical: 'center',
         }}>
-        {userAddress}
+        {trimString(userAddress, 45)}
       </Text>
     </View>
   );

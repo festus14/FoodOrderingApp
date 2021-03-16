@@ -4,11 +4,12 @@ import Header from '../../components/Header';
 import MyButton from '../../components/MyButton';
 import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
-import {cancelOrder} from '../../store/actions';
+import {cancelOrder, reInitiateOrder} from '../../store/actions';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
+  console.log('Item...', item);
 
   const {
     state: {
@@ -43,6 +44,31 @@ const OrderDetailsScreen = ({navigation, route}) => {
         text: 'Cancel',
         onPress: async () => {
           let error = await dispatch(cancelOrder(item.id));
+          if (error) {
+            Alert.alert('Error', error);
+          } else {
+            navigation.navigate('OrdersScreen');
+            Alert.alert(
+              'Success',
+              'Your order has been successfully cancelled',
+            );
+          }
+        },
+      },
+    ]);
+  };
+
+  const reInitiateOrderHandler = async () => {
+    Alert.alert('Info', 'Are you sure you want to re initiate this order?', [
+      {
+        text: 'Close',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Cancel',
+        onPress: async () => {
+          let error = await dispatch(reInitiateOrder(item.id));
           if (error) {
             Alert.alert('Error', error);
           } else {
@@ -94,15 +120,24 @@ const OrderDetailsScreen = ({navigation, route}) => {
               />
             ))}
 
-            {item.status_of_order === 'PENDING' && (
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
               <MyButton
-                style={styles.cancelBtn}
-                text="CANCEL ORDER"
+                style={styles.inBtn}
+                text="RE INITIATE"
                 textStyle={styles.textStyle}
-                onPress={cancelOrderHandler}
+                onPress={reInitiateOrderHandler}
                 isLoading={isLoading}
               />
-            )}
+              {item.status_of_order === 'PENDING' && (
+                <MyButton
+                  style={styles.cancelBtn}
+                  text="CANCEL ORDER"
+                  textStyle={styles.textStyle}
+                  onPress={cancelOrderHandler}
+                  isLoading={isLoading}
+                />
+              )}
+            </View>
           </View>
 
           <Text style={styles.orderTitle}>DELIVERY</Text>
@@ -206,8 +241,16 @@ const styles = {
     alignItems: 'center',
     backgroundColor: '#FF0606',
     height: 32,
-    alignSelf: 'flex-end',
     marginTop: 6,
+  },
+  inBtn: {
+    width: '22%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green',
+    height: 32,
+    marginTop: 6,
+    marginRight: 10,
   },
   chatBtn: {
     width: '32%',

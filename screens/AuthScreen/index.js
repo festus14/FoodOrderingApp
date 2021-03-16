@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -24,7 +24,7 @@ import {
   resendVerifyToken,
 } from '../../store/actions';
 
-export default function AuthScreen({navigation}) {
+export default function AuthScreen({navigation, route}) {
   const {
     state: {
       ui: {isLoading},
@@ -187,6 +187,8 @@ export default function AuthScreen({navigation}) {
           setError(error);
         } else {
           setSuccess('Sign up successful');
+          setAuthView('auth');
+          setAuthState('login');
           navigation.navigate('VerificationScreen');
         }
       } catch (e) {
@@ -206,6 +208,8 @@ export default function AuthScreen({navigation}) {
           setError(error);
         } else {
           setSuccess('A token has been successfully sent to your mail');
+          setAuthView('auth');
+          setAuthState('login');
           navigation.navigate('VerificationScreen');
         }
       } catch (e) {
@@ -224,8 +228,11 @@ export default function AuthScreen({navigation}) {
         if (error) {
           setError(error);
         } else {
-          setSuccess('Reset Password has been successfully sent to your mail');
-          // setAuthView('auth');
+          setSuccess(
+            'Reset password token has been successfully sent to your mail',
+          );
+          setAuthView('auth');
+          setAuthState('login');
           navigation.navigate('PasswordResetScreen');
         }
       } catch (e) {

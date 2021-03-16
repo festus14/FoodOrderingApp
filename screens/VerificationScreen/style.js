@@ -9,19 +9,17 @@ export const styles = {
     backgroundColor: '#fff',
   },
   form: {
-    padding: 16,
-    height: SCREEN_HEIGHT * 0.45,
-    marginHorizontal: 5,
-    marginTop: 50,
+    paddingHorizontal: 16,
+    marginTop: 10,
     backgroundColor: '#fff',
-    zIndex: 1,
     borderRadius: 10,
   },
   inputStyle: {},
   titleStyle: {},
   codeText: {
     color: '#555',
-    fontSize: 19,
+    fontSize: 17,
+    textAlign: 'center',
   },
   containerStyle: {
     marginTop: 30,

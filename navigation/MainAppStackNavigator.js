@@ -12,6 +12,7 @@ import ChatsScreen from '../screens/ChatsScreen';
 import PaymentScreen from '../screens/PaymentScreen';
 import PaystackScreen from '../screens/PaystackScreen';
 import AddMenuModal from '../screens/AddMenuModal';
+import PromoScreen from '../screens/PromotionScreen';
 
 const MainStack = createStackNavigator();
 
@@ -50,6 +51,7 @@ export default function MainAppNavigator() {
           />
           <MainStack.Screen name="ChatsScreen" component={ChatsScreen} />
           <MainStack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+          <MainStack.Screen name="PromoScreen" component={PromoScreen} />
           <MainStack.Screen name="PaymentScreen" component={PaymentScreen} />
           <MainStack.Screen name="PaystackScreen" component={PaystackScreen} />
         </>

@@ -14,6 +14,8 @@ import {
   ORDERS_UI_STOP_LOADING,
   ORDER_CHAT_UI_START_LOADING,
   ORDER_CHAT_UI_STOP_LOADING,
+  PROMOS_UI_START_LOADING,
+  PROMOS_UI_STOP_LOADING,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -24,6 +26,7 @@ const initialState = {
   isCartLoading: false,
   isOrdersLoading: false,
   isOrderChartLoading: false,
+  isPromoLoading: false,
 };
 
 const reducer = (state, action) => {
@@ -97,6 +100,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         isOrderChartLoading: false,
+      };
+    case PROMOS_UI_START_LOADING:
+      return {
+        ...state,
+        isPromoLoading: true,
+      };
+    case PROMOS_UI_STOP_LOADING:
+      return {
+        ...state,
+        isPromoLoading: false,
       };
     case RESET_UI:
       return initialState;

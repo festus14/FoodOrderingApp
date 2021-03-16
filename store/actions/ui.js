@@ -13,6 +13,8 @@ import {
   ORDERS_UI_STOP_LOADING,
   ORDER_CHAT_UI_START_LOADING,
   ORDER_CHAT_UI_STOP_LOADING,
+  PROMOS_UI_START_LOADING,
+  PROMOS_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -96,5 +98,17 @@ export const orderChatUiStartLoading = () => {
 export const orderChatUiStopLoading = () => {
   return {
     type: ORDER_CHAT_UI_STOP_LOADING,
+  };
+};
+
+export const promosUiStartLoading = () => {
+  return {
+    type: PROMOS_UI_START_LOADING,
+  };
+};
+
+export const promosUiStopLoading = () => {
+  return {
+    type: PROMOS_UI_STOP_LOADING,
   };
 };

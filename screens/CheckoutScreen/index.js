@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Store} from '../../store';
 import {resetCart, deleteCart, updateCart} from '../../store/actions';
 import {postOrder} from '../../store/actions/orders';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function CheckoutScreen({navigation, route}) {
   const {
@@ -127,7 +128,9 @@ export default function CheckoutScreen({navigation, route}) {
             </View>
           </View>
 
-          <View style={styles.promo}>
+          <TouchableOpacity
+            style={styles.promo}
+            onPress={() => navigation.navigate('PromoScreen')}>
             <View style={styles.promoLeft}>
               <View style={styles.promoBadge}>
                 <Icon
@@ -148,7 +151,7 @@ export default function CheckoutScreen({navigation, route}) {
                 size={26}
               />
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.cost}>
             <CalculationItem title="Subtotal" value={subtotal} />

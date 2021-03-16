@@ -12,6 +12,8 @@ export {
   cartUiStopLoading,
   ordersUiStartLoading,
   ordersUiStopLoading,
+  promosUiStartLoading,
+  promosUiStopLoading,
 } from './ui';
 
 // auth actions
@@ -27,6 +29,7 @@ export {
   resendVerifyToken,
   resetPassword,
   changePassword,
+  verifyUser,
 } from './auth';
 
 // user actions
@@ -53,10 +56,19 @@ export {
 } from './cart';
 
 // consumer orders actions
-export {setOrders, postOrder, getOrders, cancelOrder} from './orders';
+export {
+  setOrders,
+  postOrder,
+  getOrders,
+  cancelOrder,
+  reInitiateOrder,
+} from './orders';
 
 // order chat actions
 export {setOrderChat, getOrderChat, getChats} from './chats';
+// order chat actions
+
+export {getPromoCodes} from './promos';
 
 // reset app
 export {resetApp} from './reset';

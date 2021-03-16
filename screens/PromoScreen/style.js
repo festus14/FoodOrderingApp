@@ -1,11 +1,15 @@
+import {SCREEN_HEIGHT} from '../../utility/constants';
+
 export const styles = {
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
   form: {
-    paddingHorizontal: 20,
-    marginTop: 15,
+    padding: 16,
+    height: SCREEN_HEIGHT * 0.45,
+    marginHorizontal: 5,
+    marginTop: 50,
     backgroundColor: '#fff',
     zIndex: 1,
     borderRadius: 10,
@@ -14,8 +18,8 @@ export const styles = {
   titleStyle: {},
   codeText: {
     color: '#555',
-    fontSize: 19,
     textAlign: 'center',
+    marginTop: 70,
   },
   containerStyle: {
     marginTop: 30,

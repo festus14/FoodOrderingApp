@@ -24,6 +24,7 @@ const PaystackScreen = ({navigation, route}) => {
     state: {
       ui: {isLoading},
       user: {user},
+      orders: {singleOrder},
     },
     dispatch,
   } = useContext(Store);
@@ -210,8 +211,10 @@ const PaystackScreen = ({navigation, route}) => {
         Alert.alert('Error', error);
       } else {
         error = await dispatch(postOrder({deliveryMode, reference}));
-        if (error) {
+        if (!error) {
           Alert.alert('Error', error);
+          // navigation.navigate('OrderDetailsScreen', {item: singleOrder});
+          navigation.navigate('OrdersStackNavigator');
         } else {
           Alert.alert('Success', 'Order has been made');
           navigation.navigate('OrdersStackNavigator');

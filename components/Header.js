@@ -73,14 +73,9 @@ const styles = {
       },
     }),
     width: '100%',
-    height: '23%',
-    ...Platform.select({
-      android: {
-        height: '10%',
-      },
-    }),
+    height: 90,
     justifyContent: 'center',
-    paddingTop: 20,
+    paddingTop: '8%',
   },
   status: {
     height: STATUS_BAR_HEIGHT,

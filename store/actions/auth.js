@@ -81,7 +81,7 @@ export const authRemoveAsyncData = () => {
         accessible: ACCESSIBLE.WHEN_UNLOCKED,
       });
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
   };
 };
@@ -175,22 +175,11 @@ export const resetPassword = (authData) => {
 
       let resJson = await res.json();
 
-      console.warn('Reset password...', resJson);
-
       dispatch(uiStopLoading());
 
-      if (!res.ok) {
-        if (res.status === 401) {
-          return 'Please log out and sign in again';
-        }
-        return (
-          resJson?.email[0] ??
-          resJson?.message ??
-          'Something went wrong, try again'
-        );
-      }
+      console.log('Reset password...', resJson);
 
-      return null;
+      return resJson.errors ?? null;
     } catch (error) {
       dispatch(uiStopLoading());
       console.log(error);
@@ -224,7 +213,7 @@ export const changePassword = (authData) => {
 
       let resJson = await res.json();
 
-      console.warn('Change password...', resJson);
+      console.log('Change password...', resJson);
 
       dispatch(uiStopLoading());
 
@@ -310,45 +299,24 @@ export const verifyUser = (token) => {
       }, 15000);
 
       let res = await sendRequest(
-        `${API_URL}/auth/login/`,
+        `${API_URL}/auth/users/verify-token/`,
         'POST',
         {
-          // email: authData.email,
-          // password: authData.password,
+          token,
         },
         {Authorization: ''},
       );
 
-      let resJson = await res.json();
-      console.warn('Log in...', resJson);
-
       dispatch(uiStopLoading());
-      if (resJson.error || resJson.error === 'Unauthenticated.') {
-        return resJson.error === 'Login Failed, kindly login again'
-          ? 'Email and password do not match'
-          : 'Authentication failed, please try again';
-      } else {
-        let {user, email, name, roles, mobile} = resJson.data;
-        user = {
-          ...user,
-          email,
-          name,
-          roles,
-          mobile,
-        };
-        dispatch(
-          authStoreAsyncData(
-            resJson.data.token,
-            user.id,
-            // authData,
-            resJson.data.expiry_date.date,
-          ),
-        );
-        dispatch(setUser(user));
-      }
+
+      let resJson = await res.json();
+
+      console.log('Verification...', resJson);
+      console.log('Verification res...', res);
+
+      return resJson?.valid ?? null;
     } catch (error) {
       dispatch(uiStopLoading());
-      console.log('Sign in catch...', error);
       return 'Authentication failed, please check your internet connection and try again';
     }
   };
@@ -367,6 +335,8 @@ export const resendVerifyToken = (email) => {
         }
       }, 15000);
 
+      await dispatch(uiStopLoading());
+
       let res = await sendRequest(
         `${API_URL}/auth/users/resend-token/`,
         'POST',
@@ -377,16 +347,15 @@ export const resendVerifyToken = (email) => {
       );
 
       let resJson = await res.json();
-      console.warn('Verify User Token...', resJson);
+      console.log('Verify User Token...', resJson);
 
-      await dispatch(uiStopLoading());
-      if (resJson.error) {
-        return resJson.error || 'Authentication failed, please try again';
+      if (resJson?.errors) {
+        return resJson?.errors;
       }
+
       return null;
     } catch (error) {
       dispatch(uiStopLoading());
-      console.log(error);
       return 'Authentication failed, please check your internet connection and try again';
     }
   };
@@ -414,13 +383,12 @@ export const forgotPassword = (email) => {
         {Authorization: ''},
       );
 
-      let resJson = await res.json();
-      console.warn('Forgot password...', resJson);
-
       await dispatch(uiStopLoading());
-      if (resJson.error) {
-        return resJson.error || 'Authentication failed, please try again';
+      if (res.ok) {
+        let resJson = await res.json();
+        console.log('Forgot password...', resJson);
       }
+
       return null;
     } catch (error) {
       dispatch(uiStopLoading());
