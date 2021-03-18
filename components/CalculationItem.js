@@ -5,7 +5,7 @@ export default function CalculationItem({title, value, valStyle, titleStyle}) {
   return (
     <View style={styles.container}>
       <Text style={titleStyle}>{title}</Text>
-      <Text style={valStyle}>#{value}</Text>
+      <Text style={valStyle}>₦{value}</Text>
     </View>
   );
 }

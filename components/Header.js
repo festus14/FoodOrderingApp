@@ -2,7 +2,11 @@ import React from 'react';
 import {Text, View, TouchableOpacity, Platform, StatusBar} from 'react-native';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../utility/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {STATUS_BAR_HEIGHT} from '../utility/constants';
+import {
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  STATUS_BAR_HEIGHT,
+} from '../utility/constants';
 import {isEmpty} from '../utility/helpers';
 
 const Header = ({
@@ -72,10 +76,10 @@ const styles = {
         elevation: 5,
       },
     }),
-    width: '100%',
-    height: 90,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT * 0.1,
     justifyContent: 'center',
-    paddingTop: '8%',
+    paddingTop: 25,
   },
   status: {
     height: STATUS_BAR_HEIGHT,

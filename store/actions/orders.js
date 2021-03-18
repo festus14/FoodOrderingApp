@@ -31,6 +31,7 @@ export const postOrder = ({deliveryMode, reference}) => {
         menu_item: elem.id,
         price: elem.price,
         quantity: elem.count,
+        special_note: elem.instruction,
       }));
 
       let res = await sendRequest(

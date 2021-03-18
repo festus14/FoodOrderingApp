@@ -21,7 +21,7 @@ export default function FoodItem({item, navigation}) {
 
       <View style={styles.content}>
         <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.body}>{trimString(item.description, 100)}</Text>
+        <Text style={styles.body}>{trimString(item.description, 115)}</Text>
         <Text style={styles.price}>₦{item.price}</Text>
       </View>
     </TouchableOpacity>
@@ -31,8 +31,8 @@ const styles = {
   container: {
     marginBottom: 12,
     flexDirection: 'row',
-    height: SCREEN_HEIGHT * 0.13,
-    width: SCREEN_WIDTH * 0.8,
+    height: SCREEN_HEIGHT * 0.12,
+    width: SCREEN_WIDTH * 0.75,
   },
   imageContainer: {
     height: '100%',
@@ -41,7 +41,7 @@ const styles = {
     alignItems: 'center',
   },
   image: {
-    height: '90%',
+    height: '85%',
     width: '100%',
   },
   content: {

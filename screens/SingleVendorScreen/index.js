@@ -81,6 +81,15 @@ const SingleVendorScreen = ({navigation, route}) => {
     setMenu(currentMenu);
   };
 
+  const getRatingIcon = (val) => {
+    if (val <= 2) {
+      return 'ios-star-outline';
+    } else if (val <= 4) {
+      return 'ios-star-half-outline';
+    }
+    return 'ios-star-sharp';
+  };
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -126,7 +135,7 @@ const SingleVendorScreen = ({navigation, route}) => {
             </Text>
             <View style={styles.rating}>
               <Icon
-                name="star-half-outline"
+                name={getRatingIcon(vendor.rating)}
                 color={SECONDARY_COLOR}
                 size={15}
               />
@@ -134,7 +143,10 @@ const SingleVendorScreen = ({navigation, route}) => {
               <View style={{justifyContent: 'center'}}>
                 <Icon name="ellipse" color="#000" size={6} />
               </View>
-              <Text style={{color: SECONDARY_COLOR}}> ## </Text>
+              <Text style={{color: SECONDARY_COLOR}}>
+                {' '}
+                {'#'.repeat(vendor?.restaurant?.expensive_rate)}{' '}
+              </Text>
               <View style={{justifyContent: 'center'}}>
                 <Icon name="ellipse" color="#000" size={6} />
               </View>

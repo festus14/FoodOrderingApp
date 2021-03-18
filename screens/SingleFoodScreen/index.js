@@ -18,6 +18,7 @@ import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utility/constants';
 import {setCart, updateCart} from '../../store/actions';
 import {Store} from '../../store';
+import InputText from '../../components/InputText';
 
 const SingleFoodScreen = ({navigation, route}) => {
   const {
@@ -29,7 +30,7 @@ const SingleFoodScreen = ({navigation, route}) => {
   } = useContext(Store);
   const goBack = () => navigation.goBack();
   const item = route.params.item;
-  // console.log('item...', item);
+  console.log('item...', item.productvariant[0]);
 
   const [count, setCount] = useState(1);
 
@@ -47,7 +48,8 @@ const SingleFoodScreen = ({navigation, route}) => {
     const itemData = {
       id: item.id,
       name: item.name,
-      price: item.price,
+      price: item.price + varPrice,
+      instruction,
       count,
     };
     const oldItem = cart.filter((elem) => elem.id === itemData.id);
@@ -57,6 +59,25 @@ const SingleFoodScreen = ({navigation, route}) => {
       await dispatch(setCart(itemData));
     }
     goBack();
+  };
+
+  const [instruction, setInstruction] = useState({
+    field: 'Instruction',
+    value: '',
+    validationRules: {},
+  });
+
+  const [checkedList, setCheckedList] = useState([
+    ...new Array(item.productvariant.length).fill(false),
+  ]);
+
+  const [varPrice, setVarPrice] = useState(0);
+
+  const onCheckHandler = (i) => {
+    const tempArr = [...new Array(item.productvariant.length).fill(false)];
+    tempArr[i] = true;
+    setCheckedList(tempArr);
+    setVarPrice(item?.productvariant[i]?.price ?? 0);
   };
 
   return (
@@ -112,20 +133,34 @@ const SingleFoodScreen = ({navigation, route}) => {
 
             <Text style={styles.option}>Options</Text>
 
-            <FoodContentItem />
-            <FoodContentItem />
-            <FoodContentItem />
+            {item.productvariant.length > 0 ? (
+              item.productvariant.map((elem, i) => (
+                <FoodContentItem
+                  key={elem.id}
+                  item={elem}
+                  checked={checkedList[i]}
+                  onCheck={() => onCheckHandler(i)}
+                />
+              ))
+            ) : (
+              <Text style={styles.empty}>No variant available</Text>
+            )}
 
             <View style={styles.total}>
               <Text style={styles.totalText}>Total</Text>
-              <Text style={styles.totalText}>₦2250</Text>
+              <Text style={styles.totalText}>₦{item.price + varPrice}</Text>
             </View>
 
-            <Text style={styles.option}>Special Instructions</Text>
-
-            <Text style={styles.option}>
-              No extra topping such as fresh leaves
-            </Text>
+            <InputText
+              containerStyle={styles.containerStyle}
+              inputStyle={styles.inputStyle}
+              placeholder="Input special instructions..."
+              autoCapitalize="none"
+              returnKeyType="done"
+              onChangeText={(input) =>
+                setInstruction({...instruction, value: input})
+              }
+            />
 
             <View style={styles.increment}>
               <RoundButton text="-" onPress={() => incrementHandler()} />
@@ -155,10 +190,8 @@ export default SingleFoodScreen;
 const styles = {
   container: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    marginBottom: 0,
-    paddingBottom: 0,
+    marginTop: 10,
+    backgroundColor: '#fff',
   },
   infoImage: {
     width: '100%',
@@ -168,6 +201,7 @@ const styles = {
     flex: 1,
     justifyContent: 'space-between',
     padding: 15,
+    paddingHorizontal: 23,
   },
   top: {
     flexDirection: 'row',
@@ -216,6 +250,7 @@ const styles = {
   },
   content: {
     justifyContent: 'space-around',
+    paddingHorizontal: 23,
   },
   title: {
     fontWeight: 'bold',
@@ -230,19 +265,19 @@ const styles = {
   option: {
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    marginTop: 5,
+    marginTop: 4,
     marginBottom: 8,
     paddingVertical: 6,
     borderColor: LIGHTER_GREY,
+    paddingHorizontal: 23,
+    fontWeight: '100',
   },
   total: {
     flexDirection: 'row',
-    width: SCREEN_WIDTH * 0.84,
-    height: SCREEN_HEIGHT * 0.05,
+    width: SCREEN_WIDTH * 0.88,
+    height: SCREEN_HEIGHT * 0.04,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 0,
-    marginBottom: 6,
     alignSelf: 'center',
     paddingRight: 7,
     paddingLeft: 17,
@@ -271,5 +306,26 @@ const styles = {
   addStyle: {
     marginBottom: 25,
     justifyContent: 'center',
+  },
+  containerStyle: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 2,
+    marginBottom: 8,
+    paddingVertical: 0,
+    borderColor: LIGHTER_GREY,
+    paddingHorizontal: 23,
+    fontWeight: '100',
+  },
+  inputStyle: {
+    padding: 0,
+    paddingTop: 5,
+    fontSize: 15,
+    justifyContent: 'center',
+  },
+  empty: {
+    textAlign: 'center',
+    marginVertical: 10,
+    fontSize: 17,
   },
 };

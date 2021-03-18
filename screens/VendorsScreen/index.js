@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
   Platform,
 } from 'react-native';
 import Header from '../../components/Header';
-import SearchBar from '../../components/SearchBar';
 import VendorItem from '../../components/VendorItem';
 import {SECONDARY_COLOR} from '../../utility/colors';
 import {Store} from '../../store';
@@ -24,8 +23,6 @@ const VendorsScreen = ({navigation}) => {
     },
     dispatch,
   } = useContext(Store);
-
-  const goBack = () => navigation.goBack();
 
   const headerComponent = (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -47,7 +44,7 @@ const VendorsScreen = ({navigation}) => {
           textAlign: 'center',
           textAlignVertical: 'center',
         }}>
-        {trimString(userAddress, 45)}
+        {trimString(userAddress, 42)}
       </Text>
     </View>
   );
@@ -55,7 +52,9 @@ const VendorsScreen = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header
-        // rightIcon="ios-chevron-down-outline"
+        rightIcon="ios-create-outline"
+        size={25}
+        onRightPress={() => navigation.navigate('ConsumerMapScreen')}
         component={headerComponent}
       />
 

@@ -1,14 +1,44 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Store} from '../store';
+import {likeVendor} from '../store/actions';
 import {SECONDARY_COLOR} from '../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
 import MyImage from './MyImage';
 
 const VendorItem = ({item, onPress}) => {
-  const [selected, setSelected] = useState(false);
-  const [favorite, setFavorite] = useState(false);
+  const {
+    state: {},
+    dispatch,
+  } = useContext(Store);
+
   const [vendor, extraInfo] = item;
+
+  const getRatingIcon = (val) => {
+    if (val <= 2) {
+      return 'ios-star-outline';
+    } else if (val <= 4.0) {
+      return 'ios-star-half-outline';
+    }
+    return 'ios-star-sharp';
+  };
+
+  const onLikeHandler = (like) => {
+    let error = dispatch(likeVendor(vendor.restaurant.id));
+    if (!error) {
+      Alert.alert(
+        'Error',
+        `Attempt to ${like ? 'like' : 'unlike'} this vendor failed, try again`,
+      );
+    } else {
+      Alert.alert(
+        'Success',
+        `Restaurant ${like ? 'added' : 'removed'} to favorites`,
+      );
+    }
+  };
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
@@ -19,9 +49,17 @@ const VendorItem = ({item, onPress}) => {
             size={22}
           />
           {extraInfo.additional_info.liked_by_user ? (
-            <Icon name="ios-heart-sharp" color={SECONDARY_COLOR} size={22} />
+            <TouchableOpacity onPress={() => onLikeHandler(false)}>
+              <Icon name="ios-heart-sharp" color={SECONDARY_COLOR} size={22} />
+            </TouchableOpacity>
           ) : (
-            <Icon name="ios-heart-outline" color={SECONDARY_COLOR} size={22} />
+            <TouchableOpacity onPress={() => onLikeHandler(true)}>
+              <Icon
+                name="ios-heart-outline"
+                color={SECONDARY_COLOR}
+                size={22}
+              />
+            </TouchableOpacity>
           )}
         </View>
         <View style={styles.center}>
@@ -38,12 +76,19 @@ const VendorItem = ({item, onPress}) => {
           </Text>
           <Text style={styles.vendor}>{vendor.restaurant.firstname}</Text>
           <View style={styles.rating}>
-            <Icon name="star-half-outline" color={SECONDARY_COLOR} size={15} />
+            <Icon
+              name={getRatingIcon(vendor.rating)}
+              color={SECONDARY_COLOR}
+              size={15}
+            />
             <Text> 3.5 </Text>
             <View style={{justifyContent: 'center'}}>
               <Icon name="ellipse" color="#000" size={6} />
             </View>
-            <Text style={{color: SECONDARY_COLOR}}> ## </Text>
+            <Text style={{color: SECONDARY_COLOR}}>
+              {' '}
+              {'#'.repeat(vendor?.restaurant?.expensive_rate)}
+            </Text>
           </View>
         </View>
       </View>

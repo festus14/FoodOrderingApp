@@ -58,6 +58,7 @@ export const getVendors = (locationData) => {
           }
           return resJson.errors;
         }
+        console.log('Vendors...', resJson.results[0]);
         await dispatch(setVendors(resJson.results));
         await dispatch(setUserAddress(locationData.delivery_address));
 
@@ -139,6 +140,36 @@ export const getMenus = (id) => {
     } catch (e) {
       await dispatch(vendorsMenuUiStopLoading());
       console.warn(e);
+      return 'Failed';
+    }
+  };
+};
+
+export const likeVendor = (id) => {
+  return async (dispatch, state) => {
+    try {
+      let token = await dispatch(getAuthToken());
+      let res = await sendRequest(
+        `${API_URL}/auth/users/like-restaurant/`,
+        'POST',
+        {restaurant_id: id},
+        {},
+        token,
+      );
+
+      console.log('Liked res...', res);
+
+      if (res.ok) {
+        let resJson = await res.json();
+
+        await dispatch(getVendors({delivery_address: state.user.userAddress}));
+
+        return resJson.success ? null : 'Failed';
+      }
+      return 'Failed';
+    } catch (error) {
+      console.log(error);
+      return 'Failed';
     }
   };
 };

@@ -27,7 +27,7 @@ export default function CheckoutItem({
       <View style={styles.item}>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={[styles.price, styles.coloredText]}>
-          N{item.price * count}
+          ₦{item.price * count}
         </Text>
       </View>
       <View style={styles.controlContainer}>

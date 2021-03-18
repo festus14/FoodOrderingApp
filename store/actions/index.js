@@ -43,7 +43,7 @@ export {
 } from './user';
 
 // vendor actions
-export {getVendors, getVendorMenus, getMenus} from './vendors';
+export {getVendors, getVendorMenus, getMenus, likeVendor} from './vendors';
 
 // consumer cart actions
 export {
