@@ -3,23 +3,21 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../utility/colors';
 import MyButton from './MyButton';
 
-const PromoCodeItem = () => {
+const PromoCodeItem = ({item, onApply, isLoading}) => {
   return (
     <View style={styles.container}>
       <View style={styles.text}>
-        <Text style={styles.head}>FREE50</Text>
-        <Text style={styles.middle}>50% off</Text>
-        <Text style={styles.bottom}>
-          Up to 50% off any meal for new customers
-        </Text>
+        <Text style={styles.head}>{item.code}</Text>
+        <Text style={styles.middle}>{item.percentage_off}% off</Text>
+        <Text style={styles.bottom}>{item.description}</Text>
       </View>
 
       <MyButton
         style={styles.applyBtn}
         text="APPLY"
         textStyle={styles.textStyle}
-        onPress={() => {}}
-        // isLoading={isLoading}
+        onPress={onApply}
+        isLoading={isLoading === item.id}
       />
     </View>
   );

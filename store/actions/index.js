@@ -66,9 +66,9 @@ export {
 
 // order chat actions
 export {setOrderChat, getOrderChat, getChats} from './chats';
-// order chat actions
 
-export {getPromoCodes} from './promos';
+// promo codes actions
+export {getPromoCodes, applyCode} from './promos';
 
 // reset app
 export {resetApp} from './reset';

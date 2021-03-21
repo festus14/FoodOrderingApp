@@ -1,5 +1,6 @@
-import React, {useState, useContext} from 'react';
-import {ScrollView, Text, View, SafeAreaView, Alert} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useContext, useEffect} from 'react';
+import {ScrollView, Text, View, SafeAreaView, Alert, Modal} from 'react-native';
 import CheckoutItem from '../../components/CheckOutItem';
 import Header from '../../components/Header';
 import TopBar from '../../components/TopBar';
@@ -12,9 +13,16 @@ import {
 } from '../../utility/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Store} from '../../store';
-import {resetCart, deleteCart, updateCart} from '../../store/actions';
-import {postOrder} from '../../store/actions/orders';
+import {
+  resetCart,
+  deleteCart,
+  updateCart,
+  setCheckoutInfo,
+} from '../../store/actions';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import DateTimePicker from '../../components/DateTimePicker';
+import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utility/constants';
+import {getTime, isEmpty} from '../../utility/helpers';
 
 export default function CheckoutScreen({navigation, route}) {
   const {
@@ -25,16 +33,18 @@ export default function CheckoutScreen({navigation, route}) {
     },
     dispatch,
   } = useContext(Store);
+  console.log('checkoutInfo...', checkoutInfo);
   const {title} = route.params;
   const [position, setPosition] = useState('left');
   const [deliveryMode, setDeliveryMode] = useState('delivery');
-  const setPositionHandler = (pos) => {
+  const setPositionHandler = async (pos) => {
     setPosition(pos);
     if (pos === 'left') {
       setDeliveryMode('delivery');
     } else {
       setDeliveryMode('pickUp');
     }
+    await dispatch(setCheckoutInfo({deliveryMode}));
   };
 
   const resetCartHandler = async () => {
@@ -49,10 +59,16 @@ export default function CheckoutScreen({navigation, route}) {
   };
 
   const deleteItemHandler = async (id) => {
+    if (checkoutInfo.promoVal !== 0) {
+      await dispatch(setCheckoutInfo({promoVal: 0}));
+    }
     await dispatch(deleteCart(id));
   };
 
   const incrementHandler = async (id, isInc) => {
+    if (checkoutInfo.promoVal !== 0) {
+      await dispatch(setCheckoutInfo({promoVal: 0}));
+    }
     if (isInc) {
       await dispatch(updateCart(id, +1));
     } else {
@@ -60,18 +76,48 @@ export default function CheckoutScreen({navigation, route}) {
     }
   };
 
-  const getTotal = () => {
-    return subtotal;
+  const [total, setTotal] = useState(0);
+
+  const getTotal = async () => {
+    let totals =
+      +subtotal +
+      (Number.isInteger(checkoutInfo?.delivery_fee)
+        ? +checkoutInfo?.delivery_fee
+        : 0) +
+      +(subtotal * 0.03) -
+      +(checkoutInfo?.promoVal ?? 0);
+
+    totals = Math.round(totals);
+    if (+total !== +totals) {
+      setTotal(totals);
+      await dispatch(setCheckoutInfo({total: totals}));
+    }
+    return totals;
   };
 
-  const placeOrderHandler = async () => {
-    let error = await dispatch(postOrder({deliveryMode}));
-    if (error) {
-      Alert.alert('Error', error);
+  useEffect(() => {
+    getTotal();
+  }, [subtotal, checkoutInfo.promoVal]);
+
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const setDateHandler = (newDate) => {
+    setDate(newDate);
+  };
+
+  const saveTimeHandler = async () => {
+    setTime(getTime(date));
+    await dispatch(setCheckoutInfo({pickupTime: getTime(date)}));
+    setModalVisible(false);
+  };
+
+  const checkDeliveryMode = () => {
+    if (deliveryMode === 'pickUp' && isEmpty(time)) {
+      Alert.alert('Error', 'Please enter a pickup time');
     } else {
-      Alert.alert('Success', 'Order has been made');
-      navigation.navigate('OrdersStackNavigator');
-      await dispatch(resetCart());
+      navigation.navigate('PaymentScreen');
     }
   };
 
@@ -82,6 +128,32 @@ export default function CheckoutScreen({navigation, route}) {
         title={title}
         onLeftPress={() => navigation.goBack()}
       />
+
+      {modalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <DateTimePicker
+                mode="time"
+                date={date}
+                onSetDate={setDateHandler}
+              />
+              <MyButton
+                style={styles.modalBtn}
+                text="Save"
+                textStyle={styles.modalText}
+                onPress={saveTimeHandler}
+              />
+            </View>
+          </View>
+        </Modal>
+      )}
 
       <TopBar
         style={styles.topBar}
@@ -141,7 +213,11 @@ export default function CheckoutScreen({navigation, route}) {
               </View>
               <View style={styles.promoCenter}>
                 <Text style={styles.promoTitle}>Apply Promo Code</Text>
-                <Text style={styles.promoText}>No promo selected</Text>
+                <Text style={styles.promoText}>
+                  {checkoutInfo?.promoVal > 0
+                    ? 'Promo code applied'
+                    : 'No promo code used'}
+                </Text>
               </View>
             </View>
             <View style={styles.promoIcon}>
@@ -158,15 +234,18 @@ export default function CheckoutScreen({navigation, route}) {
             <CalculationItem
               title="Delivery Fee"
               value={
-                Number.isInteger(checkoutInfo.delivery)
-                  ? checkoutInfo.delivery
+                Number.isInteger(checkoutInfo?.delivery_fee)
+                  ? checkoutInfo?.delivery_fee
                   : '0'
               }
             />
-            <CalculationItem title="Service Fee" value="200" />
+            <CalculationItem
+              title="Service Fee"
+              value={Math.round(subtotal * 0.03)}
+            />
             <CalculationItem
               title="Promo"
-              value="1250"
+              value={checkoutInfo?.promoVal ?? 0}
               valStyle={{color: SECONDARY_COLOR}}
             />
           </View>
@@ -174,7 +253,7 @@ export default function CheckoutScreen({navigation, route}) {
           <View style={styles.total}>
             <CalculationItem
               title="Grand Total"
-              value={getTotal()}
+              value={total}
               valStyle={{fontWeight: 'bold'}}
               titleStyle={{fontWeight: 'bold'}}
             />
@@ -266,7 +345,9 @@ export default function CheckoutScreen({navigation, route}) {
                     <Text style={{...styles.promoTitle, fontSize: 15}}>
                       Pickup Location
                     </Text>
-                    <Text style={styles.promoText}>{userAddress}</Text>
+                    <Text style={styles.promoText}>
+                      {checkoutInfo?.pickupAddress ?? ''}
+                    </Text>
                   </View>
                 </View>
 
@@ -282,10 +363,12 @@ export default function CheckoutScreen({navigation, route}) {
                     <Text style={{...styles.promoTitle, fontSize: 15}}>
                       Pickup Time
                     </Text>
-                    <Text style={styles.promoText}>
-                      Pickup in{' '}
-                      {checkoutInfo?.delivery_time?.slice(0, -4) ?? ''}s
-                    </Text>
+
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(true)}
+                      style={styles.timeStyle}>
+                      <Text style={styles.timeText}>{time}</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </>
@@ -295,13 +378,7 @@ export default function CheckoutScreen({navigation, route}) {
           <MyButton
             style={styles.orderBtn}
             text="Place Order"
-            // onPress={placeOrderHandler}
-            onPress={() =>
-              navigation.navigate('PaymentScreen', {
-                total: getTotal(),
-                deliveryMode,
-              })
-            }
+            onPress={checkDeliveryMode}
             isLoading={isOrdersLoading}
           />
         </ScrollView>
@@ -392,5 +469,49 @@ const styles = {
   orderBtn: {
     marginVertical: 35,
     justifyContent: 'center',
+  },
+  timeStyle: {
+    width: SCREEN_WIDTH * 0.25,
+    height: SCREEN_HEIGHT * 0.038,
+    borderWidth: 1,
+    borderColor: LIGHTER_GREY,
+    borderRadius: 10,
+    marginTop: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalBtn: {
+    marginTop: 15,
+    width: '30%',
+    alignItems: 'center',
+  },
+  modalText: {
+    textAlign: 'center',
+  },
+  timeText: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 17,
   },
 };

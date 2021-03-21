@@ -18,7 +18,7 @@ export const setSingleOrder = (order) => {
   };
 };
 
-export const postOrder = ({deliveryMode, reference}) => {
+export const postOrder = ({reference}) => {
   return async (dispatch, state) => {
     try {
       dispatch(ordersUiStartLoading());
@@ -39,17 +39,21 @@ export const postOrder = ({deliveryMode, reference}) => {
         'POST',
         {
           ordereditem: orderedItem,
-          //   pick_up_time: cart.checkoutInfo.delivery_time,
+          pick_up_time: cart.checkoutInfo.pickupTime,
           delivery_address: state.user.userAddress,
           phone: state.user.user.phone,
-          subtotal_fee: cart.subtotal,
+          subtotal_fee: cart?.checkoutInfo?.total || cart.subtotal,
           delivery_fee: Number.isInteger(cart.checkoutInfo.delivery)
             ? cart.checkoutInfo.delivery
             : 0,
-          service_fee: 0,
-          order_type: deliveryMode === 'delivery' ? 'DELIVERY' : 'PICK UP',
+          service_fee: Math.round(+cart.subtotal * 0.03),
+          order_type:
+            cart.checkoutInfo.deliveryMode === 'delivery'
+              ? 'DELIVERY'
+              : 'PICK UP',
           restaurant: cart.checkoutInfo.restaurant_id,
           transaction_reference: reference,
+          promo_code_used: cart.checkoutInfo.promoId,
         },
         {},
         token,

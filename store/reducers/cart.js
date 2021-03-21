@@ -50,10 +50,10 @@ const reducer = (state, action) => {
     case SET_CHECKOUT_INFO:
       return {
         ...state,
-        checkoutInfo: action.info,
+        checkoutInfo: {...state.checkoutInfo, ...action.info},
       };
     case RESET_CART:
-      return initialState;
+      return {...state, cart: [], subtotal: 0};
     default:
       return state;
   }

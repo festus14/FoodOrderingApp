@@ -1,22 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect} from 'react';
-import {
-  View,
-  SafeAreaView,
-  FlatList,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import React from 'react';
+import {View, SafeAreaView} from 'react-native';
 import Header from '../../components/Header';
-import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
+import {SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
-import {Store} from '../../store';
-import {getOrders} from '../../store/actions';
 import PaymentItem from '../../components/PaymentItem';
 
 const PaymentScreen = ({navigation, route}) => {
-  const {total, deliveryMode} = route.params;
-
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -27,11 +17,7 @@ const PaymentScreen = ({navigation, route}) => {
         />
 
         <View style={styles.container}>
-          <PaymentItem
-            total={total}
-            deliveryMode={deliveryMode}
-            navigation={navigation}
-          />
+          <PaymentItem navigation={navigation} />
           <PaymentItem navigation={navigation} />
         </View>
       </SafeAreaView>

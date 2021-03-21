@@ -41,11 +41,11 @@ const MyButton = ({
         ) : (
           <Text style={[styles.text, textStyle || {}]}>{text}</Text>
         ))}
-      {rightIcon && (
-        <View>
+      <View>
+        {rightIcon && (
           <Icon name={rightIcon} size={iconSize} color={iconColor} />
-        </View>
-      )}
+        )}
+      </View>
     </TouchableOpacity>
   );
 };

@@ -11,6 +11,7 @@ import {
 import {sendRequest} from '../../utility/helpers';
 import {getUserRole, setUserAddress} from './user';
 import * as RootNavigation from '../../RootNavigation';
+import {resetCart} from './cart';
 
 export const setVendors = (vendors) => {
   return {
@@ -58,7 +59,6 @@ export const getVendors = (locationData) => {
           }
           return resJson.errors;
         }
-        console.log('Vendors...', resJson.results[0]);
         await dispatch(setVendors(resJson.results));
         await dispatch(setUserAddress(locationData.delivery_address));
 
@@ -75,7 +75,6 @@ export const getVendors = (locationData) => {
       return 'Failed';
     } catch (e) {
       dispatch(vendorsUiStopLoading());
-      console.warn(e);
       return 'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in';
     }
   };
@@ -105,6 +104,7 @@ export const getVendorMenus = (id) => {
           }
         }
 
+        await dispatch(resetCart());
         return resJson.results;
       }
     } catch (e) {
@@ -114,7 +114,7 @@ export const getVendorMenus = (id) => {
   };
 };
 
-export const getMenus = (id) => {
+export const getMenus = () => {
   return async (dispatch, state) => {
     dispatch(vendorsMenuUiStartLoading());
     try {
@@ -157,8 +157,6 @@ export const likeVendor = (id) => {
         token,
       );
 
-      console.log('Liked res...', res);
-
       if (res.ok) {
         let resJson = await res.json();
 
@@ -168,7 +166,6 @@ export const likeVendor = (id) => {
       }
       return 'Failed';
     } catch (error) {
-      console.log(error);
       return 'Failed';
     }
   };

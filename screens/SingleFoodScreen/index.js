@@ -1,13 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-  Platform,
-} from 'react-native';
+import {View, Text, SafeAreaView, ImageBackground} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FoodContentItem from '../../components/FoodContentItem';
@@ -23,14 +15,12 @@ import InputText from '../../components/InputText';
 const SingleFoodScreen = ({navigation, route}) => {
   const {
     state: {
-      ui: {isCartLoading: isLoading},
       cart: {cart},
     },
     dispatch,
   } = useContext(Store);
   const goBack = () => navigation.goBack();
   const item = route.params.item;
-  console.log('item...', item.productvariant[0]);
 
   const [count, setCount] = useState(1);
 
@@ -48,8 +38,8 @@ const SingleFoodScreen = ({navigation, route}) => {
     const itemData = {
       id: item.id,
       name: item.name,
-      price: item.price + varPrice,
-      instruction,
+      price: varPrice || item.price,
+      instruction: instruction.value,
       count,
     };
     const oldItem = cart.filter((elem) => elem.id === itemData.id);
@@ -93,7 +83,7 @@ const SingleFoodScreen = ({navigation, route}) => {
           }
         />
 
-        <ScrollView>
+        <ScrollView style={{backgroundColor: '#fff'}}>
           <View style={styles.infoImage}>
             <ImageBackground
               source={{uri: item.food_image}}
@@ -115,11 +105,11 @@ const SingleFoodScreen = ({navigation, route}) => {
                 <View style={styles.time}>
                   <Text>{item.preparation_time}mins</Text>
                 </View>
-                <Icon
+                {/* <Icon
                   name="ios-heart-outline"
                   color={SECONDARY_COLOR}
                   size={22}
-                />
+                /> */}
               </View>
             </ImageBackground>
           </View>
@@ -148,7 +138,7 @@ const SingleFoodScreen = ({navigation, route}) => {
 
             <View style={styles.total}>
               <Text style={styles.totalText}>Total</Text>
-              <Text style={styles.totalText}>₦{item.price + varPrice}</Text>
+              <Text style={styles.totalText}>₦{varPrice || item.price}</Text>
             </View>
 
             <InputText

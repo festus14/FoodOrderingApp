@@ -21,6 +21,8 @@ import EmptyComponent from '../../components/EmptyComponent';
 
 const SingleVendorScreen = ({navigation, route}) => {
   const [vendor, extraInfo] = route.params.item;
+  console.log('vendor...', vendor);
+  console.log('extraInfo...', extraInfo);
   const {
     state: {
       ui: {isVendorsMenuLoading: isLoading},
@@ -32,8 +34,8 @@ const SingleVendorScreen = ({navigation, route}) => {
 
   const fetchMenus = async () => {
     let info = await dispatch(getVendorMenus(vendor.restaurant.id));
-    setVendorMenus(info);
     if (info.length > 0) {
+      setVendorMenus(info);
       setLocaleHandler(info[0].name, info[0].menu);
     } else {
       Alert.alert('Info', 'This vendor has no menu');
@@ -51,6 +53,7 @@ const SingleVendorScreen = ({navigation, route}) => {
         setCheckoutInfo({
           ...extraInfo.additional_info,
           restaurant_id: vendor.id,
+          pickupAddress: vendor.address,
         }),
       );
     };
@@ -150,7 +153,7 @@ const SingleVendorScreen = ({navigation, route}) => {
               <View style={{justifyContent: 'center'}}>
                 <Icon name="ellipse" color="#000" size={6} />
               </View>
-              <Text> {extraInfo.additional_info.delivery_fee}</Text>
+              <Text> ₦{extraInfo.additional_info.delivery_fee}</Text>
             </View>
           </View>
 

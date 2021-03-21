@@ -2,13 +2,11 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {LIGHT_GREY, SECONDARY_COLOR} from '../utility/colors';
 
-export default function PaymentItem({navigation, total, deliveryMode}) {
+export default function PaymentItem({navigation}) {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() =>
-        navigation.navigate('PaystackScreen', {total, deliveryMode})
-      }>
+      onPress={() => navigation.navigate('PaystackScreen')}>
       <View>
         <Image
           source={require('../assets/images/burger.png')}

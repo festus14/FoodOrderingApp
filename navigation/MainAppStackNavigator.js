@@ -12,7 +12,7 @@ import ChatsScreen from '../screens/ChatsScreen';
 import PaymentScreen from '../screens/PaymentScreen';
 import PaystackScreen from '../screens/PaystackScreen';
 import AddMenuModal from '../screens/AddMenuModal';
-import PromoScreen from '../screens/PromotionScreen';
+import PromoScreen from '../screens/PromoScreen';
 
 const MainStack = createStackNavigator();
 

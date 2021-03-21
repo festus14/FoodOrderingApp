@@ -19,12 +19,12 @@ import MyPicker from '../../components/MyPicker';
 import RNPaystack from 'react-native-paystack';
 
 const PaystackScreen = ({navigation, route}) => {
-  const {total, deliveryMode} = route.params;
   const {
     state: {
       ui: {isLoading},
       user: {user},
       orders: {singleOrder},
+      cart: {checkOutInfo},
     },
     dispatch,
   } = useContext(Store);
@@ -186,7 +186,7 @@ const PaystackScreen = ({navigation, route}) => {
         cvc: '883',
         // cvc: cvv.value,
         email: user.email,
-        amountInKobo: total * 100,
+        amountInKobo: checkOutInfo.total * 100,
       });
 
       console.log('Payment res', res.reference);
@@ -210,7 +210,7 @@ const PaystackScreen = ({navigation, route}) => {
       if (error) {
         Alert.alert('Error', error);
       } else {
-        error = await dispatch(postOrder({deliveryMode, reference}));
+        error = await dispatch(postOrder({reference}));
         if (!error) {
           Alert.alert('Error', error);
           // navigation.navigate('OrderDetailsScreen', {item: singleOrder});

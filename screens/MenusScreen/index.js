@@ -1,23 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {
   View,
-  Text,
   SafeAreaView,
-  ImageBackground,
-  TouchableOpacity,
   FlatList,
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import FoodItem from '../../components/FoodItem';
 import Header from '../../components/Header';
 import {SECONDARY_COLOR, MAIN_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getMenus} from '../../store/actions';
-import MyButton from '../../components/MyButton';
 import EmptyComponent from '../../components/EmptyComponent';
 
 const MenusScreen = ({navigation}) => {
