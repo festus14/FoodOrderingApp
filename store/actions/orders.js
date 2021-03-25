@@ -40,18 +40,15 @@ export const postOrder = ({reference}) => {
         'POST',
         {
           ordereditem: orderedItem,
-          pick_up_time: cart.checkoutInfo.pickupTime,
+          pick_up_time: cart.checkoutInfo?.pickupTime ?? null,
           delivery_address: state.user.userAddress,
           phone: state.user.user.phone,
           subtotal_fee: cart?.checkoutInfo?.total || cart.subtotal,
-          delivery_fee: Number.isInteger(cart.checkoutInfo.delivery)
-            ? cart.checkoutInfo.delivery
+          delivery_fee: Number.isInteger(+cart.checkoutInfo.delivery_fee)
+            ? +cart.checkoutInfo.delivery_fee
             : 0,
           service_fee: Math.round(+cart.subtotal * 0.03),
-          order_type:
-            cart.checkoutInfo.deliveryMode === 'delivery'
-              ? 'DELIVERY'
-              : 'PICK UP',
+          order_type: cart.checkoutInfo.deliveryMode,
           restaurant: cart.checkoutInfo.restaurant_id,
           transaction_reference: reference,
           promo_code_used: cart.checkoutInfo.promoId,
@@ -59,27 +56,6 @@ export const postOrder = ({reference}) => {
         {},
         token,
       );
-
-      console.log(
-        'cart.checkoutInfo.deliveryMode...',
-        cart.checkoutInfo.deliveryMode,
-      );
-
-      console.log('Order res...', {
-        ordereditem: orderedItem,
-        pick_up_time: cart.checkoutInfo.pickupTime,
-        delivery_address: state.user.userAddress,
-        phone: state.user.user.phone,
-        subtotal_fee: cart?.checkoutInfo?.total || cart.subtotal,
-        delivery_fee: Number.isInteger(+cart.checkoutInfo.delivery_fee)
-          ? +cart.checkoutInfo.delivery_fee
-          : 0,
-        service_fee: Math.round(+cart.subtotal * 0.03),
-        order_type: cart.checkoutInfo.deliveryMode,
-        restaurant: cart.checkoutInfo.restaurant_id,
-        transaction_reference: reference,
-        promo_code_used: cart.checkoutInfo.promoId,
-      });
 
       dispatch(ordersUiStopLoading());
       if (res.ok) {

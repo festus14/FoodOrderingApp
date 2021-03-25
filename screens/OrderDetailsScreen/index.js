@@ -9,7 +9,7 @@ import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
-  // console.log('Item...', item);
+  console.log('Item...', item);
 
   const {
     state: {
@@ -123,13 +123,15 @@ const OrderDetailsScreen = ({navigation, route}) => {
             ))}
 
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <MyButton
-                style={styles.inBtn}
-                text="RE INITIATE"
-                textStyle={styles.textStyle}
-                onPress={reInitiateOrderHandler}
-                isLoading={isReInitiateLoading}
-              />
+              {!item.payment_successful && (
+                <MyButton
+                  style={styles.inBtn}
+                  text="RE INITIATE"
+                  textStyle={styles.textStyle}
+                  onPress={reInitiateOrderHandler}
+                  isLoading={isReInitiateLoading}
+                />
+              )}
               {item.status_of_order === 'PENDING' && (
                 <MyButton
                   style={styles.cancelBtn}

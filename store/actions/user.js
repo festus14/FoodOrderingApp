@@ -7,7 +7,7 @@ import {
   getAuthToken,
 } from './';
 import RNSecureKeyStore from 'react-native-secure-key-store';
-import {sendRequest} from '../../utility/helpers';
+import {sendRequest, sendPictureRequest} from '../../utility/helpers';
 import {
   ordersUiStartLoading,
   ordersUiStopLoading,
@@ -189,6 +189,57 @@ export const getAllBanks = () => {
       dispatch(ordersUiStopLoading());
       console.warn(e);
       return [];
+    }
+  };
+};
+
+export const changeProfilePicture = ({uri, type, fileName}) => {
+  return async (dispatch, state) => {
+    try {
+      dispatch(userUiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+      let userId = await dispatch(getUserId());
+
+      const formData = new FormData();
+
+      formData.append('image', {
+        uri,
+        type,
+        name: fileName,
+      });
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(userUiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let res = await sendPictureRequest(
+        `${API_URL}/auth/users/${userId}/`,
+        'PATCH',
+        formData,
+        {},
+        token,
+      );
+      await dispatch(userUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+        console.log('For picture', resJson);
+
+        if (resJson.errors || resJson.detail) {
+          return resJson.errors || resJson.detail;
+        }
+        await dispatch(setUser(resJson));
+        return null;
+      }
+
+      return 'Failed';
+    } catch (error) {
+      dispatch(userUiStopLoading());
+      return 'Please check your internet connection and try again';
     }
   };
 };

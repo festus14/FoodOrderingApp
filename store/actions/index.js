@@ -42,6 +42,7 @@ export {
   updateUser,
   verifyAccount,
   getAllBanks,
+  changeProfilePicture,
 } from './user';
 
 // vendor actions

@@ -109,21 +109,19 @@ export const logIn = (authData) => {
         {Authorization: ''},
       );
 
+      dispatch(uiStopLoading());
+
       let resJson = await res.json();
+
+      if (resJson.errors || resJson.detail) {
+        return resJson.errors ?? resJson.detail ?? 'Login failed';
+      }
 
       var userData = jwt_decode(resJson.access);
 
-      dispatch(uiStopLoading());
-
-      if (!res.ok) {
-        return (
-          resJson.error ?? resJson.message ?? resJson.details ?? 'Login failed'
-        );
-      }
-
       let {access: token, refresh} = resJson;
 
-      dispatch(
+      await dispatch(
         authStoreAsyncData({
           token,
           refresh,
@@ -144,7 +142,7 @@ export const logIn = (authData) => {
 
       return null;
     } catch (error) {
-      console.log(error);
+      console.log('In error', error);
       dispatch(uiStopLoading());
       return 'Authentication failed, please check your internet connection and try again';
     }
@@ -193,7 +191,6 @@ export const changePassword = (authData) => {
     try {
       dispatch(uiStartLoading());
       let token = await dispatch(getAuthToken());
-      await dispatch(authRemoveAsyncData());
 
       setTimeout(() => {
         if (!res) {
@@ -202,36 +199,27 @@ export const changePassword = (authData) => {
         }
       }, 15000);
 
+      console.log(authData);
+
       let res = await sendRequest(
-        `${API_URL}/auth/users/change_password/`,
+        `${API_URL}/auth/users/change-password/`,
         'POST',
         {
           ...authData,
         },
-        {Authorization: token},
+        {},
+        token,
       );
-
-      let resJson = await res.json();
-
-      console.log('Change password...', resJson);
-
       dispatch(uiStopLoading());
 
-      if (!res.ok) {
-        if (res.status === 401) {
-          return 'Please log out and sign in again';
-        }
-        return (
-          resJson?.email[0] ??
-          resJson?.message ??
-          'Something went wrong, try again'
-        );
+      if (res.ok) {
+        let resJson = await res.json();
+        return resJson.errors || null;
       }
 
-      return null;
+      return 'Failed';
     } catch (error) {
       dispatch(uiStopLoading());
-      console.log(error);
       return 'Authentication failed, please check your internet connection and try again';
     }
   };
@@ -310,9 +298,6 @@ export const verifyUser = (token) => {
       dispatch(uiStopLoading());
 
       let resJson = await res.json();
-
-      console.log('Verification...', resJson);
-      console.log('Verification res...', res);
 
       return resJson?.valid ?? null;
     } catch (error) {

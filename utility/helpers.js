@@ -32,6 +32,22 @@ export async function sendRequest(
   });
 }
 
+export async function sendPictureRequest(
+  url,
+  method = 'GET',
+  body,
+  headers = {},
+  token,
+) {
+  return await fetch(url, {
+    method: method,
+    body: body,
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  });
+}
+
 export function getTime(date = new Date()) {
   let hour = date.getHours();
   let min = date.getMinutes();

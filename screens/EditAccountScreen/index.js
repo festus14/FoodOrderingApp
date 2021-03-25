@@ -6,13 +6,13 @@ import MyButton from '../../components/MyButton';
 import {Store} from '../../store';
 import {LIGHTER_GREY, MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {validate} from '../../utility/validation';
-import {updateUser, resetPassword} from '../../store/actions';
+import {updateUser, changePassword} from '../../store/actions';
 import {capitalize} from '../../utility/helpers';
 
 const EditAccountScreen = ({navigation}) => {
   const {
     state: {
-      ui: {isUserLoading: isLoading},
+      ui: {isUserLoading, isLoading},
       user: {user},
     },
     dispatch,
@@ -163,12 +163,22 @@ const EditAccountScreen = ({navigation}) => {
   };
 
   const changePasswordHandler = async () => {
-    if (password.value.length > 4 && newPassword.value > 4) {
+    if (password.value.length > 4 && newPassword.value.length > 4) {
       let error = validatePassword();
       if (error) {
         setAuthError(error);
       } else {
-        error = await resetPassword({password: newPassword});
+        error = await dispatch(
+          changePassword({
+            new_password: newPassword.value,
+            old_password: password.value,
+          }),
+        );
+        if (error) {
+          setError(error);
+        } else {
+          setSuccess('Password successfully changed');
+        }
       }
     }
   };
@@ -246,7 +256,7 @@ const EditAccountScreen = ({navigation}) => {
             <MyButton
               text="Save"
               style={styles.btn}
-              isLoading={isLoading}
+              isLoading={isUserLoading}
               onPress={editUserHandler}
             />
           </View>

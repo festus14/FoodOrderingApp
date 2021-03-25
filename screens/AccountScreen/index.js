@@ -1,16 +1,29 @@
-import React, {useContext} from 'react';
-import {View, Text, Image} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, {useContext, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  Platform,
+  PermissionsAndroid,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/Header';
 import {Store} from '../../store';
-import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
+import {LIGHTER_GREY, MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {capitalize} from '../../utility/helpers';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import MyModal from '../../components/MyModal';
+import {changeProfilePicture} from '../../store/actions';
+import MyImage from '../../components/MyImage';
 
 const AccountScreen = ({navigation}) => {
   const {
     state: {
       user: {user},
+      ui: {isUserLoading: isLoading},
     },
     dispatch,
   } = useContext(Store);
@@ -20,17 +33,190 @@ const AccountScreen = ({navigation}) => {
     user?.lastname ?? ' ',
   ];
 
+  console.log('User...', user);
+
+  const [filePath, setFilePath] = useState({});
+
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission',
+          },
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
+
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'External Storage Write Permission',
+            message: 'App needs write permission',
+          },
+        );
+        // If WRITE_EXTERNAL_STORAGE Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        alert('Write permission err', err);
+      }
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const captureImage = async (type) => {
+    setModalVisible(false);
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+      videoQuality: 'low',
+      durationLimit: 30, //Video max duration in seconds
+      saveToPhotos: true,
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    if (isCameraPermitted && isStoragePermitted) {
+      launchCamera(options, async (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          alert(response.errorMessage);
+          return;
+        }
+        console.log('base64 -> ', response.base64);
+        console.log('uri -> ', response.uri);
+        console.log('width -> ', response.width);
+        console.log('height -> ', response.height);
+        console.log('fileSize -> ', response.fileSize);
+        console.log('type -> ', response.type);
+        console.log('fileName -> ', response.fileName);
+        setFilePath(response);
+        let error = await dispatch(changeProfilePicture(response));
+        if (error) {
+          Alert.alert('Error', error);
+        } else {
+          Alert.alert('Success', 'Profile picture updated');
+        }
+      });
+    }
+  };
+
+  const chooseFile = (type) => {
+    setModalVisible(false);
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        alert(response.errorMessage);
+        return;
+      }
+      console.log('base64 -> ', response.base64);
+      console.log('uri -> ', response.uri);
+      console.log('width -> ', response.width);
+      console.log('height -> ', response.height);
+      console.log('fileSize -> ', response.fileSize);
+      console.log('type -> ', response.type);
+      console.log('fileName -> ', response.fileName);
+      setFilePath(response);
+    });
+  };
+
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <>
       <Header title="Account" />
 
+      <MyModal
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+        btnTxt="CANCEL"
+        headerTxt="Select Image"
+        onPress={() => setModalVisible(false)}>
+        <View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.imageOption}
+            onPress={() => captureImage('photo')}>
+            <Text style={styles.imageText}>Take a photo...</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.imageOption}
+            onPress={() => chooseFile('photo')}>
+            <Text style={styles.imageText}>Choose from library...</Text>
+          </TouchableOpacity>
+        </View>
+      </MyModal>
+
       <View style={styles.container}>
         <View style={styles.head}>
-          <Image
-            source={require('../../assets/images/burger.png')}
-            resizeMode="contain"
-            style={styles.image}
-          />
+          {isLoading ? (
+            <ActivityIndicator color={MAIN_COLOR} style={styles.image} />
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => setModalVisible(true)}>
+              {user.image ? (
+                <MyImage
+                  uri={user.image}
+                  resizeMode="cover"
+                  style={[styles.image]}
+                  priority="high"
+                />
+              ) : (
+                <Image
+                  source={require('../../assets/images/myAvatar.png')}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+              )}
+            </TouchableOpacity>
+          )}
           <View style={styles.details}>
             <Text style={styles.title}>
               {capitalize(names[0]) + ' ' + capitalize(names[1])}
@@ -106,10 +292,7 @@ const styles = {
     paddingHorizontal: 28,
     paddingBottom: 20,
   },
-  image: {
-    height: 65,
-    width: 65,
-  },
+  image: {borderRadius: 100000, height: 60, width: 60},
   details: {
     paddingLeft: 18,
     alignItems: 'center',
@@ -145,4 +328,10 @@ const styles = {
   },
   body: {flexDirection: 'row'},
   text: {fontSize: 18},
+  imageOption: {
+    marginVertical: 10,
+  },
+  imageText: {
+    fontSize: 18,
+  },
 };

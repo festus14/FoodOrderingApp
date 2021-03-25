@@ -10,7 +10,7 @@ const reducer = (state, action) => {
     case SET_USER:
       return {
         ...state,
-        user: action.user,
+        user: {...state.user, ...action.user},
       };
     case SET_USER_ADDRESS:
       return {
