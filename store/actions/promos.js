@@ -54,7 +54,6 @@ export const applyCode = ({code, fee}) => {
       let token = await dispatch(getAuthToken());
 
       setTimeout(async () => {
-        await dispatch(promosUiStopLoading());
         if (!res) {
           return 'Check your internet connection and try again!';
         }
@@ -79,6 +78,41 @@ export const applyCode = ({code, fee}) => {
       }
       return 'Failed';
     } catch (error) {
+      return 'Something went wrong. Please check your internet connection and try again';
+    }
+  };
+};
+
+export const generateCode = (mail) => {
+  return async (dispatch, state) => {
+    await dispatch(promosUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
+
+      setTimeout(async () => {
+        await dispatch(promosUiStopLoading());
+        if (!res) {
+          return 'Check your internet connection and try again!';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/order/promo-code/get-referral-code/`,
+        'POST',
+        {mail},
+        {},
+        token,
+      );
+
+      await dispatch(promosUiStopLoading());
+      if (res.ok) {
+        let resJson = await res.json();
+        return resJson.errors || null;
+      }
+      return 'Failed';
+    } catch (error) {
+      await dispatch(promosUiStopLoading());
+      console.log(error);
       return 'Something went wrong. Please check your internet connection and try again';
     }
   };

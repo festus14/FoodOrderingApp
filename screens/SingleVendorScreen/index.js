@@ -21,8 +21,8 @@ import EmptyComponent from '../../components/EmptyComponent';
 
 const SingleVendorScreen = ({navigation, route}) => {
   const [vendor, extraInfo] = route.params.item;
-  console.log('vendor...', vendor);
-  console.log('extraInfo...', extraInfo);
+  // console.log('vendor...', vendor);
+  // console.log('extraInfo...', extraInfo);
   const {
     state: {
       ui: {isVendorsMenuLoading: isLoading},

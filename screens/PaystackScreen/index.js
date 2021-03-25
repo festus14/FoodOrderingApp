@@ -24,7 +24,7 @@ const PaystackScreen = ({navigation, route}) => {
       ui: {isLoading},
       user: {user},
       orders: {singleOrder},
-      cart: {checkOutInfo},
+      cart: {checkoutInfo},
     },
     dispatch,
   } = useContext(Store);
@@ -73,8 +73,6 @@ const PaystackScreen = ({navigation, route}) => {
   const [banks, setBanks] = useState([]);
 
   const [isResolved, setIsResolved] = useState(false);
-
-  const [reference, setReference] = useState('');
 
   useEffect(() => {
     const fetchAllBanks = async () => {
@@ -159,13 +157,12 @@ const PaystackScreen = ({navigation, route}) => {
         };
 
         let res = await dispatch(verifyAccount(accntData));
-        console.log(res);
         if (res.status) {
           Alert.alert(
             res.message,
             `${res.data.account_name} - ${res.data.account_number}`,
           );
-          setAccountName({...accountName, value: res.data.account_name});
+          // setAccountName({...accountName, value: res.data.account_name});
           setIsResolved(true);
         } else {
           setError(res.message);
@@ -186,15 +183,13 @@ const PaystackScreen = ({navigation, route}) => {
         cvc: '883',
         // cvc: cvv.value,
         email: user.email,
-        amountInKobo: checkOutInfo.total * 100,
+        amountInKobo: checkoutInfo.total * 100,
       });
 
-      console.log('Payment res', res.reference);
-      setReference(res.reference);
-      return null;
+      return res.reference || null;
     } catch (error) {
       console.log('Error payment message', error.message);
-      return error.message || 'Something went wrong, please try again';
+      Alert.alert('Error', error.message);
     }
   };
 
@@ -206,19 +201,17 @@ const PaystackScreen = ({navigation, route}) => {
     if (error) {
       Alert.alert('Error', error);
     } else {
-      error = await chargeCard();
-      if (error) {
-        Alert.alert('Error', error);
-      } else {
+      let reference = await chargeCard();
+      if (reference) {
         error = await dispatch(postOrder({reference}));
-        if (!error) {
+        if (error) {
           Alert.alert('Error', error);
           // navigation.navigate('OrderDetailsScreen', {item: singleOrder});
           navigation.navigate('OrdersStackNavigator');
         } else {
           Alert.alert('Success', 'Order has been made');
-          navigation.navigate('OrdersStackNavigator');
           await dispatch(resetCart());
+          navigation.navigate('OrdersStackNavigator');
         }
       }
     }
@@ -233,6 +226,7 @@ const PaystackScreen = ({navigation, route}) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles.container}>
+          <Text style={styles.header}>Enter Card Details</Text>
           <View style={styles.form}>
             <Text style={styles.label}>Card number</Text>
             <InputText

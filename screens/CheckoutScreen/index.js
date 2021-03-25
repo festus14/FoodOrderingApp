@@ -1,6 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useContext, useEffect} from 'react';
-import {ScrollView, Text, View, SafeAreaView, Alert, Modal} from 'react-native';
+import {
+  ScrollView,
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  Modal,
+  Image,
+} from 'react-native';
 import CheckoutItem from '../../components/CheckOutItem';
 import Header from '../../components/Header';
 import TopBar from '../../components/TopBar';
@@ -33,19 +41,23 @@ export default function CheckoutScreen({navigation, route}) {
     },
     dispatch,
   } = useContext(Store);
-  console.log('checkoutInfo...', checkoutInfo);
   const {title} = route.params;
   const [position, setPosition] = useState('left');
   const [deliveryMode, setDeliveryMode] = useState('delivery');
   const setPositionHandler = async (pos) => {
     setPosition(pos);
     if (pos === 'left') {
+      await dispatch(setCheckoutInfo({deliveryMode: 'DELIVERY'}));
       setDeliveryMode('delivery');
     } else {
+      await dispatch(setCheckoutInfo({deliveryMode: 'PICK UP'}));
       setDeliveryMode('pickUp');
     }
-    await dispatch(setCheckoutInfo({deliveryMode}));
   };
+
+  useEffect(() => {
+    setPositionHandler('left');
+  }, []);
 
   const resetCartHandler = async () => {
     Alert.alert('Warning', 'Are you sure you want to clear your cart?', [
@@ -54,7 +66,12 @@ export default function CheckoutScreen({navigation, route}) {
         onPress: () => {},
         style: 'cancel',
       },
-      {text: 'Clear', onPress: async () => await dispatch(resetCart())},
+      {
+        text: 'Clear',
+        onPress: async () => {
+          await dispatch(resetCart());
+        },
+      },
     ]);
   };
 
@@ -88,16 +105,14 @@ export default function CheckoutScreen({navigation, route}) {
       +(checkoutInfo?.promoVal ?? 0);
 
     totals = Math.round(totals);
-    if (+total !== +totals) {
-      setTotal(totals);
-      await dispatch(setCheckoutInfo({total: totals}));
-    }
+    setTotal(totals);
+    await dispatch(setCheckoutInfo({total: totals}));
     return totals;
   };
 
   useEffect(() => {
     getTotal();
-  }, [subtotal, checkoutInfo.promoVal]);
+  }, [subtotal, checkoutInfo.promoVal, cart.count]);
 
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
@@ -205,10 +220,10 @@ export default function CheckoutScreen({navigation, route}) {
             onPress={() => navigation.navigate('PromoScreen')}>
             <View style={styles.promoLeft}>
               <View style={styles.promoBadge}>
-                <Icon
-                  name="ios-chevron-forward-outline"
-                  color={ALMOST_BLACK}
-                  size={26}
+                <Image
+                  source={require('../../assets/images/promo.png')}
+                  resizeMode="contain"
+                  style={styles.image}
                 />
               </View>
               <View style={styles.promoCenter}>
@@ -224,7 +239,7 @@ export default function CheckoutScreen({navigation, route}) {
               <Icon
                 name="ios-chevron-forward-outline"
                 color={ALMOST_BLACK}
-                size={26}
+                size={30}
               />
             </View>
           </TouchableOpacity>
@@ -264,10 +279,10 @@ export default function CheckoutScreen({navigation, route}) {
               <>
                 <View style={styles.promoLeft}>
                   <View style={styles.promoBadge}>
-                    <Icon
-                      name="ios-chevron-forward-outline"
-                      color={ALMOST_BLACK}
-                      size={26}
+                    <Image
+                      source={require('../../assets/images/delivery.png')}
+                      resizeMode="contain"
+                      style={[{height: 25, width: 25}]}
                     />
                   </View>
                   <View style={[styles.promoCenter]}>
@@ -283,10 +298,10 @@ export default function CheckoutScreen({navigation, route}) {
 
                 <View style={styles.promoLeft}>
                   <View style={styles.promoBadge}>
-                    <Icon
-                      name="ios-chevron-forward-outline"
-                      color={ALMOST_BLACK}
-                      size={26}
+                    <Image
+                      source={require('../../assets/images/location.png')}
+                      resizeMode="contain"
+                      style={[{height: 25, width: 25}]}
                     />
                   </View>
                   <View style={{...styles.promoCenter, marginTop: 10}}>
@@ -300,9 +315,9 @@ export default function CheckoutScreen({navigation, route}) {
                 <View style={styles.promoLeft}>
                   <View style={styles.promoBadge}>
                     <Icon
-                      name="ios-chevron-forward-outline"
-                      color={ALMOST_BLACK}
-                      size={26}
+                      name="ios-phone-portrait-outline"
+                      color={SECONDARY_COLOR}
+                      size={28}
                     />
                   </View>
                   <View style={{...styles.promoCenter, marginTop: 10}}>
@@ -317,10 +332,10 @@ export default function CheckoutScreen({navigation, route}) {
               <>
                 <View style={styles.promoLeft}>
                   <View style={styles.promoBadge}>
-                    <Icon
-                      name="ios-chevron-forward-outline"
-                      color={ALMOST_BLACK}
-                      size={26}
+                    <Image
+                      source={require('../../assets/images/delivery.png')}
+                      resizeMode="contain"
+                      style={[{height: 25, width: 25}]}
                     />
                   </View>
                   <View style={[styles.promoCenter]}>
@@ -335,10 +350,10 @@ export default function CheckoutScreen({navigation, route}) {
 
                 <View style={styles.promoLeft}>
                   <View style={styles.promoBadge}>
-                    <Icon
-                      name="ios-chevron-forward-outline"
-                      color={ALMOST_BLACK}
-                      size={26}
+                    <Image
+                      source={require('../../assets/images/location.png')}
+                      resizeMode="contain"
+                      style={[{height: 25, width: 25}]}
                     />
                   </View>
                   <View style={{...styles.promoCenter, marginTop: 10}}>
@@ -353,10 +368,10 @@ export default function CheckoutScreen({navigation, route}) {
 
                 <View style={styles.promoLeft}>
                   <View style={styles.promoBadge}>
-                    <Icon
-                      name="ios-chevron-forward-outline"
-                      color={ALMOST_BLACK}
-                      size={26}
+                    <Image
+                      source={require('../../assets/images/pickup-time.png')}
+                      resizeMode="contain"
+                      style={[{height: 25, width: 25}]}
                     />
                   </View>
                   <View style={{...styles.promoCenter, marginTop: 10}}>
@@ -449,7 +464,9 @@ const styles = {
     alignItems: 'center',
   },
   promoBadge: {
-    paddingRight: 20,
+    paddingRight: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   promoTitle: {
     fontSize: 18,
@@ -513,5 +530,10 @@ const styles = {
     textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: 17,
+  },
+  image: {
+    height: 65,
+    width: 65,
+    borderRadius: 200,
   },
 };

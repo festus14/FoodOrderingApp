@@ -2,6 +2,7 @@ import {API_URL} from '../../utility/constants';
 import {sendRequest} from '../../utility/helpers';
 import {ordersUiStartLoading, ordersUiStopLoading, getAuthToken} from './';
 import {SET_ORDERS, SET_SINGLE_ORDER} from './actionTypes';
+import {reInitiateUiStartLoading, reInitiateUiStopLoading} from './ui';
 
 export const setOrders = (openOrders, closedOrders) => {
   return {
@@ -59,12 +60,33 @@ export const postOrder = ({reference}) => {
         token,
       );
 
+      console.log(
+        'cart.checkoutInfo.deliveryMode...',
+        cart.checkoutInfo.deliveryMode,
+      );
+
+      console.log('Order res...', {
+        ordereditem: orderedItem,
+        pick_up_time: cart.checkoutInfo.pickupTime,
+        delivery_address: state.user.userAddress,
+        phone: state.user.user.phone,
+        subtotal_fee: cart?.checkoutInfo?.total || cart.subtotal,
+        delivery_fee: Number.isInteger(+cart.checkoutInfo.delivery_fee)
+          ? +cart.checkoutInfo.delivery_fee
+          : 0,
+        service_fee: Math.round(+cart.subtotal * 0.03),
+        order_type: cart.checkoutInfo.deliveryMode,
+        restaurant: cart.checkoutInfo.restaurant_id,
+        transaction_reference: reference,
+        promo_code_used: cart.checkoutInfo.promoId,
+      });
+
       dispatch(ordersUiStopLoading());
       if (res.ok) {
         let resJson = await res.json();
         console.log('Order made, resJson', resJson);
         dispatch(setSingleOrder(resJson));
-        return resJson.payment_successful;
+        return null;
       }
 
       return 'Failed';
@@ -160,35 +182,40 @@ export const cancelOrder = (id) => {
 export const reInitiateOrder = (reference) => {
   return async (dispatch, state) => {
     try {
-      await dispatch(ordersUiStartLoading());
+      await dispatch(reInitiateUiStartLoading());
 
       let token = await dispatch(getAuthToken());
 
       setTimeout(async () => {
-        await dispatch(ordersUiStopLoading());
+        await dispatch(reInitiateUiStopLoading());
         if (!res) {
           return 'Check your internet connection and try again!';
         }
       }, 15000);
 
       let res = await sendRequest(
-        `${API_URL}/transactions/verify-transaction/?reference=${reference}/`,
+        `${API_URL}/payment/transactions/verify-transaction/?reference=${reference}`,
         'GET',
         {},
         {},
         token,
       );
 
-      await dispatch(ordersUiStopLoading());
+      await dispatch(reInitiateUiStopLoading());
+
+      console.log('ResJson re-initiate...', res);
+      let resJson = await res.json();
+      console.log('ResJson re-initiate...', resJson, reference);
 
       if (res.ok) {
-        let resJson = await res.json();
+        // let resJson = await res.json();
+        // console.log('ResJson re-initiate...', resJson);
         await dispatch(getOrders());
         return null;
       }
       return 'Failed';
     } catch (error) {
-      await dispatch(ordersUiStopLoading());
+      await dispatch(reInitiateUiStopLoading());
       console.log(error);
       return 'Something went wrong. Please check your internet connection and try again';
     }

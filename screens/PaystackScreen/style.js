@@ -7,9 +7,8 @@ export const styles = {
   },
   form: {
     padding: 16,
-    // height: SCREEN_HEIGHT * 0.4,
     marginHorizontal: 5,
-    marginTop: 50,
+    marginTop: 5,
     backgroundColor: '#fff',
     zIndex: 1,
     borderRadius: 10,
@@ -29,5 +28,10 @@ export const styles = {
   label: {
     marginTop: 30,
     fontSize: 16,
+  },
+  header: {
+    textAlign: 'center',
+    fontSize: 20,
+    paddingTop: 20,
   },
 };

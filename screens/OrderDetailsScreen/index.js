@@ -9,11 +9,11 @@ import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
-  console.log('Item...', item);
+  // console.log('Item...', item);
 
   const {
     state: {
-      ui: {isOrdersLoading: isLoading},
+      ui: {isOrdersLoading: isLoading, isReInitiateLoading},
     },
     dispatch,
   } = useContext(Store);
@@ -59,16 +59,18 @@ const OrderDetailsScreen = ({navigation, route}) => {
   };
 
   const reInitiateOrderHandler = async () => {
-    Alert.alert('Info', 'Are you sure you want to re initiate this order?', [
+    Alert.alert('Info', 'Are you sure you want to re-initiate this order?', [
       {
         text: 'Close',
         onPress: () => {},
         style: 'cancel',
       },
       {
-        text: 'Cancel',
+        text: 'YES',
         onPress: async () => {
-          let error = await dispatch(reInitiateOrder(item.id));
+          let error = await dispatch(
+            reInitiateOrder(item.transaction_reference),
+          );
           if (error) {
             Alert.alert('Error', error);
           } else {
@@ -126,7 +128,7 @@ const OrderDetailsScreen = ({navigation, route}) => {
                 text="RE INITIATE"
                 textStyle={styles.textStyle}
                 onPress={reInitiateOrderHandler}
-                isLoading={isLoading}
+                isLoading={isReInitiateLoading}
               />
               {item.status_of_order === 'PENDING' && (
                 <MyButton
@@ -154,19 +156,19 @@ const OrderDetailsScreen = ({navigation, route}) => {
           <View style={styles.orderInfo}>
             <Text style={styles.time}>
               Items total:{' '}
-              <Text style={styles.title}>N{item.subtotal_fee}</Text>
+              <Text style={styles.title}>₦{item.subtotal_fee}</Text>
             </Text>
             <Text style={styles.time}>
               Delivery fee:{' '}
-              <Text style={styles.title}>N{item.delivery_fee}</Text>
+              <Text style={styles.title}>₦{item.delivery_fee}</Text>
             </Text>
             <Text style={styles.time}>
               Service charge:{' '}
-              <Text style={styles.title}>N{item.service_fee}</Text>
+              <Text style={styles.title}>₦{item.service_fee}</Text>
             </Text>
             <View style={styles.last}>
               <Text style={styles.time}>
-                Total: <Text style={styles.title}>N{item.subtotal_fee}</Text>
+                Total: <Text style={styles.title}>₦{item.subtotal_fee}</Text>
               </Text>
 
               <MyButton

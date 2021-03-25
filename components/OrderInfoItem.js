@@ -17,7 +17,7 @@ export default function OrderInfoItem({item, navigation}) {
       <View style={styles.content}>
         <Text style={styles.title}>{item.menu_item.name}</Text>
         <View style={styles.bottom}>
-          <Text style={styles.price}>#{item.price}</Text>
+          <Text style={styles.price}>₦{item.price}</Text>
           <Text style={styles.countText}>{item.quantity}</Text>
         </View>
       </View>

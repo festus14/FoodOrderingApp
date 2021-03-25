@@ -14,6 +14,8 @@ export {
   ordersUiStopLoading,
   promosUiStartLoading,
   promosUiStopLoading,
+  reInitiateUiStartLoading,
+  reInitiateUiStopLoading,
 } from './ui';
 
 // auth actions
@@ -68,7 +70,7 @@ export {
 export {setOrderChat, getOrderChat, getChats} from './chats';
 
 // promo codes actions
-export {getPromoCodes, applyCode} from './promos';
+export {getPromoCodes, applyCode, generateCode} from './promos';
 
 // reset app
 export {resetApp} from './reset';
