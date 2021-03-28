@@ -487,6 +487,7 @@ export default function BecomeVendorScreen({navigation}) {
               mode="dropdown"
               labelStyle={styles.label}
               picker={{height: 30}}
+              valueKey="name"
             />
           </View>
 

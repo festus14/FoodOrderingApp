@@ -19,6 +19,8 @@ export const RE_INITIATE_ORDER_UI_START_LOADING =
   'RE_INITIATE_ORDER_UI_START_LOADING';
 export const RE_INITIATE_ORDER_UI_STOP_LOADING =
   'RE_INITIATE_ORDER_UI_STOP_LOADING';
+export const CATEGORY_UI_START_LOADING = 'CATEGORY_UI_START_LOADING';
+export const CATEGORY_UI_STOP_LOADING = 'CATEGORY_UI_STOP_LOADING';
 
 // Authentication action types
 export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN';
@@ -31,6 +33,7 @@ export const SET_USER_ADDRESS = 'SET_USER_ADDRESS';
 export const SET_VENDORS = 'SET_VENDORS';
 export const SET_VENDOR_MENUS = 'SET_VENDOR_MENUS';
 export const SET_MENUS = 'SET_MENUS';
+export const SET_CATEGORIES = 'SET_CATEGORIES';
 
 // Consumer cart action types
 export const SET_CART = 'SET_CART';

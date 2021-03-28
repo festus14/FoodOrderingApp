@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import {LIGHT_GREY} from '../utility/colors';
 
 export default function MyPicker({
   items,
@@ -10,6 +9,8 @@ export default function MyPicker({
   labelStyle = {},
   pickerStyle = {},
   picker = {},
+  valueKey = 'id',
+  labelKey = 'name',
   ...props
 }) {
   const [chosenValue, setChosenValue] = useState('...');
@@ -33,8 +34,8 @@ export default function MyPicker({
         {items.map((option) => (
           <Picker.Item
             key={option.id}
-            label={option.name}
-            value={option.name}
+            label={option[labelKey]}
+            value={option[valueKey]}
           />
         ))}
       </Picker>

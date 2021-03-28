@@ -53,6 +53,8 @@ export {
   getMenus,
   likeVendor,
   addMenu,
+  createVendorCategory,
+  getVendorCategories,
 } from './vendors';
 
 // consumer cart actions

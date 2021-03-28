@@ -260,7 +260,7 @@ export const signUpVendor = (data) => {
         }
       }, 15000);
 
-      let res = await sendPictureRequest(
+      let res = await sendRequest(
         `${API_URL}/order/branch_restaurant/`,
         'POST',
         {...data},
@@ -270,18 +270,22 @@ export const signUpVendor = (data) => {
       await dispatch(userUiStopLoading());
 
       console.log('Res for vendor create...', res);
-      // let resJson = await res.json();
-      // console.log('ResJson for vendor', resJson);
 
       if (res.ok) {
-        // let resJson = await res.json();
-        // console.log('For picture', resJson);
+        let resJson = await res.json();
+        console.log('For picture', resJson);
 
-        // if (resJson.errors || resJson.detail) {
-        //   return resJson.errors || resJson.detail;
-        // }
+        if (resJson.errors || resJson.detail) {
+          return resJson.errors || resJson.detail;
+        }
         // await dispatch(setUser(resJson));
+
         return null;
+      }
+
+      let resText = await res.text();
+      if (resText) {
+        console.error('Become resText...', resText);
       }
 
       return 'Failed';

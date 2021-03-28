@@ -18,6 +18,8 @@ import {
   PROMOS_UI_STOP_LOADING,
   RE_INITIATE_ORDER_UI_START_LOADING,
   RE_INITIATE_ORDER_UI_STOP_LOADING,
+  CATEGORY_UI_START_LOADING,
+  CATEGORY_UI_STOP_LOADING,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -30,6 +32,7 @@ const initialState = {
   isOrderChartLoading: false,
   isPromoLoading: false,
   isReInitiateLoading: false,
+  isCategoriesLoading: false,
 };
 
 const reducer = (state, action) => {
@@ -123,6 +126,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         isReInitiateLoading: false,
+      };
+    case CATEGORY_UI_START_LOADING:
+      return {
+        ...state,
+        isCategoriesLoading: true,
+      };
+    case CATEGORY_UI_STOP_LOADING:
+      return {
+        ...state,
+        isCategoriesLoading: false,
       };
     case RESET_UI:
       return initialState;

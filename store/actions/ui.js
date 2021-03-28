@@ -17,6 +17,8 @@ import {
   PROMOS_UI_STOP_LOADING,
   RE_INITIATE_ORDER_UI_START_LOADING,
   RE_INITIATE_ORDER_UI_STOP_LOADING,
+  CATEGORY_UI_START_LOADING,
+  CATEGORY_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -124,5 +126,17 @@ export const reInitiateUiStartLoading = () => {
 export const reInitiateUiStopLoading = () => {
   return {
     type: RE_INITIATE_ORDER_UI_STOP_LOADING,
+  };
+};
+
+export const categoryStartLoading = () => {
+  return {
+    type: CATEGORY_UI_START_LOADING,
+  };
+};
+
+export const categoryUiStopLoading = () => {
+  return {
+    type: CATEGORY_UI_STOP_LOADING,
   };
 };

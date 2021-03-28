@@ -243,14 +243,14 @@ const AccountScreen = ({navigation}) => {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.body}>
+        {/* <View style={styles.body}>
           <View style={styles.icon}>
             <Icon name="md-bicycle-sharp" size={35} color={SECONDARY_COLOR} />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>Driver's page</Text>
           </View>
-        </View>
+        </View> */}
       </View>
     </>
   );

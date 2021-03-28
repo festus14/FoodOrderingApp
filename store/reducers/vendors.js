@@ -3,12 +3,14 @@ import {
   SET_VENDOR_MENUS,
   RESET_VENDORS,
   SET_MENUS,
+  SET_CATEGORIES,
 } from '../actions/actionTypes';
 
 const initialState = {
   vendors: [],
   vendorMenus: [],
   menus: [],
+  categories: [],
 };
 
 const reducer = (state, action) => {
@@ -27,6 +29,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         menus: action.menus,
+      };
+    case SET_CATEGORIES:
+      return {
+        ...state,
+        categories: action.categories,
       };
     case RESET_VENDORS:
       return initialState;

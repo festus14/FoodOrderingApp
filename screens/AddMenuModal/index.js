@@ -1,4 +1,6 @@
-import React, {useState, useContext} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -20,7 +22,11 @@ import {
 import {styles} from './style';
 import {validate} from '../../utility/validation';
 import {Store} from '../../store';
-import {addMenu, resetPassword} from '../../store/actions';
+import {
+  addMenu,
+  createVendorCategory,
+  getVendorCategories,
+} from '../../store/actions';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MyPicker from '../../components/MyPicker';
 import {getTime, isEmpty} from '../../utility/helpers';
@@ -29,7 +35,8 @@ import DateTimePicker from '../../components/DateTimePicker';
 const AddMenuModal = ({navigation}) => {
   const {
     state: {
-      ui: {isVendorsMenuLoading: isLoading},
+      ui: {isVendorsMenuLoading: isLoading, isCategoriesLoading},
+      vendors: {categories},
     },
     dispatch,
   } = useContext(Store);
@@ -88,14 +95,21 @@ const AddMenuModal = ({navigation}) => {
     },
   });
 
-  const [categories, setCategories] = useState([
-    {id: 1, name: 'Traditional', code: 'traditional'},
-    {id: 2, name: 'Continental', code: 'continental'},
-  ]);
+  const fetchCategories = async () => {
+    let error = await dispatch(getVendorCategories());
+    if (error) {
+      setError(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
   const [modalTimeVisible, setTimeModalVisible] = useState(false);
+
   const setDateHandler = (newDate) => {
     setDate(newDate);
   };
@@ -195,12 +209,38 @@ const AddMenuModal = ({navigation}) => {
     } else {
       const data = {
         name: dishName.value,
-        price: price.value,
+        price: parseInt(price.value, 10),
         description: description.value,
         productvariant: variantArray,
         preparation_time: time,
+        food_type: selectedCategory.value,
       };
       error = await dispatch(addMenu(data));
+      if (error) {
+        setError(error);
+      } else {
+        setSuccess('Menu created successfully');
+      }
+    }
+  };
+
+  const createCategoryHandler = async () => {
+    let error = validate(
+      categoryName.value,
+      categoryName.validationRules,
+      categoryName.field,
+    );
+    if (error) {
+      setModalVisible(false);
+      setError(error);
+    } else {
+      error = await dispatch(createVendorCategory({name: categoryName.value}));
+      setModalVisible(false);
+      if (error) {
+        setError(error);
+      } else {
+        setSuccess('Category created');
+      }
     }
   };
 
@@ -238,41 +278,41 @@ const AddMenuModal = ({navigation}) => {
         </Modal>
       )}
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <InputText
-              placeholder="Category name"
-              placeholderTextColor={LIGHTER_GREY}
-              containerStyle={styles.containerStyle}
-              autoCorrect={false}
-              value={categoryName.value}
-              onSubmitEditing={() => {}}
-              onChangeText={(input) =>
-                setCategoryName({...categoryName, value: input})
-              }
-              autoCapitalize="none"
-              returnKeyType="next"
-            />
-            <MyButton
-              style={styles.chatBtn}
-              text="Save"
-              textStyle={styles.varStyle}
-              iconStyle={styles.iconStyle}
-              onPress={() => {
-                setModalVisible(false);
-              }}
-            />
+      {modalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <InputText
+                placeholder="Category name"
+                placeholderTextColor={LIGHTER_GREY}
+                containerStyle={styles.containerStyle}
+                autoCorrect={false}
+                value={categoryName.value}
+                onSubmitEditing={() => {}}
+                onChangeText={(input) =>
+                  setCategoryName({...categoryName, value: input})
+                }
+                autoCapitalize="none"
+                returnKeyType="next"
+              />
+              <MyButton
+                style={styles.chatBtn}
+                text="Save"
+                textStyle={styles.varStyle}
+                iconStyle={styles.iconStyle}
+                onPress={createCategoryHandler}
+                isLoading={isCategoriesLoading}
+              />
+            </View>
           </View>
-        </View>
-      </Modal>
-
+        </Modal>
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.container}>
@@ -385,32 +425,29 @@ const AddMenuModal = ({navigation}) => {
               />
             </View>
             {variantArray.map((elem, i) => (
-              <View style={styles.variant}>
-                <>
-                  <View
-                    key={i + elem.name}
-                    style={[
-                      styles.varBox,
-                      {paddingHorizontal: 20, paddingVertical: 10},
-                    ]}>
-                    <Text style={[styles.varText, {fontSize: 18}]}>
-                      {elem.name}
-                    </Text>
-                    <Text style={[styles.varText, {fontSize: 18}]}>
-                      # {elem.price}
-                    </Text>
-                  </View>
-                  <View style={styles.clear}>
-                    <MyButton
-                      style={styles.clearBtn}
-                      textStyle={styles.clearStyle}
-                      rightIcon="trash"
-                      iconColor={ALMOST_BLACK}
-                      iconSize={15}
-                      onPress={() => removeVariantHandler(i)}
-                    />
-                  </View>
-                </>
+              <View style={styles.variant} key={i + ''}>
+                <View
+                  style={[
+                    styles.varBox,
+                    {paddingHorizontal: 20, paddingVertical: 10},
+                  ]}>
+                  <Text style={[styles.varText, {fontSize: 18}]}>
+                    {elem.variant_name}
+                  </Text>
+                  <Text style={[styles.varText, {fontSize: 18}]}>
+                    # {elem.price}
+                  </Text>
+                </View>
+                <View style={styles.clear}>
+                  <MyButton
+                    style={styles.clearBtn}
+                    textStyle={styles.clearStyle}
+                    rightIcon="trash"
+                    iconColor={ALMOST_BLACK}
+                    iconSize={15}
+                    onPress={() => removeVariantHandler(i)}
+                  />
+                </View>
               </View>
             ))}
             <View style={styles.variant}>

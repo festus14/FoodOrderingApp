@@ -1,4 +1,9 @@
-import {SET_MENUS, SET_VENDORS, SET_VENDOR_MENUS} from './actionTypes';
+import {
+  SET_CATEGORIES,
+  SET_MENUS,
+  SET_VENDORS,
+  SET_VENDOR_MENUS,
+} from './actionTypes';
 import {API_URL} from '../../utility/constants';
 import {
   resetApp,
@@ -12,6 +17,7 @@ import {sendRequest} from '../../utility/helpers';
 import {getUserRole, setUserAddress} from './user';
 import * as RootNavigation from '../../RootNavigation';
 import {resetCart} from './cart';
+import {categoryStartLoading, categoryUiStopLoading} from './ui';
 
 export const setVendors = (vendors) => {
   return {
@@ -31,6 +37,13 @@ export const setMenus = (menus) => {
   return {
     type: SET_MENUS,
     menus,
+  };
+};
+
+export const setCategories = (categories) => {
+  return {
+    type: SET_CATEGORIES,
+    categories,
   };
 };
 
@@ -172,10 +185,16 @@ export const addMenu = (data) => {
 
         return null;
       }
+
+      let resText = await res.text();
+      if (resText) {
+        console.error('ResText...', resText);
+        return resText;
+      }
       return 'Failed';
     } catch (e) {
       await dispatch(vendorsMenuUiStopLoading());
-      console.warn(e);
+      console.error(e);
       return 'Failed';
     }
   };
@@ -202,6 +221,68 @@ export const likeVendor = (id) => {
       }
       return 'Failed';
     } catch (error) {
+      return 'Failed';
+    }
+  };
+};
+
+export const createVendorCategory = (data) => {
+  return async (dispatch, state) => {
+    try {
+      await dispatch(categoryStartLoading());
+      let token = await dispatch(getAuthToken());
+      let res = await sendRequest(
+        `${API_URL}/order/category_based_menu/`,
+        'POST',
+        {...data},
+        {},
+        token,
+      );
+
+      await dispatch(categoryUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+        console.log('Category create resJson...', resJson);
+        return null;
+      }
+      return 'Failed';
+    } catch (error) {
+      await dispatch(categoryUiStopLoading());
+      return 'Failed';
+    }
+  };
+};
+
+export const getVendorCategories = () => {
+  return async (dispatch, state) => {
+    try {
+      await dispatch(categoryStartLoading());
+      let token = await dispatch(getAuthToken());
+      let res = await sendRequest(
+        `${API_URL}/order/category_based_menu/restaurant_categories/`,
+        'GET',
+        {},
+        {},
+        token,
+      );
+
+      await dispatch(categoryUiStopLoading());
+      // console.log('Category get res...', res);
+
+      if (res.ok) {
+        let resJson = await res.json();
+        await dispatch(setCategories(resJson.food_types));
+        console.log('Category get resJson...', resJson);
+        return null;
+      }
+
+      let resText = res.text();
+      console.log('ResText...', resText);
+
+      return 'Failed';
+    } catch (error) {
+      await dispatch(categoryUiStopLoading());
       return 'Failed';
     }
   };
