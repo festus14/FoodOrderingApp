@@ -43,10 +43,17 @@ export {
   verifyAccount,
   getAllBanks,
   changeProfilePicture,
+  signUpVendor,
 } from './user';
 
 // vendor actions
-export {getVendors, getVendorMenus, getMenus, likeVendor} from './vendors';
+export {
+  getVendors,
+  getVendorMenus,
+  getMenus,
+  likeVendor,
+  addMenu,
+} from './vendors';
 
 // consumer cart actions
 export {

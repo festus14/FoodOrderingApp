@@ -33,8 +33,6 @@ const AccountScreen = ({navigation}) => {
     user?.lastname ?? ' ',
   ];
 
-  console.log('User...', user);
-
   const [filePath, setFilePath] = useState({});
 
   const requestCameraPermission = async () => {
@@ -50,7 +48,6 @@ const AccountScreen = ({navigation}) => {
         // If CAMERA Permission is granted
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
-        console.warn(err);
         return false;
       }
     } else {
@@ -71,8 +68,7 @@ const AccountScreen = ({navigation}) => {
         // If WRITE_EXTERNAL_STORAGE Permission is granted
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
-        console.warn(err);
-        alert('Write permission err', err);
+        // alert('Write permission err', err);
       }
       return false;
     } else {
@@ -95,10 +91,8 @@ const AccountScreen = ({navigation}) => {
     let isStoragePermitted = await requestExternalWritePermission();
     if (isCameraPermitted && isStoragePermitted) {
       launchCamera(options, async (response) => {
-        console.log('Response = ', response);
-
         if (response.didCancel) {
-          alert('User cancelled camera picker');
+          // alert('User cancelled camera picker');
           return;
         } else if (response.errorCode == 'camera_unavailable') {
           alert('Camera not available on device');
@@ -107,16 +101,9 @@ const AccountScreen = ({navigation}) => {
           alert('Permission not satisfied');
           return;
         } else if (response.errorCode == 'others') {
-          alert(response.errorMessage);
+          // alert(response.errorMessage);
           return;
         }
-        console.log('base64 -> ', response.base64);
-        console.log('uri -> ', response.uri);
-        console.log('width -> ', response.width);
-        console.log('height -> ', response.height);
-        console.log('fileSize -> ', response.fileSize);
-        console.log('type -> ', response.type);
-        console.log('fileName -> ', response.fileName);
         setFilePath(response);
         let error = await dispatch(changeProfilePicture(response));
         if (error) {
@@ -137,10 +124,8 @@ const AccountScreen = ({navigation}) => {
       quality: 1,
     };
     launchImageLibrary(options, (response) => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
-        alert('User cancelled camera picker');
+        // alert('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
         alert('Camera not available on device');
@@ -149,16 +134,9 @@ const AccountScreen = ({navigation}) => {
         alert('Permission not satisfied');
         return;
       } else if (response.errorCode == 'others') {
-        alert(response.errorMessage);
+        // alert(response.errorMessage);
         return;
       }
-      console.log('base64 -> ', response.base64);
-      console.log('uri -> ', response.uri);
-      console.log('width -> ', response.width);
-      console.log('height -> ', response.height);
-      console.log('fileSize -> ', response.fileSize);
-      console.log('type -> ', response.type);
-      console.log('fileName -> ', response.fileName);
       setFilePath(response);
     });
   };

@@ -28,24 +28,28 @@ const MyButton = ({
       disabled={isLoading}
       {...props}
       style={[styles.container, style]}>
-      <View style={iconStyle}>
-        {icon && <Icon name={icon} size={iconSize} color={iconColor} />}
-      </View>
+      {isLoading ? (
+        <ActivityIndicator
+          style={{height: loading.size, width: loading.size}}
+          color={loading.color}
+        />
+      ) : (
+        <>
+          <View style={iconStyle}>
+            {icon && <Icon name={icon} size={iconSize} color={iconColor} />}
+          </View>
 
-      {!isEmpty(text) &&
-        (isLoading ? (
-          <ActivityIndicator
-            style={{height: loading.size, width: loading.size}}
-            color={loading.color}
-          />
-        ) : (
-          <Text style={[styles.text, textStyle || {}]}>{text}</Text>
-        ))}
-      <View>
-        {rightIcon && (
-          <Icon name={rightIcon} size={iconSize} color={iconColor} />
-        )}
-      </View>
+          {!isEmpty(text) && (
+            <Text style={[styles.text, textStyle || {}]}>{text}</Text>
+          )}
+
+          <View>
+            {rightIcon && (
+              <Icon name={rightIcon} size={iconSize} color={iconColor} />
+            )}
+          </View>
+        </>
+      )}
     </TouchableOpacity>
   );
 };

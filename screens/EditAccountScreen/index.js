@@ -382,7 +382,6 @@ const styles = {
     paddingRight: 10,
   },
   label: {
-    // marginTop: 30,
     fontSize: 12,
   },
   containerStyle: {

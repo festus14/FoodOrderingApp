@@ -482,7 +482,6 @@ const styles = {
     borderColor: LIGHTER_GREY,
     paddingVertical: 5,
   },
-
   orderBtn: {
     marginVertical: 35,
     justifyContent: 'center',

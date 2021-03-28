@@ -240,4 +240,23 @@ export const styles = {
     marginBottom: 15,
     textAlign: 'center',
   },
+  timeStyle: {
+    width: SCREEN_WIDTH * 0.25,
+    height: SCREEN_HEIGHT * 0.038,
+    borderWidth: 1,
+    borderColor: LIGHTER_GREY,
+    borderRadius: 10,
+    marginTop: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  timeText: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 17,
+  },
+  label: {
+    fontSize: 12,
+  },
 };

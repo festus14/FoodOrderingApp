@@ -243,3 +243,52 @@ export const changeProfilePicture = ({uri, type, fileName}) => {
     }
   };
 };
+
+export const signUpVendor = (data) => {
+  return async (dispatch, state) => {
+    try {
+      dispatch(userUiStartLoading());
+
+      console.log('my data...', data);
+
+      let token = await dispatch(getAuthToken());
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(userUiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let res = await sendPictureRequest(
+        `${API_URL}/order/branch_restaurant/`,
+        'POST',
+        {...data},
+        {},
+        token,
+      );
+      await dispatch(userUiStopLoading());
+
+      console.log('Res for vendor create...', res);
+      // let resJson = await res.json();
+      // console.log('ResJson for vendor', resJson);
+
+      if (res.ok) {
+        // let resJson = await res.json();
+        // console.log('For picture', resJson);
+
+        // if (resJson.errors || resJson.detail) {
+        //   return resJson.errors || resJson.detail;
+        // }
+        // await dispatch(setUser(resJson));
+        return null;
+      }
+
+      return 'Failed';
+    } catch (error) {
+      console.log(error);
+      dispatch(userUiStopLoading());
+      return 'Please check your internet connection and try again';
+    }
+  };
+};

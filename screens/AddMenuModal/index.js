@@ -6,9 +6,8 @@ import {
   Platform,
   Alert,
   Modal,
-  Pressable,
+  ScrollView,
 } from 'react-native';
-import DismissKeyboard from '../../components/DismissKeyboard';
 import Header from '../../components/Header';
 import InputText from '../../components/InputText';
 import MyButton from '../../components/MyButton';
@@ -17,37 +16,23 @@ import {
   GREY,
   LIGHTER_GREY,
   LIGHT_GREY,
-  MAIN_COLOR,
 } from '../../utility/colors';
 import {styles} from './style';
 import {validate} from '../../utility/validation';
 import {Store} from '../../store';
-import {resetPassword} from '../../store/actions';
+import {addMenu, resetPassword} from '../../store/actions';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MyPicker from '../../components/MyPicker';
+import {getTime, isEmpty} from '../../utility/helpers';
+import DateTimePicker from '../../components/DateTimePicker';
 
 const AddMenuModal = ({navigation}) => {
   const {
     state: {
-      ui: {isLoading},
+      ui: {isVendorsMenuLoading: isLoading},
     },
     dispatch,
   } = useContext(Store);
-  const [token, setToken] = useState({
-    field: 'Token',
-    value: '',
-    validationRules: {
-      minLength: 2,
-    },
-  });
-
-  const [password, setPassword] = useState({
-    field: 'Password',
-    value: '',
-    validationRules: {
-      minLength: 8,
-    },
-  });
 
   const [dishName, setDishName] = useState({
     field: 'Dish name',
@@ -108,6 +93,18 @@ const AddMenuModal = ({navigation}) => {
     {id: 2, name: 'Continental', code: 'continental'},
   ]);
 
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState('');
+  const [modalTimeVisible, setTimeModalVisible] = useState(false);
+  const setDateHandler = (newDate) => {
+    setDate(newDate);
+  };
+
+  const saveTimeHandler = async () => {
+    setTime(getTime(date));
+    setTimeModalVisible(false);
+  };
+
   const [authError, setAuthError] = useState('');
 
   const goBack = () => navigation.goBack();
@@ -130,41 +127,82 @@ const AddMenuModal = ({navigation}) => {
     }, 5000);
   };
 
-  const validateData = () => {
-    let error = '';
-    error = validate(token.value, token.validationRules, token.field);
-    if (error) {
-      return error;
-    }
-    error = validate(password.value, password.validationRules, password.field);
-    return error;
+  const [variantArray, setVariantArray] = useState([]);
+
+  const addVariantHandler = () => {
+    let curPrice = variantPrice.value;
+    let curVar = variantName.value;
+
+    setVariantArray([...variantArray, {variant_name: curVar, price: curPrice}]);
+
+    setVariantPrice({...variantPrice, value: ''});
+
+    setVariantName({...variantName, value: ''});
   };
 
-  const resetPasswordHandler = async () => {
-    let error = validateData();
-    if (error) {
-      setError(error);
-    } else {
-      try {
-        const authData = {
-          token: token.value,
-          password: password.value,
-        };
-
-        error = await dispatch(resetPassword(authData));
-        if (error) {
-          setError(error);
-        } else {
-          setSuccess('Password reset successful');
-          navigation.navigate('AuthScreen');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
+  const removeVariantHandler = (i) => {
+    const newVars = [...variantArray.slice(0, i), ...variantArray.slice(i + 1)];
+    setVariantArray(newVars);
   };
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const validateMenu = () => {
+    let error = validate(
+      dishName.value,
+      dishName.validationRules,
+      dishName.field,
+    );
+    if (error) {
+      return error;
+    }
+
+    error = validate(price.value, price.validationRules, price.field);
+    if (error) {
+      return error;
+    }
+
+    error = validate(price.value, price.validationRules, price.field);
+    if (error) {
+      return error;
+    }
+
+    error = validate(
+      selectedCategory.value,
+      selectedCategory.validationRules,
+      selectedCategory.field,
+    );
+    if (error) {
+      return error;
+    }
+
+    error = validate(
+      description.value,
+      description.validationRules,
+      description.field,
+    );
+
+    if (isEmpty(time)) {
+      error = 'Preparation time field is required';
+    }
+    return error;
+  };
+
+  const addMenuHandler = async () => {
+    let error = validateMenu();
+    if (error) {
+      setError(error);
+    } else {
+      const data = {
+        name: dishName.value,
+        price: price.value,
+        description: description.value,
+        productvariant: variantArray,
+        preparation_time: time,
+      };
+      error = await dispatch(addMenu(data));
+    }
+  };
 
   return (
     <>
@@ -174,12 +212,37 @@ const AddMenuModal = ({navigation}) => {
         onLeftPress={goBack}
       />
 
+      {modalTimeVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalTimeVisible}
+          onRequestClose={() => {
+            setTimeModalVisible(false);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <DateTimePicker
+                mode="time"
+                date={date}
+                onSetDate={setDateHandler}
+              />
+              <MyButton
+                style={styles.btnStyle}
+                text="Save"
+                textStyle={styles.textStyle}
+                onPress={saveTimeHandler}
+              />
+            </View>
+          </View>
+        </Modal>
+      )}
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
@@ -210,10 +273,10 @@ const AddMenuModal = ({navigation}) => {
         </View>
       </Modal>
 
-      <DismissKeyboard>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
-          style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={styles.form}>
             <View style={styles.imageView}>
               <TouchableOpacity style={styles.imageBtn}>
@@ -221,7 +284,6 @@ const AddMenuModal = ({navigation}) => {
               </TouchableOpacity>
               <Text style={styles.dishText}>Dish image</Text>
             </View>
-
             <InputText
               placeholder="Dish name"
               placeholderTextColor={LIGHTER_GREY}
@@ -233,7 +295,6 @@ const AddMenuModal = ({navigation}) => {
               autoCapitalize="none"
               returnKeyType="next"
             />
-
             <View style={styles.priceRow}>
               <View style={styles.priceContainer}>
                 <Text style={styles.priceTitle}>Price</Text>
@@ -282,6 +343,13 @@ const AddMenuModal = ({navigation}) => {
               </View>
             </View>
 
+            <Text style={styles.priceTitle}>Preparation Time</Text>
+            <TouchableOpacity
+              onPress={() => setTimeModalVisible(true)}
+              style={styles.timeStyle}>
+              <Text style={styles.timeText}>{time}</Text>
+            </TouchableOpacity>
+
             <Text style={styles.priceTitle}>Description</Text>
             <InputText
               placeholder=""
@@ -295,15 +363,15 @@ const AddMenuModal = ({navigation}) => {
               onChangeText={(input) =>
                 setDescription({...description, value: input})
               }
-              multiline
-              numberOfLines={2}
+              // multiline
+              // numberOfLines={2}
               maxLength={50}
               autoCapitalize="none"
               returnKeyType="next"
             />
 
             <View style={styles.variantRow}>
-              <Text style={styles.varText}>Variant</Text>
+              <Text style={styles.varText}>Variants</Text>
 
               <MyButton
                 style={styles.chatBtn}
@@ -313,18 +381,46 @@ const AddMenuModal = ({navigation}) => {
                 iconColor="#fff"
                 iconSize={18}
                 iconStyle={styles.iconStyle}
-                onPress={() => {}}
+                onPress={addVariantHandler}
               />
             </View>
-
+            {variantArray.map((elem, i) => (
+              <View style={styles.variant}>
+                <>
+                  <View
+                    key={i + elem.name}
+                    style={[
+                      styles.varBox,
+                      {paddingHorizontal: 20, paddingVertical: 10},
+                    ]}>
+                    <Text style={[styles.varText, {fontSize: 18}]}>
+                      {elem.name}
+                    </Text>
+                    <Text style={[styles.varText, {fontSize: 18}]}>
+                      # {elem.price}
+                    </Text>
+                  </View>
+                  <View style={styles.clear}>
+                    <MyButton
+                      style={styles.clearBtn}
+                      textStyle={styles.clearStyle}
+                      rightIcon="trash"
+                      iconColor={ALMOST_BLACK}
+                      iconSize={15}
+                      onPress={() => removeVariantHandler(i)}
+                    />
+                  </View>
+                </>
+              </View>
+            ))}
             <View style={styles.variant}>
-              <View style={styles.varBox}>
+              <View style={{...styles.varBox, width: '100%'}}>
                 <InputText
                   placeholder="Name"
                   placeholderTextColor={GREY}
+                  value={variantName.value}
                   containerStyle={styles.nameStyle}
                   autoCorrect={false}
-                  value={variantName.value}
                   onSubmitEditing={() => {}}
                   onChangeText={(input) =>
                     setVariantName({...variantName, value: input})
@@ -351,29 +447,18 @@ const AddMenuModal = ({navigation}) => {
                   keyboardType="decimal-pad"
                 />
               </View>
-
-              <View style={styles.clear}>
-                <MyButton
-                  style={styles.clearBtn}
-                  textStyle={styles.clearStyle}
-                  rightIcon="trash"
-                  iconColor={ALMOST_BLACK}
-                  iconSize={15}
-                  onPress={() => {}}
-                />
-              </View>
             </View>
-
             <MyButton
               text="Add to Menu"
               style={styles.btnStyle}
               textStyle={styles.textStyle}
               icon="plus"
-              onPress={() => {}}
+              onPress={addMenuHandler}
+              isLoading={isLoading}
             />
           </View>
-        </KeyboardAvoidingView>
-      </DismissKeyboard>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 };

@@ -145,6 +145,42 @@ export const getMenus = () => {
   };
 };
 
+export const addMenu = (data) => {
+  return async (dispatch, state) => {
+    console.log('My Data...', data);
+    dispatch(vendorsMenuUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
+      let res = await sendRequest(
+        `${API_URL}/order/menu/`,
+        'POST',
+        {...data},
+        {},
+        token,
+      );
+
+      await dispatch(vendorsMenuUiStopLoading());
+      console.log('Add menu res...', res);
+      // let resJson = await res.json();
+      // console.log('Add menu resJson...', resJson);
+
+      if (res.ok) {
+        // let resJson = await res.json();
+        // console.log('Add menu resJson...', resJson);
+
+        // await dispatch(setMenus(resJson.results));
+
+        return null;
+      }
+      return 'Failed';
+    } catch (e) {
+      await dispatch(vendorsMenuUiStopLoading());
+      console.warn(e);
+      return 'Failed';
+    }
+  };
+};
+
 export const likeVendor = (id) => {
   return async (dispatch, state) => {
     try {

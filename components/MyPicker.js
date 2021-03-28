@@ -7,6 +7,7 @@ export default function MyPicker({
   items,
   setSelected,
   labelText,
+  labelStyle = {},
   pickerStyle = {},
   picker = {},
   ...props
@@ -20,17 +21,20 @@ export default function MyPicker({
   };
   return (
     <View style={[styles.container, pickerStyle]}>
-      {labelText && <Text style={styles.keyText}>{labelText}:</Text>}
+      {labelText && (
+        <Text style={[styles.keyText, labelStyle]}>{labelText}:</Text>
+      )}
       <Picker
         {...props}
         selectedValue={chosenValue}
         style={[styles.picker, picker]}
-        onValueChange={(itemValue, itemIndex) => setNewValue(itemValue)}>
+        onValueChange={(itemValue, itemIndex) => setNewValue(itemValue)}
+        itemStyle={styles.item}>
         {items.map((option) => (
           <Picker.Item
             key={option.id}
             label={option.name}
-            value={option.code}
+            value={option.name}
           />
         ))}
       </Picker>
@@ -43,16 +47,22 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: LIGHT_GREY,
+    borderColor: '#CCC',
+    marginBottom: 10,
   },
   picker: {
     height: 50,
     width: '100%',
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: '#CCC',
   },
   keyText: {
     fontSize: 16,
     alignSelf: 'flex-start',
+    color: '#000',
+  },
+  item: {
+    color: '#000',
+    fontSize: 10,
   },
 });
