@@ -38,6 +38,8 @@ const ChatsScreen = ({navigation}) => {
     fetchChats();
   }, []);
 
+  console.log(chats[0]);
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>

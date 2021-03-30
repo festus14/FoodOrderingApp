@@ -11,10 +11,10 @@ export const setOrderChat = (chat) => {
   };
 };
 
-export const setChats = (chat) => {
+export const setChats = (chats) => {
   return {
     type: SET_CHATS,
-    chat,
+    chats,
   };
 };
 
@@ -87,6 +87,7 @@ export const getChats = (id) => {
       if (res.ok) {
         let resJson = await res.json();
         console.log('Chat resJson', resJson);
+        await dispatch(setChats(resJson.results));
         return null;
       }
       return 'Failed';

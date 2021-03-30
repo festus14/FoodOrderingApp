@@ -58,16 +58,20 @@ const SingleFoodScreen = ({navigation, route}) => {
   });
 
   const [checkedList, setCheckedList] = useState([
-    ...new Array(item.productvariant.length).fill(false),
+    ...new Array((item?.productvariant ?? []).length).fill(false),
   ]);
 
   const [varPrice, setVarPrice] = useState(0);
 
   const onCheckHandler = (i) => {
-    const tempArr = [...new Array(item.productvariant.length).fill(false)];
+    const tempArr = [
+      ...new Array((item?.productvariant ?? []).length).fill(false),
+    ];
     tempArr[i] = true;
     setCheckedList(tempArr);
-    setVarPrice(item?.productvariant[i]?.price ?? 0);
+    if (item.productvariant) {
+      setVarPrice(item?.productvariant[i]?.price ?? 0);
+    }
   };
 
   return (
@@ -123,8 +127,8 @@ const SingleFoodScreen = ({navigation, route}) => {
 
             <Text style={styles.option}>Options</Text>
 
-            {item.productvariant.length > 0 ? (
-              item.productvariant.map((elem, i) => (
+            {(item?.productvariant ?? []).length > 0 ? (
+              (item?.productvariant ?? []).map((elem, i) => (
                 <FoodContentItem
                   key={elem.id}
                   item={elem}

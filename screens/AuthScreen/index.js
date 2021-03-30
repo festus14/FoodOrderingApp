@@ -432,7 +432,7 @@ export default function AuthScreen({navigation, route}) {
                     </Text>
                   </View>
                 )}
-                <View style={styles.oauthContainer}>
+                {/* <View style={styles.oauthContainer}>
                   <MyButton
                     text="Continue with Facebook"
                     style={{...styles.oauthBtn, backgroundColor: '#3B5998'}}
@@ -446,7 +446,7 @@ export default function AuthScreen({navigation, route}) {
                     icon={'google'}
                     iconStyle={styles.iconStyle}
                   />
-                </View>
+                </View> */}
               </>
             )}
           </ScrollView>

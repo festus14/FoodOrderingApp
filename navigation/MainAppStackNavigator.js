@@ -4,7 +4,6 @@ import LandingScreen from '../screens/LandingScreen';
 import ConsumerMapScreen from '../screens/ConsumerMapScreen';
 import AuthStackNavigator from './AuthStackNavigator';
 import ConsumerBottomNavigator from './ConsumerBottomNavigator';
-import RestaurantBottomNavigator from './RestaurantBottomNavigator';
 import {Store} from '../store';
 import CheckoutScreen from '../screens/CheckoutScreen';
 import SingleChatScreen from '../screens/SingleChatScreen';
@@ -13,6 +12,7 @@ import PaymentScreen from '../screens/PaymentScreen';
 import PaystackScreen from '../screens/PaystackScreen';
 import AddMenuModal from '../screens/AddMenuModal';
 import PromoScreen from '../screens/PromoScreen';
+import RestaurantStackNavigator from './RestaurantStackNavigator';
 
 const MainStack = createStackNavigator();
 
@@ -58,8 +58,8 @@ export default function MainAppNavigator() {
       ) : (
         <>
           <MainStack.Screen
-            name="RestaurantBottomNavigator"
-            component={RestaurantBottomNavigator}
+            name="RestaurantStackNavigator"
+            component={RestaurantStackNavigator}
           />
           <MainStack.Screen name="AddMenuModal" component={AddMenuModal} />
         </>

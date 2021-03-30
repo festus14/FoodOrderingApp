@@ -1,0 +1,2 @@
+java -jar bundletool-all-1.3.0.jar build-apks --bundle=app-release.aab --output=boxin.apks --ks=boxin.keystore --ks-pass=pass:BoxinPassword --ks-key-alias=boxinAlias --key-pass=pass:BoxinPassword --mode=universal
+

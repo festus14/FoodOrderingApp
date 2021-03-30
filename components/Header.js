@@ -22,6 +22,7 @@ const Header = ({
   onLeftPress,
   onRightPress,
   details,
+  textStyle = {},
 }) => {
   return (
     <View style={[styles.header, style]}>
@@ -43,7 +44,7 @@ const Header = ({
         {component ?? component}
         {!isEmpty(title) && (
           <View style={[styles.textContainer, titleStyle]}>
-            <Text style={styles.text}>{title || ''}</Text>
+            <Text style={[styles.text, textStyle]}>{title || ''}</Text>
           </View>
         )}
         <View style={styles.iconContainer}>

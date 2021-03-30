@@ -133,11 +133,13 @@ export const logIn = (authData) => {
 
       await dispatch(setUser(userData));
 
+      console.log('User data...', userData);
+
       let userRole = userData.roles[0];
       if (userRole === 'CONSUMER') {
         RootNavigation.navigate('ConsumerMapScreen');
       } else if (userRole === 'RESTAURANT') {
-        RootNavigation.navigate('RestaurantBottomNavigator');
+        RootNavigation.navigate('RestaurantStackNavigator');
       }
 
       return null;

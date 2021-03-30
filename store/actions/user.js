@@ -14,6 +14,7 @@ import {
   uiStartLoading,
   uiStopLoading,
 } from './ui';
+import {setOrders} from './orders';
 
 export const setUser = (user) => {
   return {
@@ -279,6 +280,65 @@ export const signUpVendor = (data) => {
           return resJson.errors || resJson.detail;
         }
         // await dispatch(setUser(resJson));
+
+        return null;
+      }
+
+      let resText = await res.text();
+      if (resText) {
+        console.error('Become resText...', resText);
+      }
+
+      return 'Failed';
+    } catch (error) {
+      console.log(error);
+      dispatch(userUiStopLoading());
+      return 'Please check your internet connection and try again';
+    }
+  };
+};
+
+export const restaurantSignIn = (data) => {
+  return async (dispatch, state) => {
+    try {
+      dispatch(userUiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(userUiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/order/orders-made/get-branch-orders/`,
+        'POST',
+        {...data},
+        {},
+        token,
+      );
+      await dispatch(userUiStopLoading());
+
+      console.log('Res for vendor create...', res);
+
+      if (res.ok) {
+        let resJson = await res.json();
+        console.log('Restaurant sign in...', resJson);
+
+        if (resJson.errors || resJson.detail) {
+          return resJson.errors || resJson.detail;
+        }
+
+        await dispatch(setUser({userName: data.username}));
+
+        await dispatch(
+          setOrders(
+            resJson?.all_orders?.open_orders ?? [],
+            resJson?.all_orders?.closed_orders ?? [],
+          ),
+        );
 
         return null;
       }

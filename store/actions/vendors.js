@@ -174,14 +174,12 @@ export const addMenu = (data) => {
 
       await dispatch(vendorsMenuUiStopLoading());
       console.log('Add menu res...', res);
-      // let resJson = await res.json();
-      // console.log('Add menu resJson...', resJson);
 
       if (res.ok) {
-        // let resJson = await res.json();
-        // console.log('Add menu resJson...', resJson);
+        let resJson = await res.json();
+        console.log('Add menu resJson...', resJson);
 
-        // await dispatch(setMenus(resJson.results));
+        await dispatch(setMenus(resJson.results));
 
         return null;
       }

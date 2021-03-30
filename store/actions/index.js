@@ -44,6 +44,7 @@ export {
   getAllBanks,
   changeProfilePicture,
   signUpVendor,
+  restaurantSignIn,
 } from './user';
 
 // vendor actions

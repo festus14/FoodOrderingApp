@@ -1,13 +1,15 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {LIGHT_GREY, SECONDARY_COLOR} from '../utility/colors';
-import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
 
 export default function ChatItem({item, navigation}) {
+  // console.log('chats Item...', item);
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('SingleChatScreen', {item})}>
+      onPress={() =>
+        navigation.navigate('SingleChatScreen', {chat_id: item.id})
+      }>
       <View>
         <Image
           source={require('../assets/images/burger.png')}

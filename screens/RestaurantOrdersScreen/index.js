@@ -14,7 +14,7 @@ import OrderItem from '../../components/OrderItem';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
-import {getOrders} from '../../store/actions';
+import {restaurantSignIn} from '../../store/actions';
 import EmptyComponent from '../../components/EmptyComponent';
 
 const RestaurantOrdersScreen = ({navigation}) => {
@@ -23,20 +23,23 @@ const RestaurantOrdersScreen = ({navigation}) => {
       ui: {isOrdersLoading: isLoading},
       cart: {cart},
       orders: {openOrders, closedOrders},
+      user: {
+        user: {userName},
+      },
     },
     dispatch,
   } = useContext(Store);
 
   const fetchOrders = async () => {
-    let error = await dispatch(getOrders());
+    let error = await dispatch(restaurantSignIn({username: userName}));
     if (error) {
       Alert.alert('Error', error);
     }
   };
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  // useEffect(() => {
+  //   fetchOrders();
+  // }, []);
 
   const [locale, setLocale] = useState('pending');
 
