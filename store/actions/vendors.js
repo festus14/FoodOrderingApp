@@ -13,7 +13,7 @@ import {
   vendorsMenuUiStartLoading,
   vendorsMenuUiStopLoading,
 } from './';
-import {sendRequest} from '../../utility/helpers';
+import {sendPictureRequest, sendRequest} from '../../utility/helpers';
 import {getUserRole, setUserAddress} from './user';
 import * as RootNavigation from '../../RootNavigation';
 import {resetCart} from './cart';
@@ -158,7 +158,52 @@ export const getMenus = () => {
   };
 };
 
-export const addMenu = (data) => {
+export const changeMenuPicture = ({uri, type, fileName, id}) => {
+  return async (dispatch, state) => {
+    try {
+      dispatch(vendorsMenuUiStartLoading());
+      let token = await dispatch(getAuthToken());
+
+      const formData = new FormData();
+
+      formData.append('food_image', {
+        uri,
+        type,
+        name: fileName,
+      });
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(vendorsMenuUiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let res = await sendPictureRequest(
+        `${API_URL}/order/menu/${id}/`,
+        'PATCH',
+        formData,
+        {},
+        token,
+      );
+      await dispatch(vendorsMenuUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+        console.log('For picture', resJson);
+
+        return null;
+      }
+
+      return 'Failed';
+    } catch (error) {
+      dispatch(vendorsMenuUiStopLoading());
+      return 'Please check your internet connection and try again';
+    }
+  };
+};
+
+export const addMenu = ({food_image, ...data}) => {
   return async (dispatch, state) => {
     console.log('My Data...', data);
     dispatch(vendorsMenuUiStartLoading());
@@ -179,9 +224,9 @@ export const addMenu = (data) => {
         let resJson = await res.json();
         console.log('Add menu resJson...', resJson);
 
-        await dispatch(setMenus(resJson.results));
-
-        return null;
+        return await dispatch(
+          changeMenuPicture({...food_image, id: resJson.id}),
+        );
       }
 
       let resText = await res.text();

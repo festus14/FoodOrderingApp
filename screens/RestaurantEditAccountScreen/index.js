@@ -18,6 +18,8 @@ const RestaurantEditAccountScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
+  console.log('user', user);
+
   const names = user?.fullname?.split(' ') ?? [
     user?.firstname ?? ' ',
     user?.lastname ?? ' ',
@@ -32,9 +34,17 @@ const RestaurantEditAccountScreen = ({navigation}) => {
     },
   });
 
-  const [restaurantName, setRestuarantName] = useState({
+  const [restaurantName, setRestaurantName] = useState({
     field: 'Restaurant name',
     value: capitalize(names[0]),
+    validationRules: {
+      minLength: 2,
+    },
+  });
+
+  const [username, setUsername] = useState({
+    field: 'Username',
+    value: user.userName,
     validationRules: {
       minLength: 2,
     },
@@ -96,6 +106,10 @@ const RestaurantEditAccountScreen = ({navigation}) => {
     if (error) {
       return error;
     }
+    error = validate(username.value, username.validationRules, username.field);
+    if (error) {
+      return error;
+    }
     error = validate(email.value, email.validationRules, email.field);
     if (error) {
       return error;
@@ -116,6 +130,7 @@ const RestaurantEditAccountScreen = ({navigation}) => {
       try {
         const userData = {
           email: email.value.toLowerCase(),
+          username: username.value.toLowerCase(),
           firstname: restaurantName.value.toLowerCase(),
           phone: phoneNumber.value,
         };
@@ -124,7 +139,7 @@ const RestaurantEditAccountScreen = ({navigation}) => {
         if (error) {
           setError(error);
         } else {
-          setSuccess('User has being updated');
+          setSuccess('User has been updated');
         }
       } catch (e) {
         console.log(e);
@@ -150,12 +165,22 @@ const RestaurantEditAccountScreen = ({navigation}) => {
   };
 
   const changePasswordHandler = async () => {
-    if (password.value.length > 4 && newPassword.value > 4) {
+    if (password.value.length > 4 && newPassword.value.length > 4) {
       let error = validatePassword();
       if (error) {
         setAuthError(error);
       } else {
-        error = await dispatch(changePassword({password: newPassword}));
+        error = await dispatch(
+          changePassword({
+            new_password: newPassword.value,
+            old_password: password.value,
+          }),
+        );
+        if (error) {
+          setError(error);
+        } else {
+          setSuccess('Password successfully changed');
+        }
       }
     }
   };
@@ -181,9 +206,22 @@ const RestaurantEditAccountScreen = ({navigation}) => {
               value={restaurantName.value}
               onSubmitEditing={() => {}}
               onChangeText={(input) =>
-                setRestuarantName({...restaurantName, value: input})
+                setRestaurantName({...restaurantName, value: input})
               }
               autoCapitalize="words"
+              returnKeyType="next"
+            />
+
+            <Text style={styles.label}>Username</Text>
+            <InputText
+              placeholder="Required"
+              placeholderTextColor={LIGHTER_GREY}
+              containerStyle={styles.containerStyle}
+              autoCorrect={false}
+              value={username.value}
+              onSubmitEditing={() => {}}
+              onChangeText={(input) => setUsername({...username, value: input})}
+              autoCapitalize="none"
               returnKeyType="next"
             />
 

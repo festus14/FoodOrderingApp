@@ -9,6 +9,8 @@ import {
   Alert,
   Modal,
   ScrollView,
+  PermissionsAndroid,
+  TouchableOpacity,
 } from 'react-native';
 import Header from '../../components/Header';
 import InputText from '../../components/InputText';
@@ -24,13 +26,17 @@ import {validate} from '../../utility/validation';
 import {Store} from '../../store';
 import {
   addMenu,
+  changeProfilePicture,
   createVendorCategory,
+  getMenus,
   getVendorCategories,
 } from '../../store/actions';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import MyPicker from '../../components/MyPicker';
 import {getTime, isEmpty} from '../../utility/helpers';
 import DateTimePicker from '../../components/DateTimePicker';
+import MyImage from '../../components/MyImage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import MyModal from '../../components/MyModal';
 
 const AddMenuModal = ({navigation}) => {
   const {
@@ -147,11 +153,18 @@ const AddMenuModal = ({navigation}) => {
     let curPrice = variantPrice.value;
     let curVar = variantName.value;
 
-    setVariantArray([...variantArray, {variant_name: curVar, price: curPrice}]);
+    if (curPrice && curVar) {
+      setVariantArray([
+        ...variantArray,
+        {variant_name: curVar, price: curPrice},
+      ]);
 
-    setVariantPrice({...variantPrice, value: ''});
+      setVariantPrice({...variantPrice, value: ''});
 
-    setVariantName({...variantName, value: ''});
+      setVariantName({...variantName, value: ''});
+    } else {
+      Alert.alert('Info', 'Variant price and name can not be empty');
+    }
   };
 
   const removeVariantHandler = (i) => {
@@ -170,17 +183,10 @@ const AddMenuModal = ({navigation}) => {
     if (error) {
       return error;
     }
-
     error = validate(price.value, price.validationRules, price.field);
     if (error) {
       return error;
     }
-
-    error = validate(price.value, price.validationRules, price.field);
-    if (error) {
-      return error;
-    }
-
     error = validate(
       selectedCategory.value,
       selectedCategory.validationRules,
@@ -214,12 +220,14 @@ const AddMenuModal = ({navigation}) => {
         productvariant: variantArray,
         preparation_time: time,
         food_type: selectedCategory.value,
+        food_image: filePath,
       };
       error = await dispatch(addMenu(data));
       if (error) {
         setError(error);
       } else {
         setSuccess('Menu created successfully');
+        goBack();
       }
     }
   };
@@ -236,6 +244,7 @@ const AddMenuModal = ({navigation}) => {
     } else {
       error = await dispatch(createVendorCategory({name: categoryName.value}));
       setModalVisible(false);
+      await dispatch(fetchCategories());
       if (error) {
         setError(error);
       } else {
@@ -243,6 +252,110 @@ const AddMenuModal = ({navigation}) => {
       }
     }
   };
+
+  const [filePath, setFilePath] = useState({});
+
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission',
+          },
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
+
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'External Storage Write Permission',
+            message: 'App needs write permission',
+          },
+        );
+        // If WRITE_EXTERNAL_STORAGE Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        // alert('Write permission err', err);
+      }
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const captureImage = async (type) => {
+    setPixModalVisible(false);
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+      videoQuality: 'low',
+      durationLimit: 30, //Video max duration in seconds
+      saveToPhotos: true,
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    if (isCameraPermitted && isStoragePermitted) {
+      launchCamera(options, async (response) => {
+        if (response.didCancel) {
+          // alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          // alert(response.errorMessage);
+          return;
+        }
+        setFilePath(response);
+      });
+    }
+  };
+
+  const chooseFile = (type) => {
+    setPixModalVisible(false);
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        // alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        // alert(response.errorMessage);
+        return;
+      }
+      setFilePath(response);
+    });
+  };
+
+  const [pixModalVisible, setPixModalVisible] = useState(false);
 
   return (
     <>
@@ -313,14 +426,53 @@ const AddMenuModal = ({navigation}) => {
           </View>
         </Modal>
       )}
+
+      <MyModal
+        visible={pixModalVisible}
+        onRequestClose={() => {
+          setPixModalVisible(false);
+        }}
+        btnTxt="CANCEL"
+        headerTxt="Select Image"
+        onPress={() => setPixModalVisible(false)}>
+        <View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.imageOption}
+            onPress={() => captureImage('photo')}>
+            <Text style={styles.imageText}>Take a photo...</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.imageOption}
+            onPress={() => chooseFile('photo')}>
+            <Text style={styles.imageText}>Choose from library...</Text>
+          </TouchableOpacity>
+        </View>
+      </MyModal>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.container}>
         <ScrollView style={styles.container}>
           <View style={styles.form}>
             <View style={styles.imageView}>
-              <TouchableOpacity style={styles.imageBtn}>
-                <Text> + </Text>
+              <TouchableOpacity
+                style={{marginRight: 20}}
+                activeOpacity={0.5}
+                onPress={() => setPixModalVisible(true)}>
+                {filePath.uri ? (
+                  <MyImage
+                    uri={filePath.uri}
+                    resizeMode="cover"
+                    style={[styles.image]}
+                    priority="high"
+                  />
+                ) : (
+                  <View style={styles.imageBtn}>
+                    <Text> + </Text>
+                  </View>
+                )}
               </TouchableOpacity>
               <Text style={styles.dishText}>Dish image</Text>
             </View>

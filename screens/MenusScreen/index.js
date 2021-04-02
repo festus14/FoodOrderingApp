@@ -14,6 +14,7 @@ import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getMenus} from '../../store/actions';
 import EmptyComponent from '../../components/EmptyComponent';
+import MyButton from '../../components/MyButton';
 
 const MenusScreen = ({navigation}) => {
   const {
@@ -63,6 +64,16 @@ const MenusScreen = ({navigation}) => {
                 <EmptyComponent
                   text="menu"
                   onRefresh={fetchMenus}
+                  // onPress={() => navigation.navigate('AddMenuModal')}
+                />
+              }
+              ListFooterComponent={
+                <MyButton
+                  text={'Add menu'}
+                  style={styles.btnStyle}
+                  textStyle={styles.textStyle}
+                  icon="plus"
+                  iconColor={MAIN_COLOR}
                   onPress={() => navigation.navigate('AddMenuModal')}
                 />
               }

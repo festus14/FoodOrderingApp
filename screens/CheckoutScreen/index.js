@@ -104,6 +104,14 @@ export default function CheckoutScreen({navigation, route}) {
       +(subtotal * 0.03) -
       +(checkoutInfo?.promoVal ?? 0);
 
+    if (deliveryMode === 'pickUp') {
+      totals =
+        totals -
+        (Number.isInteger(checkoutInfo?.delivery_fee)
+          ? +checkoutInfo?.delivery_fee
+          : 0);
+    }
+
     totals = Math.round(totals);
     setTotal(totals);
     await dispatch(setCheckoutInfo({total: totals}));
@@ -112,7 +120,7 @@ export default function CheckoutScreen({navigation, route}) {
 
   useEffect(() => {
     getTotal();
-  }, [subtotal, checkoutInfo.promoVal, cart.count]);
+  }, [subtotal, checkoutInfo.promoVal, cart.count, deliveryMode]);
 
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
@@ -246,14 +254,16 @@ export default function CheckoutScreen({navigation, route}) {
 
           <View style={styles.cost}>
             <CalculationItem title="Subtotal" value={subtotal} />
-            <CalculationItem
-              title="Delivery Fee"
-              value={
-                Number.isInteger(checkoutInfo?.delivery_fee)
-                  ? checkoutInfo?.delivery_fee
-                  : '0'
-              }
-            />
+            {deliveryMode === 'delivery' && (
+              <CalculationItem
+                title="Delivery Fee"
+                value={
+                  Number.isInteger(checkoutInfo?.delivery_fee)
+                    ? checkoutInfo?.delivery_fee
+                    : '0'
+                }
+              />
+            )}
             <CalculationItem
               title="Service Fee"
               value={Math.round(subtotal * 0.03)}

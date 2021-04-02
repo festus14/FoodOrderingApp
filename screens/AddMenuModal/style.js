@@ -52,7 +52,7 @@ export const styles = {
     height: SCREEN_HEIGHT * 0.1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20,
+    // marginRight: 20,
   },
   dishText: {
     fontSize: 17,
@@ -141,8 +141,8 @@ export const styles = {
     borderColor: 'black',
   },
   chatBtn: {
-    width: '32%',
-    justifyContent: 'space-between',
+    width: 100,
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: SECONDARY_COLOR,
     paddingLeft: 10,
@@ -258,5 +258,12 @@ export const styles = {
   },
   label: {
     fontSize: 12,
+  },
+  image: {width: SCREEN_WIDTH * 0.3, height: SCREEN_HEIGHT * 0.1},
+  imageOption: {
+    marginVertical: 10,
+  },
+  imageText: {
+    fontSize: 18,
   },
 };

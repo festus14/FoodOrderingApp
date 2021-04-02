@@ -123,7 +123,7 @@ const AccountScreen = ({navigation}) => {
       maxHeight: 550,
       quality: 1,
     };
-    launchImageLibrary(options, (response) => {
+    launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         // alert('User cancelled camera picker');
         return;
@@ -138,6 +138,12 @@ const AccountScreen = ({navigation}) => {
         return;
       }
       setFilePath(response);
+      let error = await dispatch(changeProfilePicture(response));
+      if (error) {
+        Alert.alert('Error', error);
+      } else {
+        Alert.alert('Success', 'Profile picture updated');
+      }
     });
   };
 

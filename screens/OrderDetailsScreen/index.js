@@ -9,7 +9,7 @@ import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
-  console.log('Item...', item);
+  console.log('Order Item...', item);
 
   const {
     state: {
@@ -149,8 +149,17 @@ const OrderDetailsScreen = ({navigation, route}) => {
           <View style={styles.orderInfo}>
             <Text style={styles.title}>Delivery option</Text>
             <Text style={styles.time}>{item.order_type}</Text>
-            <Text style={styles.title}>Delivery address</Text>
-            <Text style={styles.time}>{item.delivery_address}</Text>
+            {item.order_type !== 'PICK UP' ? (
+              <>
+                <Text style={styles.title}>Delivery address</Text>
+                <Text style={styles.time}>{item.delivery_address}</Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.title}>Pickup time</Text>
+                <Text style={styles.time}>{item.pick_up_time}</Text>
+              </>
+            )}
           </View>
 
           <Text style={styles.orderTitle}>PAYMENT DETAILS</Text>
@@ -158,12 +167,20 @@ const OrderDetailsScreen = ({navigation, route}) => {
           <View style={styles.orderInfo}>
             <Text style={styles.time}>
               Items total:{' '}
-              <Text style={styles.title}>₦{item.subtotal_fee}</Text>
+              <Text style={styles.title}>
+                ₦
+                {item.ordereditem.reduce(
+                  (sum, num) => sum + num.price * num.quantity,
+                  0,
+                )}
+              </Text>
             </Text>
-            <Text style={styles.time}>
-              Delivery fee:{' '}
-              <Text style={styles.title}>₦{item.delivery_fee}</Text>
-            </Text>
+            {item.order_type !== 'PICK UP' && (
+              <Text style={styles.time}>
+                Delivery fee:{' '}
+                <Text style={styles.title}>₦{item.delivery_fee}</Text>
+              </Text>
+            )}
             <Text style={styles.time}>
               Service charge:{' '}
               <Text style={styles.title}>₦{item.service_fee}</Text>
@@ -173,18 +190,25 @@ const OrderDetailsScreen = ({navigation, route}) => {
                 Total: <Text style={styles.title}>₦{item.subtotal_fee}</Text>
               </Text>
 
-              <MyButton
-                style={styles.chatBtn}
-                text="Chat with restaurant"
-                textStyle={styles.textStyle}
-                icon="wechat"
-                iconColor="#fff"
-                iconSize={18}
-                iconStyle={styles.iconStyle}
-                onPress={() =>
-                  navigation.navigate('SingleChatScreen', {chat_id: item.chat})
-                }
-              />
+              {item.status_of_order === 'PENDING' && (
+                <MyButton
+                  style={styles.chatBtn}
+                  text="Chat with restaurant"
+                  textStyle={[
+                    styles.textStyle,
+                    {width: '50%', textAlign: 'center'},
+                  ]}
+                  icon="wechat"
+                  iconColor="#fff"
+                  iconSize={18}
+                  iconStyle={styles.iconStyle}
+                  onPress={() =>
+                    navigation.navigate('SingleChatScreen', {
+                      chat_id: item.chat,
+                    })
+                  }
+                />
+              )}
             </View>
           </View>
         </ScrollView>
@@ -257,12 +281,12 @@ const styles = {
     marginRight: 10,
   },
   chatBtn: {
-    width: '32%',
-    justifyContent: 'space-between',
+    width: '35%',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: SECONDARY_COLOR,
-    paddingLeft: 12,
-    paddingRight: 8,
+    paddingLeft: 0,
+    paddingRight: 0,
     height: 34,
   },
   textStyle: {
@@ -276,6 +300,6 @@ const styles = {
   },
   iconStyle: {
     // marginRight: 40,
-    paddingRight: 10,
+    // paddingRight: 10,
   },
 };

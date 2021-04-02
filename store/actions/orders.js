@@ -61,7 +61,8 @@ export const postOrder = ({reference}) => {
       if (res.ok) {
         let resJson = await res.json();
         console.log('Order made, resJson', resJson);
-        dispatch(setSingleOrder(resJson));
+        await dispatch(setSingleOrder(resJson));
+        await dispatch(getOrders());
         return null;
       }
 

@@ -5,7 +5,7 @@ import {Bubble, GiftedChat, MessageText, Send} from 'react-native-gifted-chat';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/Header';
 import {Store} from '../../store';
-import {getOrderChat} from '../../store/actions';
+import {getChats, getOrderChat} from '../../store/actions';
 import {MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 
 export default function ChatModal({navigation, route}) {
@@ -75,10 +75,18 @@ export default function ChatModal({navigation, route}) {
         command: 'new_message',
       });
       socket.send(msg);
+      await fetchChats();
     } catch (error) {
       console.log('Error in sending...', error);
     }
   }, []);
+
+  const fetchChats = async () => {
+    let error = await dispatch(getChats());
+    if (error) {
+      Alert.alert('Error', error);
+    }
+  };
 
   return (
     <>
