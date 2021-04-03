@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import EmptyComponent from '../../components/EmptyComponent';
@@ -52,11 +53,13 @@ const BranchScreen = ({navigation}) => {
 
   return (
     <>
-      <Header leftIcon="ios-arrow-back" title="Branches" onLeftPress={goBack} />
+      <SafeAreaView style={{flex: 1}}>
+        <Header
+          leftIcon="ios-arrow-back"
+          title="Branches"
+          onLeftPress={goBack}
+        />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        style={styles.container}>
         {isLoading ? (
           <View style={styles.loader}>
             <ActivityIndicator size={30} color={MAIN_COLOR} />
@@ -90,7 +93,7 @@ const BranchScreen = ({navigation}) => {
             }
           />
         )}
-      </KeyboardAvoidingView>
+      </SafeAreaView>
     </>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
+import {capitalize} from '../utility/helpers';
 import MyImage from './MyImage';
 
 export default function OrderItem({item, navigation}) {
@@ -19,19 +20,21 @@ export default function OrderItem({item, navigation}) {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('OrderDetailsScreen', {item})}>
+      onPress={() =>
+        navigation.navigate('RestaurantOrderDetailsScreen', {item})
+      }>
       <View>
         <MyImage
           uri={item?.restaurant?.restaurant_image}
-          resizeMode="contain"
-          priority="normal"
+          resizeMode="cover"
+          priority="high"
           style={styles.image}
         />
       </View>
 
       <View style={styles.content}>
         <Text style={styles.title}>
-          {item?.restaurant?.restaurant_name ?? ''}
+          {capitalize(item?.restaurant?.restaurant_name ?? '')}
         </Text>
         <Text style={styles.body}>ORDER ID: {item?.id.slice(0, 6)}...</Text>
         <View style={{...styles.stateBack, backgroundColor: getStateColor()}}>
@@ -43,17 +46,15 @@ export default function OrderItem({item, navigation}) {
 }
 const styles = {
   container: {
-    marginBottom: 12,
+    marginBottom: 20,
     flexDirection: 'row',
-    height: SCREEN_HEIGHT * 0.11,
-    width: SCREEN_WIDTH * 0.8,
   },
   image: {
     height: 65,
     width: 65,
   },
   content: {
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     paddingLeft: 12,
   },
   title: {
@@ -74,6 +75,5 @@ const styles = {
     backgroundColor: '#009C22',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 20,
   },
 };

@@ -51,27 +51,25 @@ const ChatsScreen = ({navigation}) => {
           onLeftPress={() => navigation.goBack()}
         />
 
-        <View style={styles.container}>
-          {isLoading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator size={30} color={MAIN_COLOR} />
-            </View>
-          ) : (
-            <FlatList
-              data={chats}
-              renderItem={({item, index, separators}) => (
-                <ChatItem item={item} navigation={navigation} />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              refreshing={isLoading}
-              onRefresh={fetchChats}
-              showsVerticalScrollIndicator={false}
-              ListEmptyComponent={
-                <EmptyComponent text="closed order" onRefresh={fetchChats} />
-              }
-            />
-          )}
-        </View>
+        {isLoading ? (
+          <View style={styles.loader}>
+            <ActivityIndicator size={30} color={MAIN_COLOR} />
+          </View>
+        ) : (
+          <FlatList
+            data={chats}
+            renderItem={({item, index, separators}) => (
+              <ChatItem item={item} navigation={navigation} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            refreshing={isLoading}
+            onRefresh={fetchChats}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <EmptyComponent text="closed order" onRefresh={fetchChats} />
+            }
+          />
+        )}
       </SafeAreaView>
     </>
   );

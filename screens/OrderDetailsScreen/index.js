@@ -73,11 +73,11 @@ const OrderDetailsScreen = ({navigation, route}) => {
           if (error) {
             Alert.alert('Error', error);
           } else {
-            navigation.navigate('OrdersScreen');
             Alert.alert(
               'Success',
               'Your order has been successfully cancelled',
             );
+            navigation.navigate('OrdersScreen');
           }
         },
       },
@@ -263,7 +263,7 @@ const styles = {
     paddingLeft: 18,
   },
   cancelBtn: {
-    width: '28%',
+    width: 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FF0606',
@@ -271,7 +271,7 @@ const styles = {
     marginTop: 6,
   },
   inBtn: {
-    width: '22%',
+    width: 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'green',

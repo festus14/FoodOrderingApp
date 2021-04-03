@@ -75,6 +75,7 @@ export {
   getOrders,
   cancelOrder,
   reInitiateOrder,
+  acceptOrder,
 } from './orders';
 
 // order chat actions

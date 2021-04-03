@@ -37,10 +37,6 @@ const RestaurantOrdersScreen = ({navigation}) => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchOrders();
-  // }, []);
-
   const [locale, setLocale] = useState('pending');
 
   const view =

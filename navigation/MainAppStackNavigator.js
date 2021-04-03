@@ -62,6 +62,11 @@ export default function MainAppNavigator() {
             component={RestaurantStackNavigator}
           />
           <MainStack.Screen name="AddMenuModal" component={AddMenuModal} />
+          <MainStack.Screen
+            name="SingleChatScreen"
+            component={SingleChatScreen}
+          />
+          <MainStack.Screen name="ChatsScreen" component={ChatsScreen} />
         </>
       )}
     </MainStack.Navigator>

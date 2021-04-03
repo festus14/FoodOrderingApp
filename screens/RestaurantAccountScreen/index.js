@@ -233,28 +233,6 @@ const RestaurantAccountScreen = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.body}
-          onPress={() => navigation.navigate('PromotionScreen')}>
-          <View style={styles.icon}>
-            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>Restaurant Details</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.body}
-          onPress={() => navigation.navigate('PromotionScreen')}>
-          <View style={styles.icon}>
-            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>Business Metrics</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.body}
           onPress={() => navigation.navigate('AboutScreen')}>
           <View style={styles.icon}>
             <Icon

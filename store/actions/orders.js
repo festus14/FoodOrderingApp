@@ -146,6 +146,12 @@ export const cancelOrder = (id) => {
         await dispatch(getOrders());
         return null;
       }
+
+      let resText = await res.text();
+      if (resText) {
+        console.log('resText...', resText);
+      }
+
       return 'Failed';
     } catch (error) {
       await dispatch(ordersUiStopLoading());
@@ -186,6 +192,50 @@ export const reInitiateOrder = (reference) => {
         await dispatch(getOrders());
         return null;
       }
+      return 'Failed';
+    } catch (error) {
+      await dispatch(reInitiateUiStopLoading());
+      console.log(error);
+      return 'Something went wrong. Please check your internet connection and try again';
+    }
+  };
+};
+
+export const acceptOrder = (id) => {
+  return async (dispatch, state) => {
+    try {
+      await dispatch(reInitiateUiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+
+      setTimeout(async () => {
+        await dispatch(reInitiateUiStopLoading());
+        if (!res) {
+          return 'Check your internet connection and try again!';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/order/orders-made/${id}/`,
+        'PATCH',
+        {status_of_order: 'ACCEPTED'},
+        {},
+        token,
+      );
+
+      await dispatch(reInitiateUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+        await dispatch(getOrders());
+        return null;
+      }
+
+      let resText = await res.text();
+      if (resText) {
+        console.log('resText...', resText);
+      }
+
       return 'Failed';
     } catch (error) {
       await dispatch(reInitiateUiStopLoading());

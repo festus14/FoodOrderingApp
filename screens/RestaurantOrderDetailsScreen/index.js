@@ -4,15 +4,16 @@ import Header from '../../components/Header';
 import MyButton from '../../components/MyButton';
 import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
-import {cancelOrder} from '../../store/actions';
+import {cancelOrder, acceptOrder} from '../../store/actions';
 import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
+import {capitalize} from '../../utility/helpers';
 
-const RestaurantOrderDetailsScreen = ({navigation, route}) => {
+const RestaurantOrderDetailScreen = ({navigation, route}) => {
   const item = route.params.item;
 
   const {
     state: {
-      ui: {isOrdersLoading: isLoading},
+      ui: {isOrdersLoading: isLoading, isReInitiateLoading},
     },
     dispatch,
   } = useContext(Store);
@@ -57,6 +58,31 @@ const RestaurantOrderDetailsScreen = ({navigation, route}) => {
     ]);
   };
 
+  const acceptOrderHandler = async () => {
+    Alert.alert('Info', 'Are you sure you want to accept this order?', [
+      {
+        text: 'Close',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'YES',
+        onPress: async () => {
+          let error = await dispatch(acceptOrder(item.id));
+          if (error) {
+            Alert.alert('Error', error);
+          } else {
+            Alert.alert(
+              'Success',
+              'Your order has been successfully cancelled',
+            );
+            navigation.navigate('RestaurantOrdersScreen');
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -72,7 +98,7 @@ const RestaurantOrderDetailsScreen = ({navigation, route}) => {
             </Text>
             <View style={styles.infoBottom}>
               <Text style={styles.vendor}>
-                {item?.restaurant?.restaurant_name ?? ''}
+                {capitalize(item?.restaurant?.restaurant_name ?? '')}
               </Text>
               <View
                 style={{
@@ -94,15 +120,26 @@ const RestaurantOrderDetailsScreen = ({navigation, route}) => {
               />
             ))}
 
-            {item.status_of_order === 'PENDING' && (
-              <MyButton
-                style={styles.cancelBtn}
-                text="CANCEL ORDER"
-                textStyle={styles.textStyle}
-                onPress={cancelOrderHandler}
-                isLoading={isLoading}
-              />
-            )}
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              {item.payment_successful && (
+                <MyButton
+                  style={styles.inBtn}
+                  text="ACCEPT ORDER"
+                  textStyle={styles.textStyle}
+                  onPress={acceptOrderHandler}
+                  isLoading={isReInitiateLoading}
+                />
+              )}
+              {item.status_of_order === 'PENDING' && (
+                <MyButton
+                  style={styles.cancelBtn}
+                  text="CANCEL ORDER"
+                  textStyle={styles.textStyle}
+                  onPress={cancelOrderHandler}
+                  isLoading={isLoading}
+                />
+              )}
+            </View>
           </View>
 
           <Text style={styles.orderTitle}>DELIVERY</Text>
@@ -110,8 +147,17 @@ const RestaurantOrderDetailsScreen = ({navigation, route}) => {
           <View style={styles.orderInfo}>
             <Text style={styles.title}>Delivery option</Text>
             <Text style={styles.time}>{item.order_type}</Text>
-            <Text style={styles.title}>Delivery address</Text>
-            <Text style={styles.time}>{item.delivery_address}</Text>
+            {item.order_type !== 'PICK UP' ? (
+              <>
+                <Text style={styles.title}>Delivery address</Text>
+                <Text style={styles.time}>{item.delivery_address}</Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.title}>Pickup time</Text>
+                <Text style={styles.time}>{item.pick_up_time}</Text>
+              </>
+            )}
           </View>
 
           <Text style={styles.orderTitle}>PAYMENT DETAILS</Text>
@@ -119,33 +165,48 @@ const RestaurantOrderDetailsScreen = ({navigation, route}) => {
           <View style={styles.orderInfo}>
             <Text style={styles.time}>
               Items total:{' '}
-              <Text style={styles.title}>N{item.subtotal_fee}</Text>
+              <Text style={styles.title}>
+                ₦
+                {item.ordereditem.reduce(
+                  (sum, num) => sum + num.price * num.quantity,
+                  0,
+                ) || 0}
+              </Text>
             </Text>
-            <Text style={styles.time}>
-              Delivery fee:{' '}
-              <Text style={styles.title}>N{item.delivery_fee}</Text>
-            </Text>
+            {item.order_type !== 'PICK UP' && (
+              <Text style={styles.time}>
+                Delivery fee:{' '}
+                <Text style={styles.title}>₦{item.delivery_fee}</Text>
+              </Text>
+            )}
             <Text style={styles.time}>
               Service charge:{' '}
-              <Text style={styles.title}>N{item.service_fee}</Text>
+              <Text style={styles.title}>₦{item.service_fee}</Text>
             </Text>
             <View style={styles.last}>
               <Text style={styles.time}>
-                Total: <Text style={styles.title}>N{item.subtotal_fee}</Text>
+                Total: <Text style={styles.title}>₦{item.subtotal_fee}</Text>
               </Text>
 
-              <MyButton
-                style={styles.chatBtn}
-                text="Chat with restaurant"
-                textStyle={styles.textStyle}
-                icon="wechat"
-                iconColor="#fff"
-                iconSize={18}
-                iconStyle={styles.iconStyle}
-                onPress={() =>
-                  navigation.navigate('SingleChatScreen', {chat_id: item.chat})
-                }
-              />
+              {item.status_of_order === 'PENDING' && (
+                <MyButton
+                  style={styles.chatBtn}
+                  text="Chat with customer"
+                  textStyle={[
+                    styles.textStyle,
+                    {width: '50%', textAlign: 'center'},
+                  ]}
+                  icon="wechat"
+                  iconColor="#fff"
+                  iconSize={18}
+                  iconStyle={styles.iconStyle}
+                  onPress={() =>
+                    navigation.navigate('SingleChatScreen', {
+                      chat_id: item.chat,
+                    })
+                  }
+                />
+              )}
             </View>
           </View>
         </ScrollView>
@@ -154,7 +215,7 @@ const RestaurantOrderDetailsScreen = ({navigation, route}) => {
   );
 };
 
-export default RestaurantOrderDetailsScreen;
+export default RestaurantOrderDetailScreen;
 
 const styles = {
   container: {
@@ -201,21 +262,29 @@ const styles = {
     paddingLeft: 18,
   },
   cancelBtn: {
-    width: '28%',
+    width: 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FF0606',
     height: 32,
-    alignSelf: 'flex-end',
     marginTop: 6,
   },
+  inBtn: {
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green',
+    height: 32,
+    marginTop: 6,
+    marginRight: 10,
+  },
   chatBtn: {
-    width: '32%',
-    justifyContent: 'space-between',
+    width: '35%',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: SECONDARY_COLOR,
-    paddingLeft: 12,
-    paddingRight: 8,
+    paddingLeft: 0,
+    paddingRight: 0,
     height: 34,
   },
   textStyle: {
@@ -229,6 +298,6 @@ const styles = {
   },
   iconStyle: {
     // marginRight: 40,
-    paddingRight: 10,
+    // paddingRight: 10,
   },
 };
