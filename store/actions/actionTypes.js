@@ -21,6 +21,8 @@ export const RE_INITIATE_ORDER_UI_STOP_LOADING =
   'RE_INITIATE_ORDER_UI_STOP_LOADING';
 export const CATEGORY_UI_START_LOADING = 'CATEGORY_UI_START_LOADING';
 export const CATEGORY_UI_STOP_LOADING = 'CATEGORY_UI_STOP_LOADING';
+export const BRANCH_UI_START_LOADING = 'BRANCH_UI_START_LOADING';
+export const BRANCH_UI_STOP_LOADING = 'BRANCH_UI_STOP_LOADING';
 
 // Authentication action types
 export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN';
@@ -52,6 +54,9 @@ export const SET_CHATS = 'SET_CHATS';
 // Promo code action types
 export const SET_PROMO_CODES = 'SET_PROMO_CODES';
 
+// Branch action types
+export const SET_BRANCHES = 'SET_BRANCHES';
+
 // RESETS
 export const RESET_UI = 'RESET_UI';
 export const RESET_AUTH = 'RESET_AUTH';
@@ -61,3 +66,4 @@ export const RESET_CART = 'RESET_CART';
 export const RESET_ORDERS = 'RESET_ORDERS';
 export const RESET_ORDER_CHAT = 'RESET_ORDER_CHAT';
 export const RESET_PROMO_CODES = 'RESET_PROMO_CODES';
+export const RESET_BRANCHES = 'RESET_BRANCHES';

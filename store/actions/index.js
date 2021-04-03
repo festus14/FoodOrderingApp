@@ -83,5 +83,8 @@ export {setOrderChat, getOrderChat, getChats} from './chats';
 // promo codes actions
 export {getPromoCodes, applyCode, generateCode} from './promos';
 
+// branch actions
+export {getBranches, deleteBranch} from './branches';
+
 // reset app
 export {resetApp} from './reset';

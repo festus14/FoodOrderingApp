@@ -197,7 +197,9 @@ const RestaurantAccountScreen = ({navigation}) => {
             </TouchableOpacity>
           )}
           <View style={styles.details}>
-            <Text style={styles.title}>{capitalize(user?.fullname ?? '')}</Text>
+            <Text style={styles.title}>
+              {capitalize(user?.firstname ?? '')}
+            </Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('RestaurantEditAccountScreen')
@@ -220,7 +222,7 @@ const RestaurantAccountScreen = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.body}
-          onPress={() => navigation.navigate('PromotionScreen')}>
+          onPress={() => navigation.navigate('BranchScreen')}>
           <View style={styles.icon}>
             <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
           </View>
@@ -263,17 +265,6 @@ const RestaurantAccountScreen = ({navigation}) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>About</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.body}
-          onPress={() => navigation.navigate('BecomeVendorScreen')}>
-          <View style={styles.icon}>
-            <Icon name="person-sharp" size={35} color={SECONDARY_COLOR} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>Become a vendor</Text>
           </View>
         </TouchableOpacity>
       </View>

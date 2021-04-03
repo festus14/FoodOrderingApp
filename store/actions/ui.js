@@ -19,6 +19,8 @@ import {
   RE_INITIATE_ORDER_UI_STOP_LOADING,
   CATEGORY_UI_START_LOADING,
   CATEGORY_UI_STOP_LOADING,
+  BRANCH_UI_START_LOADING,
+  BRANCH_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -138,5 +140,17 @@ export const categoryStartLoading = () => {
 export const categoryUiStopLoading = () => {
   return {
     type: CATEGORY_UI_STOP_LOADING,
+  };
+};
+
+export const branchUiStartLoading = () => {
+  return {
+    type: BRANCH_UI_START_LOADING,
+  };
+};
+
+export const branchUiStopLoading = () => {
+  return {
+    type: BRANCH_UI_STOP_LOADING,
   };
 };

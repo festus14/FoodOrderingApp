@@ -1,93 +1,87 @@
 import {API_URL} from '../../utility/constants';
 import {sendRequest} from '../../utility/helpers';
-import {SET_ORDER_CHAT, SET_CHATS} from './actionTypes';
+import {SET_BRANCHES} from './actionTypes';
 import {getAuthToken} from './auth';
-import {orderChatUiStartLoading, orderChatUiStopLoading} from './ui';
+import {branchUiStopLoading, branchUiStartLoading} from './ui';
 
-export const setOrderChat = (chat) => {
+export const setBranches = (branches) => {
   return {
-    type: SET_ORDER_CHAT,
-    chat,
+    type: SET_BRANCHES,
+    branches,
   };
 };
 
-export const setChats = (chats) => {
-  return {
-    type: SET_CHATS,
-    chats,
-  };
-};
-
-export const getOrderChat = (id) => {
+export const getBranches = () => {
   return async (dispatch, state) => {
     try {
-      await dispatch(orderChatUiStartLoading());
+      await dispatch(branchUiStartLoading());
 
       let token = await dispatch(getAuthToken());
 
       setTimeout(async () => {
-        await dispatch(orderChatUiStopLoading());
+        await dispatch(branchUiStopLoading());
         if (!res) {
           return 'Check your internet connection and try again!';
         }
       }, 15000);
 
       let res = await sendRequest(
-        `https://api.boxin.ng/ws/chat/${id}/`,
+        `${API_URL}/order/branch_restaurant/`,
         'GET',
         {},
         {},
         token,
       );
 
-      await dispatch(orderChatUiStopLoading());
+      await dispatch(branchUiStopLoading());
 
       if (res.ok) {
         let resJson = await res.json();
+
+        await dispatch(setBranches(resJson.results));
         return null;
       }
       return 'Failed';
     } catch (error) {
-      await dispatch(orderChatUiStopLoading());
-      console.log(error);
+      await dispatch(branchUiStopLoading());
       return 'Something went wrong. Please check your internet connection and try again';
     }
   };
 };
 
-export const getChats = (id) => {
+export const deleteBranch = (id) => {
   return async (dispatch, state) => {
     try {
-      await dispatch(orderChatUiStartLoading());
+      await dispatch(branchUiStartLoading());
 
       let token = await dispatch(getAuthToken());
 
       setTimeout(async () => {
-        await dispatch(orderChatUiStopLoading());
+        await dispatch(branchUiStopLoading());
         if (!res) {
           return 'Check your internet connection and try again!';
         }
       }, 15000);
 
       let res = await sendRequest(
-        `${API_URL}/chat/chats/`,
-        'GET',
+        `${API_URL}/order/branch_restaurant/${id}/`,
+        'DELETE',
         {},
         {},
         token,
       );
 
-      await dispatch(orderChatUiStopLoading());
+      await dispatch(branchUiStopLoading());
 
       if (res.ok) {
         let resJson = await res.json();
-        await dispatch(setChats(resJson.results));
+
+        await dispatch(setBranches(resJson.results));
         return null;
       }
       return 'Failed';
     } catch (error) {
-      await dispatch(orderChatUiStopLoading());
-      console.log(error);
+      await dispatch(branchUiStopLoading());
       return 'Something went wrong. Please check your internet connection and try again';
     }
   };

@@ -2,10 +2,11 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import RestaurantAccountScreen from '../screens/RestaurantAccountScreen';
 import AboutScreen from '../screens/AboutScreen';
-import BecomeVendorScreen from '../screens/BecomeVendorScreen';
 import DriversScreen from '../screens/DriversScreen';
 import RestaurantEditAccountScreen from '../screens/RestaurantEditAccountScreen';
 import MenusScreen from '../screens/MenusScreen';
+import BranchScreen from '../screens/BranchScreen';
+import AddBranchScreen from '../screens/AddBranch';
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,8 @@ export default function RestaurantAccountStackNavigator() {
       />
       <Stack.Screen name="MenusScreen" component={MenusScreen} />
       <Stack.Screen name="AboutScreen" component={AboutScreen} />
-      <Stack.Screen name="BecomeVendorScreen" component={BecomeVendorScreen} />
+      <Stack.Screen name="BranchScreen" component={BranchScreen} />
+      <Stack.Screen name="AddBranchScreen" component={AddBranchScreen} />
       <Stack.Screen name="DriversScreen" component={DriversScreen} />
     </Stack.Navigator>
   );

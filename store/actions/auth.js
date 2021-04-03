@@ -133,8 +133,6 @@ export const logIn = (authData) => {
 
       await dispatch(setUser(userData));
 
-      console.log('User data...', userData);
-
       let userRole = userData.roles[0];
       if (userRole === 'CONSUMER') {
         RootNavigation.navigate('ConsumerMapScreen');
@@ -177,8 +175,6 @@ export const resetPassword = (authData) => {
 
       dispatch(uiStopLoading());
 
-      console.log('Reset password...', resJson);
-
       return resJson.errors ?? null;
     } catch (error) {
       dispatch(uiStopLoading());
@@ -200,8 +196,6 @@ export const changePassword = (authData) => {
           return 'Please check your internet connection';
         }
       }, 15000);
-
-      console.log(authData);
 
       let res = await sendRequest(
         `${API_URL}/auth/users/change-password/`,
@@ -256,8 +250,6 @@ export const signUp = (authData) => {
       );
 
       let resJson = await res.json();
-
-      console.log('Sign up...', resJson);
 
       await dispatch(uiStopLoading());
 
@@ -334,7 +326,6 @@ export const resendVerifyToken = (email) => {
       );
 
       let resJson = await res.json();
-      console.log('Verify User Token...', resJson);
 
       if (resJson?.errors) {
         return resJson?.errors;
@@ -373,7 +364,6 @@ export const forgotPassword = (email) => {
       await dispatch(uiStopLoading());
       if (res.ok) {
         let resJson = await res.json();
-        console.log('Forgot password...', resJson);
       }
 
       return null;

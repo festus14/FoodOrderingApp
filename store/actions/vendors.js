@@ -190,7 +190,6 @@ export const changeMenuPicture = ({uri, type, fileName, id}) => {
 
       if (res.ok) {
         let resJson = await res.json();
-        console.log('For picture', resJson);
 
         return null;
       }
@@ -205,7 +204,6 @@ export const changeMenuPicture = ({uri, type, fileName, id}) => {
 
 export const addMenu = ({food_image, ...data}) => {
   return async (dispatch, state) => {
-    console.log('My Data...', data);
     dispatch(vendorsMenuUiStartLoading());
     try {
       let token = await dispatch(getAuthToken());
@@ -218,11 +216,9 @@ export const addMenu = ({food_image, ...data}) => {
       );
 
       await dispatch(vendorsMenuUiStopLoading());
-      console.log('Add menu res...', res);
 
       if (res.ok) {
         let resJson = await res.json();
-        console.log('Add menu resJson...', resJson);
 
         return await dispatch(
           changeMenuPicture({...food_image, id: resJson.id}),
@@ -286,7 +282,6 @@ export const createVendorCategory = (data) => {
 
       if (res.ok) {
         let resJson = await res.json();
-        console.log('Category create resJson...', resJson);
         return null;
       }
       return 'Failed';
@@ -311,17 +306,13 @@ export const getVendorCategories = () => {
       );
 
       await dispatch(categoryUiStopLoading());
-      // console.log('Category get res...', res);
-
       if (res.ok) {
         let resJson = await res.json();
         await dispatch(setCategories(resJson.food_types));
-        console.log('Category get resJson...', resJson);
         return null;
       }
 
       let resText = res.text();
-      console.log('ResText...', resText);
 
       return 'Failed';
     } catch (error) {

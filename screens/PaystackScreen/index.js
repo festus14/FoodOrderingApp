@@ -188,7 +188,6 @@ const PaystackScreen = ({navigation, route}) => {
 
       return res.reference || null;
     } catch (error) {
-      console.log('Error payment message', error.message);
       Alert.alert('Error', error.message);
     }
   };

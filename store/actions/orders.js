@@ -60,7 +60,6 @@ export const postOrder = ({reference}) => {
       dispatch(ordersUiStopLoading());
       if (res.ok) {
         let resJson = await res.json();
-        console.log('Order made, resJson', resJson);
         await dispatch(setSingleOrder(resJson));
         await dispatch(getOrders());
         return null;
@@ -180,13 +179,10 @@ export const reInitiateOrder = (reference) => {
 
       await dispatch(reInitiateUiStopLoading());
 
-      console.log('ResJson re-initiate...', res);
       let resJson = await res.json();
-      console.log('ResJson re-initiate...', resJson, reference);
 
       if (res.ok) {
         // let resJson = await res.json();
-        // console.log('ResJson re-initiate...', resJson);
         await dispatch(getOrders());
         return null;
       }

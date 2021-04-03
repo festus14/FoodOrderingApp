@@ -106,7 +106,6 @@ export const getUser = () => {
 export const updateUser = (userData) => {
   return async (dispatch, state) => {
     dispatch(userUiStartLoading());
-    console.log(userData);
     try {
       let token = await dispatch(getAuthToken());
       let userId = await dispatch(getUserId());
@@ -119,7 +118,6 @@ export const updateUser = (userData) => {
         token,
       );
 
-      console.log(res);
       await dispatch(userUiStopLoading());
 
       if (res.ok) {
@@ -228,7 +226,6 @@ export const changeProfilePicture = ({uri, type, fileName}) => {
 
       if (res.ok) {
         let resJson = await res.json();
-        console.log('For picture', resJson);
 
         if (resJson.errors || resJson.detail) {
           return resJson.errors || resJson.detail;
@@ -250,8 +247,6 @@ export const signUpVendor = (data) => {
     try {
       dispatch(userUiStartLoading());
 
-      console.log('my data...', data);
-
       let token = await dispatch(getAuthToken());
 
       setTimeout(() => {
@@ -270,11 +265,8 @@ export const signUpVendor = (data) => {
       );
       await dispatch(userUiStopLoading());
 
-      console.log('Res for vendor create...', res);
-
       if (res.ok) {
         let resJson = await res.json();
-        console.log('For picture', resJson);
 
         if (resJson.errors || resJson.detail) {
           return resJson.errors || resJson.detail;
@@ -321,11 +313,8 @@ export const restaurantSignIn = (data) => {
       );
       await dispatch(userUiStopLoading());
 
-      console.log('Res for vendor create...', res);
-
       if (res.ok) {
         let resJson = await res.json();
-        console.log('Restaurant sign in...', resJson);
 
         if (resJson.errors || resJson.detail) {
           return resJson.errors || resJson.detail;

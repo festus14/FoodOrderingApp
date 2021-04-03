@@ -18,8 +18,6 @@ const RestaurantEditAccountScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
-  console.log('user', user);
-
   const names = user?.fullname?.split(' ') ?? [
     user?.firstname ?? ' ',
     user?.lastname ?? ' ',

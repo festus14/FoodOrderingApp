@@ -19,7 +19,7 @@ class MyMultiplePicker extends Component {
           selectedItems={selectedItems}
           selectText="Days open"
           searchInputPlaceholderText="Search days..."
-          onChangeInput={(text) => console.log(text)}
+          // onChangeInput={(text) => console.log(text)}
           altFontFamily="ProximaNova-Light"
           tagRemoveIconColor="#CCC"
           tagBorderColor="#CCC"

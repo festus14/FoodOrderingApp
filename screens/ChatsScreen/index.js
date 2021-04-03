@@ -36,7 +36,6 @@ const ChatsScreen = ({navigation}) => {
 
   useEffect(() => {
     fetchChats();
-    console.log('herererer');
   }, []);
 
   return (

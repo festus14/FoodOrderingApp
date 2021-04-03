@@ -26,9 +26,7 @@ import {validate} from '../../utility/validation';
 import {Store} from '../../store';
 import {
   addMenu,
-  changeProfilePicture,
   createVendorCategory,
-  getMenus,
   getVendorCategories,
 } from '../../store/actions';
 import MyPicker from '../../components/MyPicker';

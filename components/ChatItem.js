@@ -5,7 +5,7 @@ import {LIGHT_GREY, SECONDARY_COLOR} from '../utility/colors';
 import MyImage from './MyImage';
 
 export default function ChatItem({item, navigation}) {
-  console.log('chats Item...', item);
+  // console.log('chats Item...', item);
 
   const {
     state: {

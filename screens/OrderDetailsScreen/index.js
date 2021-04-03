@@ -9,7 +9,6 @@ import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
-  console.log('Order Item...', item);
 
   const {
     state: {

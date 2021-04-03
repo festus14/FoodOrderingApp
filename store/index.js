@@ -8,6 +8,7 @@ import cart from './reducers/cart';
 import orders from './reducers/orders';
 import chats from './reducers/chats';
 import promos from './reducers/promos';
+import branches from './reducers/branches';
 
 export const Store = React.createContext();
 
@@ -20,6 +21,7 @@ export const initialState = {
   orders: orders.initialState,
   chats: chats.initialState,
   promos: promos.initialState,
+  branches: branches.initialState,
 };
 
 export function StoreProvider(props) {
@@ -32,6 +34,7 @@ export function StoreProvider(props) {
     orders: React.useReducer(orders.reducer, orders.initialState),
     chats: React.useReducer(chats.reducer, chats.initialState),
     promos: React.useReducer(promos.reducer, promos.initialState),
+    branches: React.useReducer(branches.reducer, branches.initialState),
   });
 
   return (

@@ -20,6 +20,8 @@ import {
   RE_INITIATE_ORDER_UI_STOP_LOADING,
   CATEGORY_UI_START_LOADING,
   CATEGORY_UI_STOP_LOADING,
+  BRANCH_UI_START_LOADING,
+  BRANCH_UI_STOP_LOADING,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -33,6 +35,7 @@ const initialState = {
   isPromoLoading: false,
   isReInitiateLoading: false,
   isCategoriesLoading: false,
+  isBranchLoading: false,
 };
 
 const reducer = (state, action) => {
@@ -136,6 +139,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         isCategoriesLoading: false,
+      };
+    case BRANCH_UI_START_LOADING:
+      return {
+        ...state,
+        isBranchLoading: true,
+      };
+    case BRANCH_UI_STOP_LOADING:
+      return {
+        ...state,
+        isBranchLoading: false,
       };
     case RESET_UI:
       return initialState;

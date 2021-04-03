@@ -170,7 +170,6 @@ export const styles = {
   clearStyle: {
     color: ALMOST_BLACK,
     fontSize: 14,
-    // paddingRight: 6,
   },
   variant: {
     backgroundColor: LIGHTER_GREY,
