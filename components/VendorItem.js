@@ -66,7 +66,7 @@ const VendorItem = ({item, onPress}) => {
           <MyImage
             uri={vendor.restaurant.image}
             resizeMode="cover"
-            priority="normal"
+            priority="high"
             style={styles.image}
           />
         </View>

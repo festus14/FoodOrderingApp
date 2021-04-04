@@ -1,0 +1,56 @@
+0000000000000000000000000000000000000000 7bd9120490d99183cab0a2b8595fa223ad89aa88 festus14 <festusomole14@gmail.com> 1611258624 +0100	commit (initial): initial commit
+7bd9120490d99183cab0a2b8595fa223ad89aa88 158656aebc4731f8024ed521fef85848bf86a95d festus14 <festusomole14@gmail.com> 1611411269 +0100	commit: first commit
+158656aebc4731f8024ed521fef85848bf86a95d 0000000000000000000000000000000000000000 festus14 <festusomole14@gmail.com> 1611411275 +0100	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 158656aebc4731f8024ed521fef85848bf86a95d festus14 <festusomole14@gmail.com> 1611411275 +0100	Branch: renamed refs/heads/master to refs/heads/main
+158656aebc4731f8024ed521fef85848bf86a95d 158656aebc4731f8024ed521fef85848bf86a95d festus14 <festusomole14@gmail.com> 1611411922 +0100	checkout: moving from main to feature/vendors
+158656aebc4731f8024ed521fef85848bf86a95d 78e02111fc1ba0e448a6006dc6c76d04ae054b40 festus14 <festusomole14@gmail.com> 1611670738 +0100	commit: finished add to cart view
+78e02111fc1ba0e448a6006dc6c76d04ae054b40 78e02111fc1ba0e448a6006dc6c76d04ae054b40 festus14 <festusomole14@gmail.com> 1611670832 +0100	checkout: moving from feature/vendors to feature/orders
+78e02111fc1ba0e448a6006dc6c76d04ae054b40 3072f64dad232c6a0def7716c68869a98c9eca00 festus14 <festusomole14@gmail.com> 1611834169 +0100	commit: feat/finished implementation of order screens
+3072f64dad232c6a0def7716c68869a98c9eca00 3072f64dad232c6a0def7716c68869a98c9eca00 festus14 <festusomole14@gmail.com> 1611834221 +0100	checkout: moving from feature/orders to feature/account
+3072f64dad232c6a0def7716c68869a98c9eca00 4669ce2054a9c65f97d0aed870e68f7c968b09f5 festus14 <festusomole14@gmail.com> 1612013718 +0100	commit: about to integrate with backend
+4669ce2054a9c65f97d0aed870e68f7c968b09f5 4669ce2054a9c65f97d0aed870e68f7c968b09f5 festus14 <festusomole14@gmail.com> 1612013769 +0100	checkout: moving from feature/account to @feature/auth-logic
+4669ce2054a9c65f97d0aed870e68f7c968b09f5 a6c322d92017d54a33d1b394cac3ae349fb0db07 festus14 <festusomole14@gmail.com> 1612423206 +0100	commit: implemented login, sign up, verify user and resend verification logic
+a6c322d92017d54a33d1b394cac3ae349fb0db07 225ddeb4c1cc2cc3d763899de013c02af3d77973 festus14 <festusomole14@gmail.com> 1612455090 +0100	commit: implementing checkout modal
+225ddeb4c1cc2cc3d763899de013c02af3d77973 225ddeb4c1cc2cc3d763899de013c02af3d77973 festus14 <festusomole14@gmail.com> 1612643241 +0100	checkout: moving from @feature/auth-logic to maps-integration
+225ddeb4c1cc2cc3d763899de013c02af3d77973 248969676edb67bc7b47bf7261223f9ae1837834 festus14 <festusomole14@gmail.com> 1612822635 +0100	commit: implemeting getting of vendors based on user location
+248969676edb67bc7b47bf7261223f9ae1837834 eb99ea8f9de1ed2f12204bba597a94d8ad8f5193 festus14 <festusomole14@gmail.com> 1612822849 +0100	commit: removed .vscode
+eb99ea8f9de1ed2f12204bba597a94d8ad8f5193 606fb5afd68f00b2efdb5bcdd1b8cd0b8dca4fcd festus14 <festusomole14@gmail.com> 1612870933 +0100	commit: implmented vendors, currently working on single vendors menues
+606fb5afd68f00b2efdb5bcdd1b8cd0b8dca4fcd ef3bdbd3c6d9abef956b81ddf893a2343eae06f9 festus14 <festusomole14@gmail.com> 1613079376 +0100	commit: implemented single vendor screen and its menus
+ef3bdbd3c6d9abef956b81ddf893a2343eae06f9 05212cd885a388a0aff1ddfc527c143eba881cfb festus14 <festusomole14@gmail.com> 1613219119 +0100	commit: populated single food screen with data
+05212cd885a388a0aff1ddfc527c143eba881cfb a6be45230b9efa540b28b2e2d680ab74928d3a5f festus14 <festusomole14@gmail.com> 1613258487 +0100	commit: implemented checkout screen and logic
+a6be45230b9efa540b28b2e2d680ab74928d3a5f b6d92cbbc69be33cb255840593f9fb676d8d247b festus14 <festusomole14@gmail.com> 1613265942 +0100	commit: finished preparation for ordering
+b6d92cbbc69be33cb255840593f9fb676d8d247b 2c7b95accc7bb98aeef2fea46020a5f05be4c617 festus14 <festusomole14@gmail.com> 1613413113 +0100	commit: implementing orders UI and logic
+2c7b95accc7bb98aeef2fea46020a5f05be4c617 2c7b95accc7bb98aeef2fea46020a5f05be4c617 festus14 <festusomole14@gmail.com> 1613413238 +0100	checkout: moving from maps-integration to orders
+2c7b95accc7bb98aeef2fea46020a5f05be4c617 2b3499ed6912213f64f6fce72e3411053bb51f0a festus14 <festusomole14@gmail.com> 1613600096 +0100	commit: code adjustment, implemented order cancelling
+2b3499ed6912213f64f6fce72e3411053bb51f0a 2b3499ed6912213f64f6fce72e3411053bb51f0a festus14 <festusomole14@gmail.com> 1613739892 +0100	checkout: moving from orders to feature/chat
+2b3499ed6912213f64f6fce72e3411053bb51f0a 4158441c7100ff0ad31ae1bb6dc1cdf3326dcdd9 festus14 <festusomole14@gmail.com> 1613755097 +0100	commit: implemented chats view and store
+4158441c7100ff0ad31ae1bb6dc1cdf3326dcdd9 1d50965bbc3d20c3a2917ff723e139e2732f885d festus14 <festusomole14@gmail.com> 1613760779 +0100	commit: installing socket
+1d50965bbc3d20c3a2917ff723e139e2732f885d 91261ce060a361f8565fe8a05480aeb2d01ffeab festus14 <festusomole14@gmail.com> 1614091481 +0100	commit: started implementation of cpnsumer account
+91261ce060a361f8565fe8a05480aeb2d01ffeab 4669ce2054a9c65f97d0aed870e68f7c968b09f5 festus14 <festusomole14@gmail.com> 1614093437 +0100	checkout: moving from feature/chat to feature/account
+4669ce2054a9c65f97d0aed870e68f7c968b09f5 b08e53036ccf5f9f7bd9d30138a96b4281eecdc6 festus14 <festusomole14@gmail.com> 1614093576 +0100	pull origin main: Fast-forward
+b08e53036ccf5f9f7bd9d30138a96b4281eecdc6 0a4b9547d23ce39836f15359045f38dceeca36fd festus14 <festusomole14@gmail.com> 1614105215 +0100	commit: implemented ui for 90% of consumer screen
+0a4b9547d23ce39836f15359045f38dceeca36fd 95629c22e699f67860c624c6e1c4976d64bd0b05 festus14 <festusomole14@gmail.com> 1614105645 +0100	commit: added restaurant orders and order details screen
+95629c22e699f67860c624c6e1c4976d64bd0b05 183fd203b325d1b66799a2ba57177561f3350ecf festus14 <festusomole14@gmail.com> 1614454060 +0100	commit: tying restaurant to backend
+183fd203b325d1b66799a2ba57177561f3350ecf 183fd203b325d1b66799a2ba57177561f3350ecf festus14 <festusomole14@gmail.com> 1614454126 +0100	checkout: moving from feature/account to feature/restuarant
+183fd203b325d1b66799a2ba57177561f3350ecf 858700f54cd4df20cd9c1074dc5a0d80f12cac31 festus14 <festusomole14@gmail.com> 1614508791 +0100	commit: updating restaurant done
+858700f54cd4df20cd9c1074dc5a0d80f12cac31 c4a3c6c7b828bf10f7de64019e74f2868a726336 festus14 <festusomole14@gmail.com> 1615038706 +0100	commit: completed chatting, menus in progress
+c4a3c6c7b828bf10f7de64019e74f2868a726336 c5833809e261d3d8e9c0b343823d3d97957fad59 festus14 <festusomole14@gmail.com> 1615285963 +0100	commit: Done with menus UI
+c5833809e261d3d8e9c0b343823d3d97957fad59 c5833809e261d3d8e9c0b343823d3d97957fad59 festus14 <festusomole14@gmail.com> 1615286031 +0100	checkout: moving from feature/restuarant to @feature/payment
+c5833809e261d3d8e9c0b343823d3d97957fad59 22278db039676bd7de0e325ef447215b1116161b festus14 <festusomole14@gmail.com> 1615656167 +0100	commit: first release build, implemented payment with paystack
+22278db039676bd7de0e325ef447215b1116161b 8db94fdb1369d9067a408c9aa92481e2dbe316d6 festus14 <festusomole14@gmail.com> 1615658904 +0100	commit: added empty views for empty lists
+8db94fdb1369d9067a408c9aa92481e2dbe316d6 2685ceb9dc31c645520b47e0ed1e3b37cb6a8ce8 festus14 <festusomole14@gmail.com> 1615662154 +0100	commit: implemented RN fast image
+2685ceb9dc31c645520b47e0ed1e3b37cb6a8ce8 a40e3e70d565f6e6039f2d4b2b0f596d4e232e09 festus14 <festusomole14@gmail.com> 1615663541 +0100	commit: removed vendor search
+a40e3e70d565f6e6039f2d4b2b0f596d4e232e09 5b327557fc6c2265aece2b03b4cf2d04803912fe festus14 <festusomole14@gmail.com> 1615893938 +0100	commit: fixed auth pages bug
+5b327557fc6c2265aece2b03b4cf2d04803912fe 97f38244758a1c2e9065bacab1d732212d7fa176 festus14 <festusomole14@gmail.com> 1616070305 +0100	commit: adjusted UI, implemented variants in ordering, like and rating if vendor implemented
+97f38244758a1c2e9065bacab1d732212d7fa176 88a3068e579586a23a7a995680c529866a393d78 festus14 <festusomole14@gmail.com> 1616352431 +0100	commit: completed checkout flow
+88a3068e579586a23a7a995680c529866a393d78 e561995cfa11951bf2a2c645e29692f1648d2555 festus14 <festusomole14@gmail.com> 1616668229 +0100	commit: added images to checkout pages, fixed bugs on checkout screen and orders creen
+e561995cfa11951bf2a2c645e29692f1648d2555 e8a33dc84a3217e9257d312e8096c5b9825333c6 festus14 <festusomole14@gmail.com> 1616689373 +0100	commit: implemented image picker
+e8a33dc84a3217e9257d312e8096c5b9825333c6 334c0ba9d7731ab3e1598ab5b83a99dd278c740a festus14 <festusomole14@gmail.com> 1616943737 +0100	commit: Implemented multiple select, menus and become a vendor form
+334c0ba9d7731ab3e1598ab5b83a99dd278c740a effe4edbad605f280bb6e771c065d562a6e6d200 festus14 <festusomole14@gmail.com> 1616953293 +0100	commit: finished become a vendor flow
+effe4edbad605f280bb6e771c065d562a6e6d200 effe4edbad605f280bb6e771c065d562a6e6d200 festus14 <festusomole14@gmail.com> 1616953657 +0100	checkout: moving from @feature/payment to @feature/restuarant
+effe4edbad605f280bb6e771c065d562a6e6d200 82ba25f1ec4481ebe1b4509617b89f9f1c952a2b festus14 <festusomole14@gmail.com> 1617098186 +0100	commit: correcting build bugs
+82ba25f1ec4481ebe1b4509617b89f9f1c952a2b 885ab872b72411eaf58e19d37f9e53f059344736 festus14 <festusomole14@gmail.com> 1617369071 +0100	commit: fix: fixed bugs on consumer side, fixing chat bugs, feature: completed adding of menu
+885ab872b72411eaf58e19d37f9e53f059344736 4e2a1c95e82f1bd74ced7cd98bf756934d7975c3 festus14 <festusomole14@gmail.com> 1617437185 +0100	commit: removed console logs
+4e2a1c95e82f1bd74ced7cd98bf756934d7975c3 6fb9040e680ca9ff84987802097412e385ecd73a festus14 <festusomole14@gmail.com> 1617474252 +0100	commit: feature: implemented restaurant order actions
+6fb9040e680ca9ff84987802097412e385ecd73a 356c601483f8a7530491ff44da5d5befa62e2d5d festus14 <festusomole14@gmail.com> 1617530435 +0100	commit: feature: finished implementing order flow
+                                                                                                                                                                              

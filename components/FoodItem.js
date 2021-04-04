@@ -13,7 +13,7 @@ export default function FoodItem({item, navigation}) {
       <View style={styles.imageContainer}>
         <MyImage
           uri={item.food_image}
-          priority="normal"
+          priority="high"
           resizeMode="cover"
           style={styles.image}
         />

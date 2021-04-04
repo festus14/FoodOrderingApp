@@ -9,7 +9,7 @@ export default function PaymentItem({navigation}) {
       onPress={() => navigation.navigate('PaystackScreen')}>
       <View>
         <Image
-          source={require('../assets/images/burger.png')}
+          source={require('../assets/images/paystack-screen.jpeg')}
           resizeMode="contain"
           style={styles.image}
         />
@@ -17,7 +17,7 @@ export default function PaymentItem({navigation}) {
 
       <View style={styles.content}>
         <Text style={styles.price}>Pay now securely with Paystack</Text>
-        <Text style={styles.body}>Mastercard, verve, visa</Text>
+        <Text style={styles.body}>Mastercard, Verve, Visa</Text>
       </View>
     </TouchableOpacity>
   );

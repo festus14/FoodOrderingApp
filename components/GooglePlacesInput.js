@@ -1,7 +1,8 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import SearchBar from './SearchBar';
 import {SCREEN_WIDTH} from '../utility/constants';
+import {GOOGLE_MAPS_API_KEY} from '@env';
 
 navigator.geolocation = require('react-native-geolocation-service');
 
@@ -14,7 +15,7 @@ const GooglePlacesInput = ({setLocation = () => {}, onSearch = () => {}}) => {
         setLocation(data.description);
       }}
       query={{
-        key: 'AIzaSyCFVVIaYQpkVBWFalnI2WiYkPtJWwGrd_E',
+        key: GOOGLE_MAPS_API_KEY,
         language: 'en',
       }}
       // currentLocation={true}

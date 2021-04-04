@@ -4,7 +4,7 @@ import {OCEAN_BLUE} from '../utility/colors';
 import {capitalize} from '../utility/helpers';
 import MyImage from './MyImage';
 
-export default function OrderItem({item, navigation}) {
+export default function OrderItem({item, onPress}) {
   const getStateColor = () => {
     switch (item.status_of_order) {
       case 'PENDING':
@@ -22,11 +22,7 @@ export default function OrderItem({item, navigation}) {
     }
   };
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() =>
-        navigation.navigate('RestaurantOrderDetailsScreen', {item})
-      }>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View>
         <MyImage
           uri={item?.restaurant?.restaurant_image}

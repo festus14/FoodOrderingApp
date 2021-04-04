@@ -11,5 +11,8 @@ module.exports = {
     'react-native-splash-screen': {
       root: NODE_MODULES_PATH + '/react-native-splash-screen',
     },
+    'react-native-paystack': {
+      root: NODE_MODULES_PATH + '/react-native-paystack',
+    },
   },
 };

@@ -2,7 +2,6 @@ import React from 'react';
 import {Text, View, Platform} from 'react-native';
 import {SECONDARY_COLOR} from '../utility/colors';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
-import Checkbox from './Checkbox';
 import RadioIcon from './RadioIcon';
 
 export default function FoodContentItem({item, checked, onCheck}) {

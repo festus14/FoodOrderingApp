@@ -18,7 +18,6 @@ const PaymentScreen = ({navigation, route}) => {
 
         <View style={styles.container}>
           <PaymentItem navigation={navigation} />
-          {/* <PaymentItem navigation={navigation} /> */}
         </View>
       </SafeAreaView>
     </>

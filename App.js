@@ -1,7 +1,8 @@
 import RNPaystack from 'react-native-paystack';
+import {PAYSTACK_LIVE_KEY} from '@env';
 
 RNPaystack.init({
-  publicKey: 'pk_test_b3b4e25efbb878f097556f7238f24588ea7f5e67',
+  publicKey: PAYSTACK_LIVE_KEY,
 });
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';

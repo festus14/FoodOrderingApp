@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, KeyboardAvoidingView, Platform, Alert} from 'react-native';
@@ -15,7 +16,6 @@ import {
   resetCart,
   verifyAccount,
 } from '../../store/actions';
-import MyPicker from '../../components/MyPicker';
 import RNPaystack from 'react-native-paystack';
 
 const PaystackScreen = ({navigation, route}) => {
@@ -23,7 +23,6 @@ const PaystackScreen = ({navigation, route}) => {
     state: {
       ui: {isLoading},
       user: {user},
-      orders: {singleOrder},
       cart: {checkoutInfo},
     },
     dispatch,
@@ -176,12 +175,10 @@ const PaystackScreen = ({navigation, route}) => {
   const chargeCard = async () => {
     try {
       let res = await RNPaystack.chargeCard({
-        cardNumber: '4123450131001381',
-        // cardNumber: cardNumber.value,
+        cardNumber: cardNumber.value,
         expiryMonth: expDate.value.slice(0, 2),
         expiryYear: expDate.value.slice(3),
-        cvc: '883',
-        // cvc: cvv.value,
+        cvc: cvv.value,
         email: user.email,
         amountInKobo: checkoutInfo.total * 100,
       });

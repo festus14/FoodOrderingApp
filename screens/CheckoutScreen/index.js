@@ -30,7 +30,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import DateTimePicker from '../../components/DateTimePicker';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utility/constants';
-import {getTime, isEmpty} from '../../utility/helpers';
+import {getTime, isEmpty, trimString} from '../../utility/helpers';
 
 export default function CheckoutScreen({navigation, route}) {
   const {
@@ -318,7 +318,9 @@ export default function CheckoutScreen({navigation, route}) {
                     <Text style={{...styles.promoTitle, fontSize: 15}}>
                       Delivery Location
                     </Text>
-                    <Text style={styles.promoText}>{userAddress}</Text>
+                    <Text style={styles.promoText}>
+                      {trimString(userAddress, 52)}
+                    </Text>
                   </View>
                 </View>
 
@@ -371,7 +373,7 @@ export default function CheckoutScreen({navigation, route}) {
                       Pickup Location
                     </Text>
                     <Text style={styles.promoText}>
-                      {checkoutInfo?.pickupAddress ?? ''}
+                      {trimString(checkoutInfo?.pickupAddress ?? '', 52)}
                     </Text>
                   </View>
                 </View>

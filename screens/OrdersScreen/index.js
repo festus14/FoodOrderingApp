@@ -45,7 +45,10 @@ const OrdersScreen = ({navigation}) => {
       <FlatList
         data={openOrders}
         renderItem={({item, index, separators}) => (
-          <OrderItem item={item} navigation={navigation} />
+          <OrderItem
+            item={item}
+            onPress={() => navigation.navigate('OrderDetailsScreen', {item})}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         refreshing={isLoading}
@@ -59,7 +62,10 @@ const OrdersScreen = ({navigation}) => {
       <FlatList
         data={closedOrders}
         renderItem={({item, index, separators}) => (
-          <OrderItem item={item} navigation={navigation} />
+          <OrderItem
+            item={item}
+            onPress={() => navigation.navigate('OrderDetailsScreen', {item})}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         refreshing={isLoading}
