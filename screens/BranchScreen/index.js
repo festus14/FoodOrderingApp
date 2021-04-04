@@ -72,6 +72,7 @@ const BranchScreen = ({navigation}) => {
                 item={item}
                 onDelete={() => deleteBranchHandler(item.id)}
                 isLoading={isLoading}
+                navigation={navigation}
               />
             )}
             keyExtractor={(item) => item.id.toString()}

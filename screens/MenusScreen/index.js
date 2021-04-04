@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import FoodItem from '../../components/FoodItem';
+import MenuItem from '../../components/MenuItem';
 import Header from '../../components/Header';
 import {SECONDARY_COLOR, MAIN_COLOR} from '../../utility/colors';
 import {SCREEN_HEIGHT} from '../../utility/constants';
@@ -54,19 +54,13 @@ const MenusScreen = ({navigation}) => {
             <FlatList
               data={menus}
               renderItem={({item, index, separators}) => (
-                <FoodItem item={item} navigation={navigation} />
+                <MenuItem item={item} navigation={navigation} />
               )}
               keyExtractor={(item) => item.id.toString()}
               refreshing={isLoading}
               onRefresh={fetchMenus}
               showsVerticalScrollIndicator={false}
-              ListEmptyComponent={
-                <EmptyComponent
-                  text="menu"
-                  onRefresh={fetchMenus}
-                  // onPress={() => navigation.navigate('AddMenuModal')}
-                />
-              }
+              ListEmptyComponent={<EmptyComponent text="menu" onRefresh />}
               ListFooterComponent={
                 <MyButton
                   text={'Add menu'}

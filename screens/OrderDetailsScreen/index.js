@@ -5,7 +5,7 @@ import MyButton from '../../components/MyButton';
 import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
 import {cancelOrder, reInitiateOrder} from '../../store/actions';
-import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
+import {LIGHTER_GREY, OCEAN_BLUE, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
@@ -27,6 +27,10 @@ const OrderDetailsScreen = ({navigation, route}) => {
         return '#009C22';
       case 'CANCELLED':
         return '#FF1500';
+      case 'ACCEPTED':
+        return 'green';
+      case 'ORDER_READY':
+        return OCEAN_BLUE;
       default:
         return '#FBBC05';
     }
@@ -234,8 +238,8 @@ const styles = {
     color: '#fff',
   },
   stateBack: {
-    width: 70,
-    height: 18,
+    width: 80,
+    height: 20,
     backgroundColor: '#009C22',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -246,6 +250,7 @@ const styles = {
   },
   vendor: {
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   time: {
     fontWeight: '100',

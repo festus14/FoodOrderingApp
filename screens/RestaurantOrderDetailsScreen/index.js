@@ -5,11 +5,18 @@ import MyButton from '../../components/MyButton';
 import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
 import {cancelOrder, acceptOrder} from '../../store/actions';
-import {LIGHTER_GREY, SECONDARY_COLOR} from '../../utility/colors';
+import {
+  LIGHTER_GREY,
+  LIGHT_BLUE,
+  OCEAN_BLUE,
+  SECONDARY_COLOR,
+} from '../../utility/colors';
 import {capitalize} from '../../utility/helpers';
 
 const RestaurantOrderDetailScreen = ({navigation, route}) => {
   const item = route.params.item;
+
+  console.log('Item...', item);
 
   const {
     state: {
@@ -28,6 +35,10 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
         return '#009C22';
       case 'CANCELLED':
         return '#FF1500';
+      case 'ACCEPTED':
+        return 'green';
+      case 'ORDER_READY':
+        return OCEAN_BLUE;
       default:
         return '#FBBC05';
     }
@@ -43,11 +54,11 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
       {
         text: 'Cancel',
         onPress: async () => {
-          let error = await dispatch(cancelOrder(item.id));
+          let error = await dispatch(cancelOrder(item.id, true));
           if (error) {
             Alert.alert('Error', error);
           } else {
-            navigation.navigate('OrdersScreen');
+            navigation.navigate('RestaurantOrdersScreen');
             Alert.alert(
               'Success',
               'Your order has been successfully cancelled',
@@ -58,29 +69,41 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
     ]);
   };
 
-  const acceptOrderHandler = async () => {
-    Alert.alert('Info', 'Are you sure you want to accept this order?', [
-      {
-        text: 'Close',
-        onPress: () => {},
-        style: 'cancel',
-      },
-      {
-        text: 'YES',
-        onPress: async () => {
-          let error = await dispatch(acceptOrder(item.id));
-          if (error) {
-            Alert.alert('Error', error);
-          } else {
-            Alert.alert(
-              'Success',
-              'Your order has been successfully cancelled',
-            );
-            navigation.navigate('RestaurantOrdersScreen');
-          }
+  const acceptOrderHandler = async (isOrderReady) => {
+    Alert.alert(
+      'Info',
+      `${
+        isOrderReady
+          ? 'Are you certain this order is ready?'
+          : 'Are you sure you want to accept this order?'
+      }`,
+      [
+        {
+          text: 'Close',
+          onPress: () => {},
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: 'YES',
+          onPress: async () => {
+            let error = await dispatch(acceptOrder(item.id, isOrderReady));
+            if (error) {
+              Alert.alert('Error', error);
+            } else {
+              Alert.alert(
+                'Success',
+                `${
+                  isOrderReady
+                    ? 'Order is ready'
+                    : 'Your order has been successfully accepted'
+                }`,
+              );
+              navigation.navigate('RestaurantOrdersScreen');
+            }
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -98,7 +121,7 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
             </Text>
             <View style={styles.infoBottom}>
               <Text style={styles.vendor}>
-                {capitalize(item?.restaurant?.restaurant_name ?? '')}
+                {item?.restaurant?.restaurant_name ?? ''}
               </Text>
               <View
                 style={{
@@ -121,16 +144,29 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
             ))}
 
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-              {item.payment_successful && (
+              {item.status_of_order === 'ACCEPTED' && (
                 <MyButton
-                  style={styles.inBtn}
-                  text="ACCEPT ORDER"
+                  style={[styles.inBtn, {backgroundColor: OCEAN_BLUE}]}
+                  text="ORDER READY"
                   textStyle={styles.textStyle}
-                  onPress={acceptOrderHandler}
+                  onPress={() => acceptOrderHandler(true)}
                   isLoading={isReInitiateLoading}
                 />
               )}
-              {item.status_of_order === 'PENDING' && (
+              {item.payment_successful &&
+                item.status_of_order !== 'ACCEPTED' &&
+                item.status_of_order !== 'CANCELLED' &&
+                item.status_of_order !== 'ORDER_READY' && (
+                  <MyButton
+                    style={styles.inBtn}
+                    text="ACCEPT ORDER"
+                    textStyle={styles.textStyle}
+                    onPress={acceptOrderHandler}
+                    isLoading={isReInitiateLoading}
+                  />
+                )}
+              {(item.status_of_order === 'PENDING' ||
+                item.status_of_order === 'ACCEPTED') && (
                 <MyButton
                   style={styles.cancelBtn}
                   text="CANCEL ORDER"
@@ -233,8 +269,8 @@ const styles = {
     color: '#fff',
   },
   stateBack: {
-    width: 70,
-    height: 18,
+    width: 80,
+    height: 20,
     backgroundColor: '#009C22',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -245,6 +281,7 @@ const styles = {
   },
   vendor: {
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   time: {
     fontWeight: '100',

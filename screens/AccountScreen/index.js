@@ -202,9 +202,7 @@ const AccountScreen = ({navigation}) => {
             </TouchableOpacity>
           )}
           <View style={styles.details}>
-            <Text style={styles.title}>
-              {capitalize(names[0]) + ' ' + capitalize(names[1])}
-            </Text>
+            <Text style={styles.title}>{names[0] + ' ' + names[1]}</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('EditAccountScreen')}>
               <Text style={styles.account}>View account</Text>
@@ -285,6 +283,7 @@ const styles = {
   title: {
     fontSize: 18,
     paddingBottom: 3,
+    textTransform: 'capitalize',
   },
   account: {
     color: SECONDARY_COLOR,

@@ -36,7 +36,8 @@ import MyImage from '../../components/MyImage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import MyModal from '../../components/MyModal';
 
-const AddMenuModal = ({navigation}) => {
+const AddMenuModal = ({navigation, route}) => {
+  const item = route?.params?.item ?? {};
   const {
     state: {
       ui: {isVendorsMenuLoading: isLoading, isCategoriesLoading},
@@ -47,7 +48,7 @@ const AddMenuModal = ({navigation}) => {
 
   const [dishName, setDishName] = useState({
     field: 'Dish name',
-    value: '',
+    value: item?.name ?? '',
     validationRules: {
       minLength: 2,
     },
@@ -63,7 +64,7 @@ const AddMenuModal = ({navigation}) => {
 
   const [price, setPrice] = useState({
     field: 'Price',
-    value: '',
+    value: item?.price + '' ?? '',
     validationRules: {
       minLength: 1,
     },
@@ -79,7 +80,7 @@ const AddMenuModal = ({navigation}) => {
 
   const [description, setDescription] = useState({
     field: 'Description',
-    value: '',
+    value: item?.description + '' ?? '',
     validationRules: {},
   });
 
@@ -93,7 +94,7 @@ const AddMenuModal = ({navigation}) => {
 
   const [selectedCategory, setSelectedCategory] = useState({
     field: 'Category',
-    value: '',
+    value: item?.food_type + '' ?? '',
     validationRules: {
       minLength: 1,
     },
@@ -111,7 +112,7 @@ const AddMenuModal = ({navigation}) => {
   }, []);
 
   const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState('');
+  const [time, setTime] = useState(item?.preparation_time ?? '');
   const [modalTimeVisible, setTimeModalVisible] = useState(false);
 
   const setDateHandler = (newDate) => {
@@ -145,7 +146,7 @@ const AddMenuModal = ({navigation}) => {
     }, 5000);
   };
 
-  const [variantArray, setVariantArray] = useState([]);
+  const [variantArray, setVariantArray] = useState(item?.productvariant ?? []);
 
   const addVariantHandler = () => {
     let curPrice = variantPrice.value;
@@ -220,11 +221,11 @@ const AddMenuModal = ({navigation}) => {
         food_type: selectedCategory.value,
         food_image: filePath,
       };
-      error = await dispatch(addMenu(data));
+      error = await dispatch(addMenu({...data, id: item?.id ?? null}));
       if (error) {
         setError(error);
       } else {
-        setSuccess('Menu created successfully');
+        setSuccess(`Menu ${item.id ? 'updated' : 'created'} successfully`);
         goBack();
       }
     }
@@ -251,7 +252,7 @@ const AddMenuModal = ({navigation}) => {
     }
   };
 
-  const [filePath, setFilePath] = useState({});
+  const [filePath, setFilePath] = useState({uri: item?.food_image ?? null});
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -414,10 +415,14 @@ const AddMenuModal = ({navigation}) => {
               />
               <MyButton
                 style={styles.chatBtn}
-                text="Save"
+                text={!isEmpty(categoryName.value) ? 'Save' : 'Close'}
                 textStyle={styles.varStyle}
                 iconStyle={styles.iconStyle}
-                onPress={createCategoryHandler}
+                onPress={
+                  !isEmpty(categoryName.value)
+                    ? createCategoryHandler
+                    : () => setModalVisible(false)
+                }
                 isLoading={isCategoriesLoading}
               />
             </View>

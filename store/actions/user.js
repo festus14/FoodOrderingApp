@@ -15,6 +15,7 @@ import {
   uiStopLoading,
 } from './ui';
 import {setOrders} from './orders';
+import {getBranches} from './branches';
 
 export const setUser = (user) => {
   return {
@@ -242,7 +243,7 @@ export const changeProfilePicture = ({uri, type, fileName}) => {
   };
 };
 
-export const signUpVendor = (data) => {
+export const signUpVendor = ({id, ...data}) => {
   return async (dispatch, state) => {
     try {
       dispatch(userUiStartLoading());
@@ -256,13 +257,15 @@ export const signUpVendor = (data) => {
         }
       }, 15000);
 
-      let res = await sendRequest(
-        `${API_URL}/order/branch_restaurant/`,
-        'POST',
-        {...data},
-        {},
-        token,
-      );
+      let url = `${API_URL}/order/branch_restaurant/`;
+      let method = 'POST';
+
+      if (id) {
+        url = `${API_URL}/order/branch_restaurant/${id}/`;
+        method = 'PATCH';
+      }
+
+      let res = await sendRequest(url, method, {...data}, {}, token);
       await dispatch(userUiStopLoading());
 
       if (res.ok) {
@@ -271,7 +274,8 @@ export const signUpVendor = (data) => {
         if (resJson.errors || resJson.detail) {
           return resJson.errors || resJson.detail;
         }
-        // await dispatch(setUser(resJson));
+
+        await dispatch(getBranches());
 
         return null;
       }

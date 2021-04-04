@@ -3,6 +3,7 @@ import {sendRequest} from '../../utility/helpers';
 import {ordersUiStartLoading, ordersUiStopLoading, getAuthToken} from './';
 import {SET_ORDERS, SET_SINGLE_ORDER} from './actionTypes';
 import {reInitiateUiStartLoading, reInitiateUiStopLoading} from './ui';
+import {restaurantSignIn} from './user';
 
 export const setOrders = (openOrders, closedOrders) => {
   return {
@@ -117,7 +118,7 @@ export const getOrders = () => {
   };
 };
 
-export const cancelOrder = (id) => {
+export const cancelOrder = (id, isRestaurant) => {
   return async (dispatch, state) => {
     try {
       await dispatch(ordersUiStartLoading());
@@ -143,13 +144,19 @@ export const cancelOrder = (id) => {
 
       if (res.ok) {
         let resJson = await res.json();
-        await dispatch(getOrders());
+        if (isRestaurant) {
+          await dispatch(
+            restaurantSignIn({username: state?.user?.user?.userName ?? ''}),
+          );
+        } else {
+          await dispatch(getOrders());
+        }
         return null;
       }
 
       let resText = await res.text();
       if (resText) {
-        console.log('resText...', resText);
+        return resText;
       }
 
       return 'Failed';
@@ -201,7 +208,7 @@ export const reInitiateOrder = (reference) => {
   };
 };
 
-export const acceptOrder = (id) => {
+export const acceptOrder = (id, isOrderReady) => {
   return async (dispatch, state) => {
     try {
       await dispatch(reInitiateUiStartLoading());
@@ -218,16 +225,20 @@ export const acceptOrder = (id) => {
       let res = await sendRequest(
         `${API_URL}/order/orders-made/${id}/`,
         'PATCH',
-        {status_of_order: 'ACCEPTED'},
+        {status_of_order: `${isOrderReady ? 'ORDER_READY' : 'ACCEPTED'}`},
         {},
         token,
       );
 
       await dispatch(reInitiateUiStopLoading());
+      console.log('accept res...', res);
 
       if (res.ok) {
         let resJson = await res.json();
-        await dispatch(getOrders());
+        console.log('accept resJson...', resJson);
+        await dispatch(
+          restaurantSignIn({username: state?.user?.user?.userName ?? ''}),
+        );
         return null;
       }
 

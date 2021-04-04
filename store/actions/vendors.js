@@ -202,18 +202,18 @@ export const changeMenuPicture = ({uri, type, fileName, id}) => {
   };
 };
 
-export const addMenu = ({food_image, ...data}) => {
+export const addMenu = ({food_image, id, ...data}) => {
   return async (dispatch, state) => {
     dispatch(vendorsMenuUiStartLoading());
     try {
       let token = await dispatch(getAuthToken());
-      let res = await sendRequest(
-        `${API_URL}/order/menu/`,
-        'POST',
-        {...data},
-        {},
-        token,
-      );
+      let url = `${API_URL}/order/menu/`;
+      let method = 'POST';
+      if (id) {
+        url = `${API_URL}/order/menu/${id}/`;
+        method = 'PATCH';
+      }
+      let res = await sendRequest(url, method, {...data}, {}, token);
 
       await dispatch(vendorsMenuUiStopLoading());
 

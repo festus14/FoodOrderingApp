@@ -28,6 +28,8 @@ const RestaurantAccountScreen = ({navigation}) => {
     dispatch,
   } = useContext(Store);
 
+  console.log(user);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const [filePath, setFilePath] = useState({});
@@ -197,9 +199,7 @@ const RestaurantAccountScreen = ({navigation}) => {
             </TouchableOpacity>
           )}
           <View style={styles.details}>
-            <Text style={styles.title}>
-              {capitalize(user?.firstname ?? '')}
-            </Text>
+            <Text style={styles.title}>{user?.firstname ?? ''}</Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('RestaurantEditAccountScreen')
@@ -213,7 +213,7 @@ const RestaurantAccountScreen = ({navigation}) => {
           style={styles.body}
           onPress={() => navigation.navigate('MenusScreen')}>
           <View style={styles.icon}>
-            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
+            <Icon name="md-menu-sharp" size={35} color={SECONDARY_COLOR} />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>Menu</Text>
@@ -224,7 +224,7 @@ const RestaurantAccountScreen = ({navigation}) => {
           style={styles.body}
           onPress={() => navigation.navigate('BranchScreen')}>
           <View style={styles.icon}>
-            <Icon name="md-pricetags-sharp" size={35} color={SECONDARY_COLOR} />
+            <Icon name="md-git-branch" size={35} color={SECONDARY_COLOR} />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>Branches</Text>
@@ -273,6 +273,7 @@ const styles = {
   title: {
     fontSize: 18,
     paddingBottom: 3,
+    textTransform: 'capitalize',
   },
   account: {
     color: SECONDARY_COLOR,

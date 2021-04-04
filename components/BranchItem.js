@@ -1,16 +1,17 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ALMOST_BLACK, LIGHTER_GREY, SECONDARY_COLOR} from '../utility/colors';
-import {capitalize} from '../utility/helpers';
 import MyButton from './MyButton';
 
-export default function BranchItem({item, onDelete, isLoading}) {
+export default function BranchItem({item, onDelete, isLoading, navigation}) {
   return (
     <View style={styles.container}>
-      <View style={styles.text}>
-        <Text style={styles.head}>{capitalize(item.restaurant_name)}</Text>
+      <TouchableOpacity
+        style={styles.text}
+        onPress={() => navigation.navigate('AddBranchScreen', {item})}>
+        <Text style={styles.head}>{item.restaurant_name}</Text>
         <Text style={styles.bottom}>{item.address}</Text>
-      </View>
+      </TouchableOpacity>
 
       <MyButton
         style={styles.clearBtn}
@@ -52,8 +53,9 @@ const styles = StyleSheet.create({
   head: {
     fontWeight: 'bold',
     color: '#000',
-    fontSize: 17,
+    fontSize: 18,
     marginBottom: 8,
+    textTransform: 'capitalize',
   },
   middle: {
     fontWeight: 'bold',
@@ -61,8 +63,9 @@ const styles = StyleSheet.create({
   },
   bottom: {
     fontWeight: '100',
-    fontSize: 12,
+    fontSize: 14,
     color: SECONDARY_COLOR,
+    textTransform: 'capitalize',
   },
   clearBtn: {
     width: 30,

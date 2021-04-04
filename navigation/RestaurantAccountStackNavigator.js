@@ -6,7 +6,7 @@ import DriversScreen from '../screens/DriversScreen';
 import RestaurantEditAccountScreen from '../screens/RestaurantEditAccountScreen';
 import MenusScreen from '../screens/MenusScreen';
 import BranchScreen from '../screens/BranchScreen';
-import AddBranchScreen from '../screens/AddBranch';
+import AddBranchScreen from '../screens/AddBranchScreen';
 
 const Stack = createStackNavigator();
 

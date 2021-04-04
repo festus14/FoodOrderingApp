@@ -17,14 +17,15 @@ import {LIGHTER_GREY} from '../../utility/colors';
 import InputText from '../../components/InputText';
 import {validate} from '../../utility/validation';
 import {Store} from '../../store';
-import {resetApp, getAllBanks, signUpVendor} from '../../store/actions';
+import {getAllBanks, signUpVendor} from '../../store/actions';
 import MyPicker from '../../components/MyPicker';
 import DateTimePicker from '../../components/DateTimePicker';
 import {getTime, isEmpty} from '../../utility/helpers';
 import MyMultiplePicker from '../../components/MyMultiplePicker';
 import VirtualizedView from '../../components/VirtualizedView';
 
-export default function BecomeVendorScreen({navigation}) {
+export default function AddBranchScreen({navigation, route}) {
+  const item = route?.params?.item ?? {};
   const {
     state: {
       ui: {isUserLoading: isLoading},
@@ -36,7 +37,7 @@ export default function BecomeVendorScreen({navigation}) {
 
   const [email, setEmail] = useState({
     field: 'Email',
-    value: '',
+    value: item?.email ?? '',
     validationRules: {
       isEmail: true,
       minLength: 5,
@@ -44,16 +45,16 @@ export default function BecomeVendorScreen({navigation}) {
   });
 
   const [restaurantName, setRestaurantName] = useState({
-    field: 'First name',
-    value: '',
+    field: 'Restaurant name',
+    value: item?.restaurant_name ?? '',
     validationRules: {
       minLength: 2,
     },
   });
 
   const [userName, setUserName] = useState({
-    field: 'User name',
-    value: '',
+    field: 'Username',
+    value: item?.username ?? '',
     validationRules: {
       minLength: 2,
     },
@@ -61,7 +62,7 @@ export default function BecomeVendorScreen({navigation}) {
 
   const [accountName, setAccountName] = useState({
     field: 'Account name',
-    value: '',
+    value: item?.account_name ?? '',
     validationRules: {
       minLength: 2,
     },
@@ -69,7 +70,7 @@ export default function BecomeVendorScreen({navigation}) {
 
   const [contactNumber, setContactNumber] = useState({
     field: 'Contact number',
-    value: '',
+    value: item?.phone_number ?? '',
     validationRules: {
       minLength: 10,
     },
@@ -77,7 +78,7 @@ export default function BecomeVendorScreen({navigation}) {
 
   const [accountNumber, setAccountNumber] = useState({
     field: 'Account number',
-    value: '',
+    value: item?.account_number ?? '',
     validationRules: {
       minLength: 10,
       maxLength: 10,
@@ -86,7 +87,7 @@ export default function BecomeVendorScreen({navigation}) {
 
   const [address, setAddress] = useState({
     field: 'Address',
-    value: '',
+    value: item?.address ?? '',
     validationRules: {
       minLength: 3,
     },
@@ -227,14 +228,19 @@ export default function BecomeVendorScreen({navigation}) {
           bank_name: selectedBank.value,
           opening_hours: openingTime,
           closing_hours: closingTime,
-          is_headquarter: false,
+          is_headquarter: item?.is_headquarter ?? false,
+          id: item?.id ?? null,
         };
 
         error = await dispatch(signUpVendor(authData));
         if (error) {
           setError(error);
         } else {
-          setSuccess('You have successfully created a branch');
+          setSuccess(
+            `You have successfully ${
+              item?.id ? 'updated' : 'created'
+            } a branch`,
+          );
           goBack();
         }
       } catch (e) {
@@ -249,7 +255,7 @@ export default function BecomeVendorScreen({navigation}) {
 
   const [selectedBank, setSelectedBank] = useState({
     field: 'Bank',
-    value: '',
+    value: item?.bank_name ?? '',
     validationRules: {
       minLength: 1,
     },
@@ -301,12 +307,51 @@ export default function BecomeVendorScreen({navigation}) {
     },
   ];
 
-  const [openingTime, setOpeningTime] = useState('');
-  const [closingTime, setClosingTime] = useState('');
+  const [openingTime, setOpeningTime] = useState(item?.opening_hours ?? '');
+  const [closingTime, setClosingTime] = useState(item?.closing_hours ?? '');
   const [timeType, setTimeType] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [selectedItems, setSelectedItems] = useState([]);
+
+  const getDays = () => {
+    const daysOpen = [];
+    if (item?.day_of_week_available) {
+      for (let i = 0; i < item?.day_of_week_available.length; i++) {
+        const day = item.day_of_week_available[i];
+
+        switch (day) {
+          case '0':
+            daysOpen.push('mon');
+            break;
+          case '1':
+            daysOpen.push('tue');
+            break;
+          case '2':
+            daysOpen.push('wed');
+            break;
+          case '3':
+            daysOpen.push('thu');
+            break;
+          case '4':
+            daysOpen.push('fri');
+            break;
+          case '5':
+            daysOpen.push('sat');
+            break;
+          case '6':
+            daysOpen.push('sun');
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
+
+    return daysOpen;
+  };
+
+  const [selectedItems, setSelectedItems] = useState(getDays ?? []);
 
   const onSelectedItemsChange = (selected) => {
     setSelectedItems(selected);
@@ -521,7 +566,7 @@ export default function BecomeVendorScreen({navigation}) {
           </View>
 
           <MyButton
-            text="Create Branch"
+            text={`${item?.id ? 'Update' : 'Create'} Branch`}
             style={styles.btn}
             isLoading={isLoading}
             onPress={createBranchHandler}

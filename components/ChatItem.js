@@ -42,7 +42,7 @@ export default function ChatItem({item, navigation}) {
       <View style={styles.content}>
         <View style={styles.top}>
           <Text style={styles.price}>{item.participants[0].firstname}</Text>
-          <Text style={styles.countText}>1</Text>
+          <Text></Text>
         </View>
         <Text style={styles.body}>{item.messages[0]?.content ?? ''}</Text>
       </View>
