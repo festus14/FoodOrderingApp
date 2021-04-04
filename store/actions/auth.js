@@ -30,11 +30,11 @@ export const authStoreAsyncData = ({
     dispatch(authSetToken({token, refresh, userId, expiry, userRole}));
     try {
       userId &&
-        (await RNSecureKeyStore.set('user-id', JSON.stringify(userId), {
+        (await RNSecureKeyStore.set('user-id', userId, {
           accessible: ACCESSIBLE.WHEN_UNLOCKED,
         }));
       userRole &&
-        (await RNSecureKeyStore.set('user-role', JSON.stringify(userRole), {
+        (await RNSecureKeyStore.set('user-role', userRole, {
           accessible: ACCESSIBLE.WHEN_UNLOCKED,
         }));
       token &&
@@ -117,15 +117,15 @@ export const logIn = (authData) => {
         return resJson.errors ?? resJson.detail ?? 'Login failed';
       }
 
-      var userData = jwt_decode(resJson.access);
+      let userData = await jwt_decode(resJson.access);
 
-      let {access: token, refresh} = resJson;
+      let {access: token, refresh} = await resJson;
 
       await dispatch(
         authStoreAsyncData({
           token,
           refresh,
-          userData: authData,
+          userData: {...userData, ...authData},
           userId: userData.user_id,
           userRole: userData.roles[0],
         }),
@@ -376,30 +376,28 @@ export const forgotPassword = (email) => {
 
 export const getAuthToken = () => {
   return async (dispatch, state) => {
-    let token = state.auth.token;
-
-    let expiryDate = state.auth.expiry;
-    // if (!token || moment(expiryDate).add(59, 'minutes') <= moment()) {
+    let {token} = state.auth;
+    // if (!token || moment(expiry).add(59, 'minutes') <= moment()) {
     if (!token) {
       try {
         token = await RNSecureKeyStore.get('auth-token');
-        expiryDate = await RNSecureKeyStore.get('auth-expiry-date');
-        let userId = await RNSecureKeyStore.get('userId');
-        userId = JSON.parse(userId);
+        let userId = await RNSecureKeyStore.get('user-id');
+        let userRole = await RNSecureKeyStore.get('user-role');
         let userData = await RNSecureKeyStore.get('user-data');
-        userData = JSON.parse(userData);
+        userData = await JSON.parse(userData);
 
         if (!token || !userData) {
           return false;
         }
 
-        if (moment(expiryDate).add(59, 'minutes') <= moment()) {
-          await dispatch(logIn(userData, true));
-          return state.auth.token;
-        } else {
-          dispatch(authSetToken(token, userId));
-          return token;
-        }
+        // if (moment(expiry).add(59, 'minutes') <= moment()) {
+        //   await dispatch(logIn(userData, true));
+        //   return state.auth.token;
+        // }
+        // else {
+        dispatch(authSetToken({token, userId, userRole}));
+        return token;
+        // }
       } catch (error) {
         await dispatch(resetApp());
         console.log(error);
@@ -414,36 +412,8 @@ export const getAuthToken = () => {
 export const logout = () => {
   return async (dispatch, state) => {
     try {
-      dispatch(uiStartLoading());
-
-      let token = await dispatch(getAuthToken());
-
-      setTimeout(() => {
-        if (!res) {
-          dispatch(uiStopLoading());
-          return 'Please check your internet connection';
-        }
-      }, 15000);
-
-      let res = await sendRequest(
-        `${API_URL}api_logout`,
-        'POST',
-        {},
-        {},
-        token,
-      );
-
-      let resJson = await res.json();
-
-      dispatch(uiStopLoading());
-      if (resJson.error || resJson.message === 'Unauthenticated.') {
-        return 'Logout failed, please try again';
-      } else {
-        dispatch(resetApp());
-        return '';
-      }
+      await dispatch(resetApp());
     } catch (error) {
-      dispatch(uiStopLoading());
       return 'Logout failed, please try check your internet connection and try again';
     }
   };

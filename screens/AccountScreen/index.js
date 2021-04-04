@@ -16,7 +16,7 @@ import {LIGHTER_GREY, MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 import {capitalize} from '../../utility/helpers';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import MyModal from '../../components/MyModal';
-import {changeProfilePicture} from '../../store/actions';
+import {changeProfilePicture, logout} from '../../store/actions';
 import MyImage from '../../components/MyImage';
 
 const AccountScreen = ({navigation}) => {
@@ -147,6 +147,22 @@ const AccountScreen = ({navigation}) => {
     });
   };
 
+  const signOutHandler = () => {
+    Alert.alert('Warning', 'Are you sure you want to log out?', [
+      {
+        text: 'Close',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Log out',
+        onPress: async () => {
+          await dispatch(logout());
+        },
+      },
+    ]);
+  };
+
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -244,6 +260,15 @@ const AccountScreen = ({navigation}) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>Become a vendor</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.body} onPress={signOutHandler}>
+          <View style={styles.icon}>
+            <Icon name="ios-log-out" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Log out</Text>
           </View>
         </TouchableOpacity>
 

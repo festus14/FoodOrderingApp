@@ -1,4 +1,5 @@
-import React, {useContext} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useContext, useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import LandingScreen from '../screens/LandingScreen';
 import ConsumerMapScreen from '../screens/ConsumerMapScreen';
@@ -13,17 +14,47 @@ import PaystackScreen from '../screens/PaystackScreen';
 import AddMenuModal from '../screens/AddMenuModal';
 import PromoScreen from '../screens/PromoScreen';
 import RestaurantStackNavigator from './RestaurantStackNavigator';
+import {getAuthToken, getUser} from '../store/actions';
+import {ActivityIndicator, View} from 'react-native';
 
 const MainStack = createStackNavigator();
 
 export default function MainAppNavigator() {
   const {
     state: {
-      ui: {isLoading},
       auth: {token, userRole},
     },
     dispatch,
   } = useContext(Store);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      setIsLoading(true);
+      try {
+        if (!token) {
+          const new_token = await dispatch(getAuthToken());
+          if (new_token) {
+            await dispatch(getUser());
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size={40} />
+      </View>
+    );
+  }
 
   return (
     <MainStack.Navigator headerMode="none">
@@ -72,3 +103,10 @@ export default function MainAppNavigator() {
     </MainStack.Navigator>
   );
 }
+
+const styles = {
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+};

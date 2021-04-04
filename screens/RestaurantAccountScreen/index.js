@@ -15,7 +15,7 @@ import Header from '../../components/Header';
 import MyImage from '../../components/MyImage';
 import MyModal from '../../components/MyModal';
 import {Store} from '../../store';
-import {changeProfilePicture} from '../../store/actions';
+import {changeProfilePicture, logout} from '../../store/actions';
 import {LIGHTER_GREY, MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
 
 const RestaurantAccountScreen = ({navigation}) => {
@@ -143,6 +143,22 @@ const RestaurantAccountScreen = ({navigation}) => {
     });
   };
 
+  const signOutHandler = () => {
+    Alert.alert('Warning', 'Are you sure you want to log out?', [
+      {
+        text: 'Close',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Log out',
+        onPress: async () => {
+          await dispatch(logout());
+        },
+      },
+    ]);
+  };
+
   return (
     <>
       <Header title="Account" />
@@ -240,6 +256,15 @@ const RestaurantAccountScreen = ({navigation}) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>About</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.body} onPress={signOutHandler}>
+          <View style={styles.icon}>
+            <Icon name="ios-log-out" size={35} color={SECONDARY_COLOR} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Log out</Text>
           </View>
         </TouchableOpacity>
       </View>

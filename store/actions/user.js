@@ -36,7 +36,7 @@ export const getUserId = () => {
     try {
       let userId = await state.auth.userId;
       if (!userId) {
-        userId = await RNSecureKeyStore.get('userId');
+        userId = await RNSecureKeyStore.get('user-id');
       }
       return userId;
     } catch (error) {
@@ -68,37 +68,39 @@ export const getUser = () => {
       let userData = await state.user.user;
 
       if (!userData.email) {
-        let token = await dispatch(getAuthToken());
-        let userId = await dispatch(getUserId());
-
-        let res = await sendRequest(
-          `${API_URL}/auth​/users​​/${userId}/`,
-          'GET',
-          {},
-          {},
-          token,
-        );
-        let resJson = await res.json();
-
-        console.warn('In get User...', resJson);
-
+        // let token = await dispatch(getAuthToken());
+        // let userId = await dispatch(getUserId());
+        // let res = await sendRequest(
+        //   `${API_URL}/auth/users/${userId}`,
+        //   'GET',
+        //   {},
+        //   {},
+        //   token,
+        // );
+        // await dispatch(userUiStopLoading());
+        // console.log('Getting user res', res);
+        // if (res.ok) {
+        //   let resJson = await res.json();
+        //   console.warn('In get User...', resJson);
+        //   dispatch(setUser(resJson.data));
+        //   return resJson.data;
+        // }
+        // let resText = await res.text();
+        // console.log('Res Text...', resText);
         await dispatch(userUiStopLoading());
-        if (resJson.error) {
-          if (resJson.error === 'Unauthenticated.') {
-            dispatch(resetApp());
-          }
-          return 'Something went wrong, pls try again';
-        } else {
-          dispatch(setUser(resJson.data));
-          return null;
-        }
+
+        userData = await RNSecureKeyStore.get('user-data');
+        userData = await JSON.parse(userData);
+        dispatch(setUser(userData));
+
+        return null;
       } else {
         await dispatch(userUiStopLoading());
         return null;
       }
     } catch (e) {
       dispatch(userUiStopLoading());
-      console.warn(e);
+      console.log(e);
       return 'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in';
     }
   };
