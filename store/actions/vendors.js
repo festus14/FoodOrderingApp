@@ -158,8 +158,9 @@ export const getMenus = () => {
   };
 };
 
-export const changeMenuPicture = ({uri, type, fileName, id}) => {
+export const changeMenuPicture = ({uri, type = '', fileName = '', id}) => {
   return async (dispatch, state) => {
+    console.log('Test...', {uri, type, fileName, id});
     try {
       dispatch(vendorsMenuUiStartLoading());
       let token = await dispatch(getAuthToken());
@@ -171,6 +172,8 @@ export const changeMenuPicture = ({uri, type, fileName, id}) => {
         type,
         name: fileName,
       });
+
+      console.log('form Data...', formData);
 
       setTimeout(() => {
         if (!res) {
@@ -213,6 +216,7 @@ export const addMenu = ({food_image, id, ...data}) => {
         url = `${API_URL}/order/menu/${id}/`;
         method = 'PATCH';
       }
+
       let res = await sendRequest(url, method, {...data}, {}, token);
 
       await dispatch(vendorsMenuUiStopLoading());
@@ -220,9 +224,15 @@ export const addMenu = ({food_image, id, ...data}) => {
       if (res.ok) {
         let resJson = await res.json();
 
-        return await dispatch(
-          changeMenuPicture({...food_image, id: resJson.id}),
-        );
+        console.log('ResJson for initial update or create...', resJson);
+
+        if (food_image.type) {
+          return await dispatch(
+            changeMenuPicture({...food_image, id: resJson.id}),
+          );
+        }
+
+        return null;
       }
 
       let resText = await res.text();

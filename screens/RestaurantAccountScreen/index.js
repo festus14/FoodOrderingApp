@@ -17,7 +17,6 @@ import MyModal from '../../components/MyModal';
 import {Store} from '../../store';
 import {changeProfilePicture} from '../../store/actions';
 import {LIGHTER_GREY, MAIN_COLOR, SECONDARY_COLOR} from '../../utility/colors';
-import {capitalize} from '../../utility/helpers';
 
 const RestaurantAccountScreen = ({navigation}) => {
   const {
@@ -27,8 +26,6 @@ const RestaurantAccountScreen = ({navigation}) => {
     },
     dispatch,
   } = useContext(Store);
-
-  console.log(user);
 
   const [modalVisible, setModalVisible] = useState(false);
 

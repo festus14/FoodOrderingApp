@@ -27,6 +27,7 @@ import {Store} from '../../store';
 import {
   addMenu,
   createVendorCategory,
+  getMenus,
   getVendorCategories,
 } from '../../store/actions';
 import MyPicker from '../../components/MyPicker';
@@ -64,7 +65,7 @@ const AddMenuModal = ({navigation, route}) => {
 
   const [price, setPrice] = useState({
     field: 'Price',
-    value: item?.price + '' ?? '',
+    value: (item?.price ?? '') + '',
     validationRules: {
       minLength: 1,
     },
@@ -80,7 +81,7 @@ const AddMenuModal = ({navigation, route}) => {
 
   const [description, setDescription] = useState({
     field: 'Description',
-    value: item?.description + '' ?? '',
+    value: (item?.description ?? '') + '',
     validationRules: {},
   });
 
@@ -94,7 +95,7 @@ const AddMenuModal = ({navigation, route}) => {
 
   const [selectedCategory, setSelectedCategory] = useState({
     field: 'Category',
-    value: item?.food_type + '' ?? '',
+    value: (item?.food_type ?? '') + '',
     validationRules: {
       minLength: 1,
     },
@@ -112,7 +113,7 @@ const AddMenuModal = ({navigation, route}) => {
   }, []);
 
   const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(item?.preparation_time ?? '');
+  const [time, setTime] = useState((item?.preparation_time ?? '') + '');
   const [modalTimeVisible, setTimeModalVisible] = useState(false);
 
   const setDateHandler = (newDate) => {
@@ -225,6 +226,7 @@ const AddMenuModal = ({navigation, route}) => {
       if (error) {
         setError(error);
       } else {
+        await dispatch(getMenus());
         setSuccess(`Menu ${item.id ? 'updated' : 'created'} successfully`);
         goBack();
       }
@@ -496,7 +498,7 @@ const AddMenuModal = ({navigation, route}) => {
                 <InputText
                   placeholder=""
                   placeholderTextColor={LIGHT_GREY}
-                  title="#"
+                  title="₦"
                   autoCorrect={false}
                   value={price.value}
                   containerStyle={styles.priceStyle}
@@ -590,7 +592,7 @@ const AddMenuModal = ({navigation, route}) => {
                     {elem.variant_name}
                   </Text>
                   <Text style={[styles.varText, {fontSize: 18}]}>
-                    # {elem.price}
+                    ₦{elem.price}
                   </Text>
                 </View>
                 <View style={styles.clear}>
@@ -624,7 +626,7 @@ const AddMenuModal = ({navigation, route}) => {
                 <InputText
                   placeholder=""
                   placeholderTextColor={LIGHT_GREY}
-                  title="#"
+                  title="₦"
                   autoCorrect={false}
                   value={variantPrice.value}
                   containerStyle={styles.varPriceStyle}
@@ -641,10 +643,10 @@ const AddMenuModal = ({navigation, route}) => {
               </View>
             </View>
             <MyButton
-              text="Add to Menu"
+              text={item.id ? 'Update Menu' : 'Add to Menu'}
               style={styles.btnStyle}
               textStyle={styles.textStyle}
-              icon="plus"
+              icon={item.id ? null : 'plus'}
               onPress={addMenuHandler}
               isLoading={isLoading}
             />
