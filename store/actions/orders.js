@@ -173,6 +173,51 @@ export const cancelOrder = (id, isRestaurant) => {
   };
 };
 
+export const confirmOrder = (id) => {
+  return async (dispatch, state) => {
+    try {
+      await dispatch(cancelUiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+
+      setTimeout(async () => {
+        await dispatch(cancelUiStopLoading());
+        if (!res) {
+          return 'Check your internet connection and try again!';
+        }
+      }, 15000);
+
+      let res = await sendRequest(
+        `${API_URL}/order/orders-made/${id}/`,
+        'PATCH',
+        {status_of_order: 'COMPLETED'},
+        {},
+        token,
+      );
+
+      await dispatch(cancelUiStopLoading());
+
+      if (res.ok) {
+        let resJson = await res.json();
+
+        await dispatch(getOrders());
+        return null;
+      }
+
+      let resText = await res.text();
+      // if (resText) {
+      //   return resText;
+      // }
+
+      return 'Failed';
+    } catch (error) {
+      await dispatch(cancelUiStopLoading());
+      console.log(error);
+      return 'Something went wrong. Please check your internet connection and try again';
+    }
+  };
+};
+
 export const reInitiateOrder = (reference) => {
   return async (dispatch, state) => {
     try {

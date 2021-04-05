@@ -237,7 +237,7 @@ const AccountScreen = ({navigation}) => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.body}
           onPress={() => navigation.navigate('AboutScreen')}>
           <View style={styles.icon}>
@@ -250,7 +250,7 @@ const AccountScreen = ({navigation}) => {
           <View style={styles.textContainer}>
             <Text style={styles.text}>About</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={styles.body}

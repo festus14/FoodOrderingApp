@@ -244,7 +244,7 @@ const RestaurantAccountScreen = ({navigation}) => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.body}
           onPress={() => navigation.navigate('AboutScreen')}>
           <View style={styles.icon}>
@@ -257,7 +257,7 @@ const RestaurantAccountScreen = ({navigation}) => {
           <View style={styles.textContainer}>
             <Text style={styles.text}>About</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.body} onPress={signOutHandler}>
           <View style={styles.icon}>

@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import MyButton from '../../components/MyButton';
 import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
-import {cancelOrder, reInitiateOrder} from '../../store/actions';
+import {cancelOrder, reInitiateOrder, confirmOrder} from '../../store/actions';
 import {LIGHTER_GREY, OCEAN_BLUE, SECONDARY_COLOR} from '../../utility/colors';
 
 const OrderDetailsScreen = ({navigation, route}) => {
@@ -25,7 +25,7 @@ const OrderDetailsScreen = ({navigation, route}) => {
     switch (item.status_of_order) {
       case 'PENDING':
         return '#FBBC05';
-      case 'COMPLETE':
+      case 'COMPLETED':
         return '#009C22';
       case 'CANCELLED':
         return '#FF1500';
@@ -90,6 +90,28 @@ const OrderDetailsScreen = ({navigation, route}) => {
     ]);
   };
 
+  const confirmOrderHandler = async () => {
+    Alert.alert('Info', 'Are you sure you want to confirm this order?', [
+      {
+        text: 'Close',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'YES',
+        onPress: async () => {
+          let error = await dispatch(confirmOrder(item.id));
+          if (error) {
+            Alert.alert('Error', error);
+          } else {
+            Alert.alert('Success', 'Your order has been confirmed this order');
+            navigation.navigate('OrdersScreen');
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <>
       <SafeAreaView style={{flex: 1}}>
@@ -135,6 +157,15 @@ const OrderDetailsScreen = ({navigation, route}) => {
                   textStyle={styles.textStyle}
                   onPress={reInitiateOrderHandler}
                   isLoading={isReInitiateLoading}
+                />
+              )}
+              {item.status_of_order === 'ORDER_READY' && (
+                <MyButton
+                  style={[styles.cancelBtn, {backgroundColor: OCEAN_BLUE}]}
+                  text="CONFIRM ORDER"
+                  textStyle={styles.textStyle}
+                  onPress={confirmOrderHandler}
+                  isLoading={isCancelLoading}
                 />
               )}
               {item.status_of_order === 'PENDING' && (

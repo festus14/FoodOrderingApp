@@ -25,7 +25,7 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
     switch (item.status_of_order) {
       case 'PENDING':
         return '#FBBC05';
-      case 'COMPLETE':
+      case 'COMPLETED':
         return '#009C22';
       case 'CANCELLED':
         return '#FF1500';
