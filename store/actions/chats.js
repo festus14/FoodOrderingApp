@@ -3,6 +3,7 @@ import {sendRequest} from '../../utility/helpers';
 import {SET_ORDER_CHAT, SET_CHATS} from './actionTypes';
 import {getAuthToken} from './auth';
 import {orderChatUiStartLoading, orderChatUiStopLoading} from './ui';
+import {getUserRole} from './user';
 
 export const setOrderChat = (chat) => {
   return {
@@ -69,21 +70,27 @@ export const getChats = (id) => {
         }
       }, 15000);
 
-      let res = await sendRequest(
-        `${API_URL}/chat/chats/`,
-        'GET',
-        {},
-        {},
-        token,
-      );
+      let url = `${API_URL}/chat/chats/`;
+      let method = 'GET';
+      const data = {};
+      const userRole = await dispatch(getUserRole());
+
+      if (userRole !== 'CONSUMER') {
+        url = `${API_URL}/chat/chats/get-branch-chats/`;
+        method = 'POST';
+        data.username = state.user.user.userName;
+      }
+
+      let res = await sendRequest(url, method, {...data}, {}, token);
 
       await dispatch(orderChatUiStopLoading());
 
       if (res.ok) {
         let resJson = await res.json();
-        await dispatch(setChats(resJson.results));
+        await dispatch(setChats(resJson.chats));
         return null;
       }
+
       return 'Failed';
     } catch (error) {
       await dispatch(orderChatUiStopLoading());
