@@ -10,9 +10,11 @@ import {LIGHTER_GREY, OCEAN_BLUE, SECONDARY_COLOR} from '../../utility/colors';
 const OrderDetailsScreen = ({navigation, route}) => {
   const item = route.params.item;
 
+  console.log('Item...', item);
+
   const {
     state: {
-      ui: {isOrdersLoading: isLoading, isReInitiateLoading},
+      ui: {isCancelLoading, isReInitiateLoading},
     },
     dispatch,
   } = useContext(Store);
@@ -79,7 +81,7 @@ const OrderDetailsScreen = ({navigation, route}) => {
           } else {
             Alert.alert(
               'Success',
-              'Your order has been successfully cancelled',
+              'Your order has been successfully re-initiated',
             );
             navigation.navigate('OrdersScreen');
           }
@@ -141,7 +143,7 @@ const OrderDetailsScreen = ({navigation, route}) => {
                   text="CANCEL ORDER"
                   textStyle={styles.textStyle}
                   onPress={cancelOrderHandler}
-                  isLoading={isLoading}
+                  isLoading={isCancelLoading}
                 />
               )}
             </View>

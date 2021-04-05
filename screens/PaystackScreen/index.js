@@ -21,7 +21,6 @@ import RNPaystack from 'react-native-paystack';
 const PaystackScreen = ({navigation, route}) => {
   const {
     state: {
-      ui: {isLoading},
       user: {user},
       cart: {checkoutInfo},
     },
@@ -185,7 +184,7 @@ const PaystackScreen = ({navigation, route}) => {
 
       return res.reference || null;
     } catch (error) {
-      Alert.alert('Error', error.message);
+      setError(error.message);
     }
   };
 
@@ -195,17 +194,17 @@ const PaystackScreen = ({navigation, route}) => {
     setIsPayLoading(true);
     let error = validateForm();
     if (error) {
-      Alert.alert('Error', error);
+      setError(error);
     } else {
       let reference = await chargeCard();
       if (reference) {
         error = await dispatch(postOrder({reference}));
         if (error) {
-          Alert.alert('Error', error);
+          setError(error);
           // navigation.navigate('OrderDetailsScreen', {item: singleOrder});
           navigation.navigate('OrdersStackNavigator');
         } else {
-          Alert.alert('Success', 'Order has been made');
+          setSuccess('Order has been made');
           await dispatch(resetCart());
           navigation.navigate('OrdersStackNavigator');
         }
@@ -241,13 +240,6 @@ const PaystackScreen = ({navigation, route}) => {
               maxLength={16}
               minLength={16}
             />
-
-            {/* <MyPicker
-              labelText="Select bank"
-              items={banks}
-              setSelected={(value) => setSelectedBank({...selectedBank, value})}
-              mode="dropdown"
-            /> */}
 
             <View
               style={{
@@ -292,23 +284,6 @@ const PaystackScreen = ({navigation, route}) => {
               </View>
             </View>
 
-            {/* {isResolved && (
-              <>
-                <Text style={styles.label}>Card name</Text>
-                <InputText
-                  placeholder="Required"
-                  placeholderTextColor={LIGHT_GREY}
-                  containerStyle={styles.containerStyle}
-                  autoCorrect={false}
-                  value={accountName.value}
-                  onSubmitEditing={() => {}}
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  editable={false}
-                  defaultValue={accountName.value}
-                />
-              </>
-            )} */}
             <MyButton
               text={'Make payment'}
               style={styles.btn}

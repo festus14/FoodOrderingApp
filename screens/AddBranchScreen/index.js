@@ -23,6 +23,8 @@ import DateTimePicker from '../../components/DateTimePicker';
 import {getTime, isEmpty} from '../../utility/helpers';
 import MyMultiplePicker from '../../components/MyMultiplePicker';
 import VirtualizedView from '../../components/VirtualizedView';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {GOOGLE_MAPS_API_KEY} from '@env';
 
 export default function AddBranchScreen({navigation, route}) {
   const item = route?.params?.item ?? {};
@@ -416,7 +418,10 @@ export default function AddBranchScreen({navigation, route}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.container}>
-        <VirtualizedView showsVerticalScrollIndicator={false}>
+        <VirtualizedView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="always"
+          listViewDisplayed={false}>
           <Text style={styles.cardTitle}>Vendor Details</Text>
           <View style={styles.cardBody}>
             <Text style={styles.label}>Restaurant Name</Text>
@@ -462,16 +467,30 @@ export default function AddBranchScreen({navigation, route}) {
             />
 
             <Text style={styles.label}> Headquarter Address</Text>
-            <InputText
-              placeholder="Required"
-              placeholderTextColor={LIGHTER_GREY}
-              containerStyle={styles.containerStyle}
-              autoCorrect={false}
-              value={address.value}
-              onSubmitEditing={() => {}}
-              onChangeText={(input) => setAddress({...address, value: input})}
-              autoCapitalize="none"
-              returnKeyType="next"
+            <GooglePlacesAutocomplete
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                setAddress({...address, value: data.description});
+              }}
+              // currentLocation
+              query={{
+                key: GOOGLE_MAPS_API_KEY,
+                language: 'en',
+              }}
+              textInputProps={{
+                InputComp: InputText,
+                placeholder: 'Required',
+                placeholderTextColor: LIGHTER_GREY,
+                containerStyle: {...styles.containerStyle},
+                autoCorrect: false,
+                value: address.value,
+                onSubmitEditing: () => {},
+                onChangeText: (input) => {
+                  setAddress({...address, value: input});
+                },
+                autoCapitalize: 'none',
+                returnKeyType: 'next',
+              }}
             />
 
             <Text style={styles.label}>Contact Number</Text>

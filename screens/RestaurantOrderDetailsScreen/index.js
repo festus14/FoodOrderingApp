@@ -5,13 +5,7 @@ import MyButton from '../../components/MyButton';
 import OrderInfoItem from '../../components/OrderInfoItem';
 import {Store} from '../../store';
 import {cancelOrder, acceptOrder} from '../../store/actions';
-import {
-  LIGHTER_GREY,
-  LIGHT_BLUE,
-  OCEAN_BLUE,
-  SECONDARY_COLOR,
-} from '../../utility/colors';
-import {capitalize} from '../../utility/helpers';
+import {LIGHTER_GREY, OCEAN_BLUE, SECONDARY_COLOR} from '../../utility/colors';
 
 const RestaurantOrderDetailScreen = ({navigation, route}) => {
   const item = route.params.item;
@@ -20,7 +14,7 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
 
   const {
     state: {
-      ui: {isOrdersLoading: isLoading, isReInitiateLoading},
+      ui: {isCancelLoading, isReInitiateLoading},
     },
     dispatch,
   } = useContext(Store);
@@ -172,7 +166,7 @@ const RestaurantOrderDetailScreen = ({navigation, route}) => {
                   text="CANCEL ORDER"
                   textStyle={styles.textStyle}
                   onPress={cancelOrderHandler}
-                  isLoading={isLoading}
+                  isLoading={isCancelLoading}
                 />
               )}
             </View>

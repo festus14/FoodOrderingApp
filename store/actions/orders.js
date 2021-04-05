@@ -2,7 +2,12 @@ import {API_URL} from '../../utility/constants';
 import {sendRequest} from '../../utility/helpers';
 import {ordersUiStartLoading, ordersUiStopLoading, getAuthToken} from './';
 import {SET_ORDERS, SET_SINGLE_ORDER} from './actionTypes';
-import {reInitiateUiStartLoading, reInitiateUiStopLoading} from './ui';
+import {
+  cancelUiStartLoading,
+  cancelUiStopLoading,
+  reInitiateUiStartLoading,
+  reInitiateUiStopLoading,
+} from './ui';
 import {restaurantSignIn} from './user';
 
 export const setOrders = (openOrders, closedOrders) => {
@@ -121,12 +126,12 @@ export const getOrders = () => {
 export const cancelOrder = (id, isRestaurant) => {
   return async (dispatch, state) => {
     try {
-      await dispatch(ordersUiStartLoading());
+      await dispatch(cancelUiStartLoading());
 
       let token = await dispatch(getAuthToken());
 
       setTimeout(async () => {
-        await dispatch(ordersUiStopLoading());
+        await dispatch(cancelUiStopLoading());
         if (!res) {
           return 'Check your internet connection and try again!';
         }
@@ -140,7 +145,7 @@ export const cancelOrder = (id, isRestaurant) => {
         token,
       );
 
-      await dispatch(ordersUiStopLoading());
+      await dispatch(cancelUiStopLoading());
 
       if (res.ok) {
         let resJson = await res.json();
@@ -161,7 +166,7 @@ export const cancelOrder = (id, isRestaurant) => {
 
       return 'Failed';
     } catch (error) {
-      await dispatch(ordersUiStopLoading());
+      await dispatch(cancelUiStopLoading());
       console.log(error);
       return 'Something went wrong. Please check your internet connection and try again';
     }
@@ -191,14 +196,20 @@ export const reInitiateOrder = (reference) => {
       );
 
       await dispatch(reInitiateUiStopLoading());
-
-      let resJson = await res.json();
+      console.log('Re initiate order res...', res);
 
       if (res.ok) {
-        // let resJson = await res.json();
+        let resJson = await res.json();
+        console.log('Re initiate order resJson...', resJson);
         await dispatch(getOrders());
         return null;
       }
+
+      let resText = await res.text();
+      if (resText) {
+        console.log('ResText...', resText);
+      }
+
       return 'Failed';
     } catch (error) {
       await dispatch(reInitiateUiStopLoading());

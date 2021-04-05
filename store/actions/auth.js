@@ -412,6 +412,7 @@ export const getAuthToken = () => {
 export const logout = () => {
   return async (dispatch, state) => {
     try {
+      await dispatch(authRemoveAsyncData());
       await dispatch(resetApp());
     } catch (error) {
       return 'Logout failed, please try check your internet connection and try again';

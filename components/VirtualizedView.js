@@ -8,6 +8,7 @@ export default function VirtualizedView(props) {
       ListEmptyComponent={null}
       keyExtractor={() => 'dummy'}
       renderItem={null}
+      {...props}
       ListHeaderComponent={<>{props.children}</>}
     />
   );

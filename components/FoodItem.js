@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {SECONDARY_COLOR} from '../utility/colors';
-import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utility/constants';
+import {SCREEN_HEIGHT} from '../utility/constants';
 import {trimString} from '../utility/helpers';
 import MyImage from './MyImage';
 
@@ -29,10 +29,9 @@ export default function FoodItem({item, navigation}) {
 }
 const styles = {
   container: {
-    marginBottom: 12,
+    marginBottom: 6,
     flexDirection: 'row',
     height: SCREEN_HEIGHT * 0.12,
-    width: SCREEN_WIDTH * 0.75,
   },
   imageContainer: {
     height: '100%',

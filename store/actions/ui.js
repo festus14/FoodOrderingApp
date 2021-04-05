@@ -21,6 +21,8 @@ import {
   CATEGORY_UI_STOP_LOADING,
   BRANCH_UI_START_LOADING,
   BRANCH_UI_STOP_LOADING,
+  CANCEL_UI_START_LOADING,
+  CANCEL_UI_STOP_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () => {
@@ -152,5 +154,17 @@ export const branchUiStartLoading = () => {
 export const branchUiStopLoading = () => {
   return {
     type: BRANCH_UI_STOP_LOADING,
+  };
+};
+
+export const cancelUiStartLoading = () => {
+  return {
+    type: CANCEL_UI_START_LOADING,
+  };
+};
+
+export const cancelUiStopLoading = () => {
+  return {
+    type: CANCEL_UI_STOP_LOADING,
   };
 };

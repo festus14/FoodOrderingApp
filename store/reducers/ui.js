@@ -22,6 +22,8 @@ import {
   CATEGORY_UI_STOP_LOADING,
   BRANCH_UI_START_LOADING,
   BRANCH_UI_STOP_LOADING,
+  CANCEL_UI_START_LOADING,
+  CANCEL_UI_STOP_LOADING,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -36,6 +38,7 @@ const initialState = {
   isReInitiateLoading: false,
   isCategoriesLoading: false,
   isBranchLoading: false,
+  isCancelLoading: false,
 };
 
 const reducer = (state, action) => {
@@ -149,6 +152,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         isBranchLoading: false,
+      };
+    case CANCEL_UI_START_LOADING:
+      return {
+        ...state,
+        isCancelLoading: true,
+      };
+    case CANCEL_UI_STOP_LOADING:
+      return {
+        ...state,
+        isCancelLoading: false,
       };
     case RESET_UI:
       return initialState;

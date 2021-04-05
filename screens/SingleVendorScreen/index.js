@@ -198,18 +198,16 @@ export default SingleVendorScreen;
 
 const styles = {
   container: {
-    flex: 1,
-    paddingVertical: 10,
     paddingHorizontal: 15,
   },
   infoImage: {
     width: '100%',
-    height: SCREEN_HEIGHT * 0.25,
+    backgroundColor: 'red',
   },
   bImage: {
-    flex: 1,
     justifyContent: 'space-between',
     padding: 15,
+    height: SCREEN_HEIGHT * 0.25,
   },
   top: {
     flexDirection: 'row',
@@ -224,7 +222,7 @@ const styles = {
     paddingVertical: 8,
   },
   infoHeader: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   rating: {
     flexDirection: 'row',
@@ -232,12 +230,10 @@ const styles = {
   },
   topTab: {
     color: '#fff',
-    justifyContent: 'flex-end',
-    marginBottom: 30,
-    height: 20,
+    marginBottom: 6,
     alignItems: 'center',
-    marginHorizontal: 4,
-    paddingHorizontal: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 6,
   },
   activeTopTab: {
     borderBottomWidth: 1,
