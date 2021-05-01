@@ -142,11 +142,7 @@ const OrderDetailsScreen = ({navigation, route}) => {
           <Text style={styles.orderTitle}>ITEMS ORDERED</Text>
           <View style={styles.orderInfo}>
             {item.ordereditem.map((elem) => (
-              <OrderInfoItem
-                key={elem.menu_item.id}
-                item={elem}
-                navigation={navigation}
-              />
+              <OrderInfoItem key={elem.menu_item.id} item={elem} />
             ))}
 
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>

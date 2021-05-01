@@ -1,10 +1,15 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {SECONDARY_COLOR} from '../utility/colors';
+import {View, Text, StyleSheet} from 'react-native';
+import {
+  GREY,
+  LIGHTER_GREY,
+  LIGHT_GREY,
+  SECONDARY_COLOR,
+} from '../utility/colors';
 import {SCREEN_HEIGHT} from '../utility/constants';
 import MyImage from './MyImage';
 
-export default function OrderInfoItem({item, navigation}) {
+export default function OrderInfoItem({item}) {
   return (
     <View style={styles.container}>
       <MyImage
@@ -16,6 +21,7 @@ export default function OrderInfoItem({item, navigation}) {
 
       <View style={styles.content}>
         <Text style={styles.title}>{item.menu_item.name}</Text>
+        <Text style={styles.text}>{item.variant.variant_name}</Text>
         <View style={styles.bottom}>
           <Text style={styles.price}>₦{item.price}</Text>
           <Text style={styles.countText}>{item.quantity}</Text>
@@ -24,10 +30,10 @@ export default function OrderInfoItem({item, navigation}) {
     </View>
   );
 }
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: SCREEN_HEIGHT * 0.045,
+    height: SCREEN_HEIGHT * 0.046,
     alignItems: 'center',
     marginVertical: 16,
   },
@@ -49,7 +55,7 @@ const styles = {
   bottom: {
     width: '69%',
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -60,4 +66,10 @@ const styles = {
     width: 18,
     borderRadius: 5,
   },
-};
+  text: {
+    textTransform: 'capitalize',
+    fontSize: 12,
+    color: LIGHT_GREY,
+    paddingLeft: 12,
+  },
+});
