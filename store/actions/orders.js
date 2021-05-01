@@ -37,6 +37,7 @@ export const postOrder = ({reference}) => {
       const orderedItem = cart.cart.map((elem) => ({
         menu_item: elem.id,
         price: elem.price,
+        variant: elem.variant,
         quantity: elem.count,
         special_note: elem.instruction,
       }));

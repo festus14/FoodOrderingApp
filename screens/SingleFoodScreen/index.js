@@ -39,6 +39,7 @@ const SingleFoodScreen = ({navigation, route}) => {
       id: item.id,
       name: item.name,
       price: varPrice || item.price,
+      variant: varId,
       instruction: instruction.value,
       count,
     };
@@ -63,6 +64,8 @@ const SingleFoodScreen = ({navigation, route}) => {
 
   const [varPrice, setVarPrice] = useState(0);
 
+  const [varId, setVarId] = useState('');
+
   const onCheckHandler = (i) => {
     const tempArr = [
       ...new Array((item?.productvariant ?? []).length).fill(false),
@@ -71,6 +74,7 @@ const SingleFoodScreen = ({navigation, route}) => {
     setCheckedList(tempArr);
     if (item.productvariant) {
       setVarPrice(item?.productvariant[i]?.price ?? 0);
+      setVarId(item?.productvariant[i]?.id ?? '');
     }
   };
 
