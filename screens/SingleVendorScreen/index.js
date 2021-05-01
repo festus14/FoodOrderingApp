@@ -18,11 +18,10 @@ import {SCREEN_HEIGHT} from '../../utility/constants';
 import {Store} from '../../store';
 import {getVendorMenus, setCheckoutInfo} from '../../store/actions';
 import EmptyComponent from '../../components/EmptyComponent';
+import VirtualizedView from '../../components/VirtualizedView';
 
 const SingleVendorScreen = ({navigation, route}) => {
   const [vendor, extraInfo] = route.params.item;
-  // console.log('vendor...', vendor);
-  // console.log('extraInfo...', extraInfo);
   const {
     state: {
       ui: {isVendorsMenuLoading: isLoading},
@@ -94,8 +93,8 @@ const SingleVendorScreen = ({navigation, route}) => {
   };
 
   return (
-    <>
-      <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
+      <VirtualizedView>
         <Header
           leftIcon="ios-arrow-back"
           title={vendor.restaurant.firstname}
@@ -189,8 +188,8 @@ const SingleVendorScreen = ({navigation, route}) => {
             </>
           )}
         </View>
-      </SafeAreaView>
-    </>
+      </VirtualizedView>
+    </SafeAreaView>
   );
 };
 
